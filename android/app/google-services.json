@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "843967352246",
+    "firebase_url": "https://cups-7a185-default-rtdb.firebaseio.com",
+    "project_id": "cups-7a185",
+    "storage_bucket": "cups-7a185.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843967352246:android:23c0f0d8c28649a057c517",
+        "android_client_info": {
+          "package_name": "com.example.newfp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBABR6VjYQ-8MwkrPqbXOlDk4aLxJmHh9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843967352246:android:6a2d88ed9261e80c57c517",
+        "android_client_info": {
+          "package_name": "com.example.youth_center"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBABR6VjYQ-8MwkrPqbXOlDk4aLxJmHh9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
