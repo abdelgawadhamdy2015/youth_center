@@ -1,41 +1,63 @@
 // booking_card.dart
 import 'package:flutter/material.dart';
 import 'package:youth_center/models/booking_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:youth_center/screen/update_booking.dart';
 
 class BookingCard extends StatelessWidget {
   final BookingModel booking;
   final VoidCallback? onTap;
 
   const BookingCard({super.key, required this.booking, this.onTap});
+  onClick(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return UpdateBooking(booking: booking);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onClick(context),
       child: Card(
-        margin: const EdgeInsets.all(10),
-        shape: const Border.symmetric(
-          vertical: BorderSide(color: Colors.blueAccent, width: 5),
-          horizontal: BorderSide(color: Colors.purple, width: 5),
-        ),
-        color: Colors.deepOrangeAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 4,
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(booking.name),
-              const SizedBox(width: 10),
-              const Icon(Icons.sports_baseball),
-              const SizedBox(width: 10),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("from ${booking.timeStart}"),
-                  Text("to ${booking.timeEnd}"),
+                  Text(
+                    booking.name,
+                    style: GoogleFonts.tajawal(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "من ${booking.timeStart} إلى ${booking.timeEnd}",
+                    style: GoogleFonts.tajawal(),
+                  ),
                 ],
               ),
-              const SizedBox(width: 10),
-              Text(booking.mobile.toString()),
+              Column(
+                children: [
+                  Icon(Icons.sports_soccer, size: 30, color: Colors.teal),
+                  Text(
+                    booking.mobile,
+                    style: GoogleFonts.tajawal(fontSize: 14),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
