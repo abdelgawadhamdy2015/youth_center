@@ -5,8 +5,7 @@ import 'package:youth_center/screen/login_screen.dart';
 import 'package:youth_center/screen/welcome_screen.dart';
 
 class Auth extends StatelessWidget {
-  const Auth({super.key,  this.centerUser});
-  final CenterUser? centerUser;
+  const Auth({super.key,  });
 
   @override
   Widget build(BuildContext context) {

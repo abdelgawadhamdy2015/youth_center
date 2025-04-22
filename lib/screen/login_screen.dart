@@ -1,13 +1,13 @@
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => Login();
-
 }
 
 class Login extends State<LoginScreen> {
@@ -44,7 +44,7 @@ class Login extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: Colors.amber,
+        backgroundColor: MyColors.primaryColor,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -65,14 +65,14 @@ class Login extends State<LoginScreen> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: usernameController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(Icons.person),
+                      icon: const Icon(Icons.person),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "username",
                     ),
                   ),
@@ -80,14 +80,14 @@ class Login extends State<LoginScreen> {
                   TextField(
                     obscureText: true,
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(Icons.lock),
+                      icon: const Icon(Icons.lock),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "password",
                     ),
                   ),
@@ -105,7 +105,7 @@ class Login extends State<LoginScreen> {
                         signIn();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
+                        backgroundColor: MyColors.primaryColor,
                       ),
                       child: const Text(
                         "submit",
@@ -120,7 +120,7 @@ class Login extends State<LoginScreen> {
                         debugPrint("clear");
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
+                        backgroundColor: MyColors.primaryColor,
                         foregroundColor: Colors.black,
                       ),
                       child: const Text(

@@ -105,7 +105,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.blueGrey,
         title: Text(
           'Youth Center',
           style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/FetchData.dart';
 
 import '../models/user_model.dart';
@@ -26,9 +27,8 @@ class Update extends State<UpdateProfile> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<String> minuItems = ["الصفحة الرئيسية", "إضافة حجز", "تسجيل خروج"];
 
-  FetchData fetchData=FetchData();
-  bool adminValue=false;
-
+  FetchData fetchData = FetchData();
+  bool adminValue = false;
 
   @override
   void dispose() {
@@ -43,7 +43,11 @@ class Update extends State<UpdateProfile> {
     super.initState();
 
     getUser();
-   
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   Future updateMyProfile(CenterUser centerUser) async {
@@ -52,11 +56,14 @@ class Update extends State<UpdateProfile> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set(centerUser.toJson())
         .whenComplete(
-            () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Profile updated successfully "),
-                  backgroundColor: Colors.redAccent,
-                  elevation: 10, //shadow
-                )));
+          () => ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Profile updated successfully "),
+              backgroundColor: Colors.redAccent,
+              elevation: 10, //shadow
+            ),
+          ),
+        );
   }
 
   getUser() async {
@@ -65,162 +72,146 @@ class Update extends State<UpdateProfile> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        String json = jsonEncode(documentSnapshot.data());
-        Map<String, dynamic>? c = jsonDecode(json);
-        centerUser = CenterUser.fromJson(c!);
-        setState(() {
-          usernameController.text = centerUser.email.toString().trim();
-          nameController.text = centerUser.name.toString().trim();
-          mobileController.text = centerUser.mobile.toString().trim();
-          dropdownValue = centerUser.youthCenterName.toString().trim();
-          adminValue=centerUser.admin;
-        //  print(centerUser.name);
+          if (documentSnapshot.exists) {
+            String json = jsonEncode(documentSnapshot.data());
+            Map<String, dynamic>? c = jsonDecode(json);
+            centerUser = CenterUser.fromJson(c!);
+            setState(() {
+              usernameController.text = centerUser.email.toString().trim();
+              nameController.text = centerUser.name.toString().trim();
+              mobileController.text = centerUser.mobile.toString().trim();
+              dropdownValue = centerUser.youthCenterName.toString().trim();
+              adminValue = centerUser.admin;
+              //  print(centerUser.name);
+            });
+          } else {
+            print("error: no document found");
+          }
         });
-      } else {
-        print("error: no document found");
-      }
-    });
-   
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Youth Center"),
-        backgroundColor: Colors.amber,
-      
+        backgroundColor: Colors.blueGrey,
+        title: Text('Youth Center', style: GoogleFonts.tajawal()),
+        leading: BackButton(),
       ),
-     
       body: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("images/3f.jpg"), fit: BoxFit.cover)),
-        alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Image(
-                    image: AssetImage("images/icon3.jpg"),
-                    width: 50,
-                    height: 50,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                      controller: usernameController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          icon: Icon(Icons.person, color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "Email")),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                      obscureText: false,
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          icon: Icon(
-                            Icons.nature,
-                            color: Colors.red,
-                          ),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "name")),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                      obscureText: false,
-                      controller: mobileController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          icon: Icon(
-                            Icons.phone_in_talk_rounded,
-                            color: Colors.red,
-                          ),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "mobile")),
-                  Container(
-                    color: Colors.amber,
-                    child: DropdownButton<String>(
-                        // Step 3.
-                        value: dropdownValue,
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.purple,
-                        ),
-                        // Step 4.
-                        items: youthCentersNames
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(fontSize: 30),
-                            ),
-                          );
-                        }).toList(),
-                        // Step 5.
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        }),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        updateMyProfile(CenterUser(
-                            admin: centerUser.admin,
-                            name: nameController.text.toString().trim(),
-                            email: usernameController.text.toString().trim(),
-                            mobile: mobileController.text.toString().trim(),
-                            youthCenterName: dropdownValue));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        //foregroundColor: Colors.black,
-                      ),
-                      child: const Text("Update my profile",
-                          style: TextStyle(fontSize: 15, color: Colors.blue)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/1f.jpg'), // Replace with your background
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.2),
+              BlendMode.darken,
+            ),
           ),
         ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'images/logo.jpg',
+              height: 80,
+            ), // Replace with your logo
+            SizedBox(height: 20),
+            buildInputField(Icons.email, "email", usernameController),
+            SizedBox(height: 10),
+            buildInputField(Icons.person, "name", nameController),
+            SizedBox(height: 10),
+            buildInputField(Icons.phone, "mobile", mobileController),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.blueGrey),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: youthCentersNames[0],
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.blueGrey),
+                  items:
+                      youthCentersNames.map((center) {
+                        return DropdownMenuItem(
+                          value: center,
+                          child: Text(
+                            center,
+                            style: GoogleFonts.tajawal(fontSize: 16),
+                          ),
+                        );
+                      }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                updateMyProfile(
+                  CenterUser(
+                    name: nameController.text,
+                    mobile: mobileController.text,
+                    email: usernameController.text,
+                    youthCenterName: dropdownValue,
+                    admin: centerUser.admin,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueGrey,
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                "تحديث الملف الشخصي",
+                style: GoogleFonts.tajawal(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildInputField(
+    IconData icon,
+    String hintText,
+    TextEditingController controller,
+  ) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.blueGrey),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.blueGrey),
+          SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              style: GoogleFonts.tajawal(),
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:youth_center/core/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
@@ -78,10 +79,10 @@ class Cup extends State<CupScreen> {
   }
 
   TextStyle getTextStyle() {
-    return const TextStyle(
+    return  TextStyle(
       fontSize: 18,
       color: Colors.black,
-      backgroundColor: Colors.amber,
+      backgroundColor: MyColors.primaryColor,
     );
   }
 
@@ -174,7 +175,7 @@ class Cup extends State<CupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: Colors.amber,
+        backgroundColor: MyColors.primaryColor,
       ),
       body: SwipeDetector(
         onSwipeDown: (offset) => setState(() {}),

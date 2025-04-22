@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
@@ -53,10 +54,10 @@ class Matches extends State<MatchesOfActiveCups> {
   }
 
   TextStyle getTextStyle() {
-    return const TextStyle(
+    return  TextStyle(
       fontSize: 18,
       color: Colors.black,
-      backgroundColor: Colors.amber,
+      backgroundColor: MyColors.primaryColor,
     );
   }
 

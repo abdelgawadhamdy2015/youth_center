@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/auth.dart';
+import 'package:youth_center/core/colors.dart';
 import '../models/user_model.dart';
 import '../models/youth_center_model.dart';
 
@@ -76,7 +77,7 @@ class SignUp extends State<SignUpScreen> {
               .whenComplete(
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Auth(centerUser:  this.centerUser)),
+                  MaterialPageRoute(builder: (context) => Auth()),
                 ),
               )
               .catchError((error) {
@@ -117,7 +118,7 @@ class SignUp extends State<SignUpScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: Colors.amber,
+        backgroundColor: MyColors.primaryColor,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -144,14 +145,14 @@ class SignUp extends State<SignUpScreen> {
                   TextField(
                     inputFormatters: [],
                     controller: usernameController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(Icons.person, color: Colors.red),
+                      icon: const Icon(Icons.person, color: Colors.red),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "ُEmail",
                     ),
                   ),
@@ -159,14 +160,14 @@ class SignUp extends State<SignUpScreen> {
                   TextField(
                     obscureText: false,
                     controller: nameController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(Icons.nature, color: Colors.red),
+                      icon: const Icon(Icons.nature, color: Colors.red),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "name",
                     ),
                   ),
@@ -175,17 +176,17 @@ class SignUp extends State<SignUpScreen> {
                     inputFormatters: [],
                     obscureText: false,
                     controller: mobileController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.phone_in_talk_rounded,
                         color: Colors.red,
                       ),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "mobile",
                     ),
                   ),
@@ -193,14 +194,14 @@ class SignUp extends State<SignUpScreen> {
                   TextField(
                     obscureText: true,
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      border: OutlineInputBorder(
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      icon: Icon(Icons.lock, color: Colors.red),
+                      icon: const Icon(Icons.lock, color: Colors.red),
                       filled: true,
-                      fillColor: Colors.amber,
+                      fillColor: MyColors.primaryColor,
                       hintText: "password",
                     ),
                   ),
@@ -214,13 +215,13 @@ class SignUp extends State<SignUpScreen> {
                         Visibility(
                           visible: true,
                           child: DropdownButton<String>(
-                            style: TextStyle(color: Colors.amber),
+                            style: TextStyle(color: MyColors.primaryColor),
 
                             // Step 3.
                             value: dropdownValue,
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.amber,
+                              color: MyColors.primaryColor,
                             ),
                             // Step 4.
                             items:
@@ -268,7 +269,7 @@ class SignUp extends State<SignUpScreen> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
+                        backgroundColor: MyColors.primaryColor,
                         //foregroundColor: Colors.black,
                       ),
                       child: const Text(

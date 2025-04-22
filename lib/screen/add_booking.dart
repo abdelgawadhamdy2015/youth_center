@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 
 import '../FetchData.dart';
@@ -49,12 +50,18 @@ class Add extends State<AddBooking> {
   }
 
   Future addBooking(BookingModel booking) async {
-    db.collection("Bookings").add(booking.toJson()).whenComplete(
-        () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    db
+        .collection("Bookings")
+        .add(booking.toJson())
+        .whenComplete(
+          () => ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
               content: Text("success "),
               backgroundColor: Colors.redAccent,
               elevation: 10, //shadow
-            )));
+            ),
+          ),
+        );
   }
 
   @override
@@ -63,46 +70,17 @@ class Add extends State<AddBooking> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: Colors.amber,
-        /*actions: [
-          PopupMenuButton(
-            color: Colors.amberAccent,
-            itemBuilder: (context) {
-              return [
-                fetchDate.buildPopupMenuItem(
-                    adminValue, 0, "حسابي", Icons.account_circle_outlined),
-                fetchDate.buildPopupMenuItem(
-                    adminValue, 1, "الصفحة الرئيسية", Icons.home),
-                fetchDate.buildPopupMenuItem(
-                    adminValue, 2, "اضافة حجز", Icons.add),
-                fetchDate.buildPopupMenuItem(
-                    adminValue, 3, "تسجيل خروج", Icons.logout),
-              ];
-            },
-            onSelected: (value) {
-              switch (value) {
-                case 0:
-                  Navigator.of(context).pushReplacementNamed('updateProfile');
-                  break;
-                case 1:
-                  Navigator.of(context).pushReplacementNamed('homeScreen');
-                  break;
-                case 2:
-                  Navigator.of(context).pushReplacementNamed('addBooking');
-                  break;
-                case 3:
-                  FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushReplacementNamed('/');
-              }
-            },
-          )
-        ],*/
+        backgroundColor: MyColors.primaryColor,
+       
       ),
 
       body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("images/3f.jpg"), fit: BoxFit.cover)),
+          image: DecorationImage(
+            image: AssetImage("images/3f.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         alignment: AlignmentDirectional.topStart,
         padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
         child: SingleChildScrollView(
@@ -117,76 +95,68 @@ class Add extends State<AddBooking> {
                     width: 50,
                     height: 50,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          icon: Icon(Icons.person, color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "enter who booking name ")),
-                  const SizedBox(
-                    height: 10,
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.person, color: Colors.red),
+                      filled: true,
+                      fillColor: MyColors.primaryColor,
+                      hintText: "enter who booking name ",
+                    ),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
-                      obscureText: false,
-                      controller: mobileController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          icon: Icon(Icons.phone, color: Colors.red),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "enter who booking mobile ")),
-                  const SizedBox(
-                    height: 10,
+                    obscureText: false,
+                    controller: mobileController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.phone, color: Colors.red),
+                      filled: true,
+                      fillColor: MyColors.primaryColor,
+                      hintText: "enter who booking mobile ",
+                    ),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
-                      obscureText: false,
-                      controller: timeStartController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          icon: Icon(
-                            Icons.timer_rounded,
-                            color: Colors.red,
-                          ),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "enter start time ex : 22:30")),
-                  const SizedBox(
-                    height: 10,
+                    obscureText: false,
+                    controller: timeStartController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.timer_rounded, color: Colors.red),
+                      filled: true,
+                      fillColor: MyColors.primaryColor,
+                      hintText: "enter start time ex : 22:30",
+                    ),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
-                      obscureText: false,
-                      controller: timeEndController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.all(10),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          icon: Icon(
-                            Icons.timer,
-                            color: Colors.red,
-                          ),
-                          filled: true,
-                          fillColor: Colors.amber,
-                          hintText: "enter end  time ex : 22:30")),
-                  const SizedBox(
-                    height: 10,
+                    obscureText: false,
+                    controller: timeEndController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(10),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                      icon: const Icon(Icons.timer, color: Colors.red),
+                      filled: true,
+                      fillColor: MyColors.primaryColor,
+                      hintText: "enter end  time ex : 22:30",
+                    ),
                   ),
+                  const SizedBox(height: 10),
                   /*Container(
-                    color: Colors.amber,
+                    color: MyColors.primaryColor,
                     child: DropdownButton<String>(
                       // Step 3.
                         value: dropdownValue,
@@ -215,9 +185,7 @@ class Add extends State<AddBooking> {
                   ),*/
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -226,20 +194,24 @@ class Add extends State<AddBooking> {
                     margin: const EdgeInsets.only(left: 0),
                     child: ElevatedButton(
                       onPressed: () {
-
-                        addBooking(BookingModel(
+                        addBooking(
+                          BookingModel(
                             name: nameController.text.toString().trim(),
                             mobile: mobileController.text.toString().trim(),
                             timeEnd: timeEndController.text.toString().trim(),
                             timeStart:
                                 timeStartController.text.toString().trim(),
-                            youthCenterId: centerName));
+                            youthCenterId: centerName,
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
+                        backgroundColor: MyColors.primaryColor,
                       ),
-                      child: const Text("add to Bookings",
-                          style: TextStyle(fontSize: 15, color: Colors.blue)),
+                      child: const Text(
+                        "add to Bookings",
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      ),
                     ),
                   ),
                 ],
