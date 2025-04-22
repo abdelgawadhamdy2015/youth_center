@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/FetchData.dart';
-import 'package:youth_center/screen/home_screen.dart';
+import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../models/user_model.dart';
 
