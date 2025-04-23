@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youth_center/core/colors.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/user_model.dart';
 
 class AddCupScreen extends StatefulWidget {

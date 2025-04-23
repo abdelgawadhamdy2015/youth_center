@@ -3,15 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
-import 'package:youth_center/core/colors.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/screen/create_cup.dart';
-import 'package:youth_center/screen/cup_detail_screen.dart';
+import 'package:youth_center/screen/cup/create_cup.dart';
+import 'package:youth_center/screen/cup/cup_detail_screen.dart';
 
-import '../FetchData.dart';
+import '../../FetchData.dart';
 
 class CupScreen extends StatefulWidget {
   const CupScreen({super.key, required this.center});

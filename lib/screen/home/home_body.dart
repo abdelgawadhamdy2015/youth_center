@@ -5,12 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
-import 'package:youth_center/screen/add_booking.dart';
-import 'package:youth_center/screen/cups_screen.dart';
+import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/booking_card.dart';
 import 'package:youth_center/screen/home/booking_service.dart';
-import 'package:youth_center/screen/matches_of_ctive_cups.dart';
-import 'package:youth_center/screen/update_profile.dart';
+import 'package:youth_center/screen/home/matches_of_ctive_cups.dart';
+import 'package:youth_center/screen/auth/update_profile.dart';
 
 class HomeScreenBody extends StatefulWidget {
   final CenterUser centerUser;

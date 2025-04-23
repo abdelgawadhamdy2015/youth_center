@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:youth_center/auth.dart';
+import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/firebase_options.dart';
 
 void main() async {

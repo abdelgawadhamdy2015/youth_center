@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/screen/add_booking.dart';
-import 'package:youth_center/screen/cups_screen.dart';
-import 'package:youth_center/screen/update_profile.dart';
+import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/cup/cups_screen.dart';
+import 'package:youth_center/screen/auth/update_profile.dart';
 
 
 class FetchData {

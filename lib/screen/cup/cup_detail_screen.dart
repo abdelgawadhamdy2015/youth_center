@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
-import 'package:youth_center/core/colors.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
 
-import '../FetchData.dart';
+import '../../FetchData.dart';
 
 class CupDetailScreen extends StatefulWidget {
   const CupDetailScreen({

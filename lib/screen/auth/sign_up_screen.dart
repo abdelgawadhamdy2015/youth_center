@@ -3,10 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:youth_center/auth.dart';
-import 'package:youth_center/core/colors.dart';
-import '../models/user_model.dart';
-import '../models/youth_center_model.dart';
+import 'package:youth_center/screen/auth/auth.dart';
+import 'package:youth_center/core/themes/colors.dart';
+import '../../models/user_model.dart';
+import '../../models/youth_center_model.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

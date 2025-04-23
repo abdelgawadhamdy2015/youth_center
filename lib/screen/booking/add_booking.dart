@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
-import 'package:youth_center/core/colors.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 
-import '../FetchData.dart';
+import '../../FetchData.dart';
 
 class AddBooking extends StatefulWidget {
   const AddBooking({super.key, required this.center});

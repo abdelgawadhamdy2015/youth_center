@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/FetchData.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../models/user_model.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key, });
+  const WelcomeScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -32,19 +34,13 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    centerUser = const CenterUser(
-      name: "0",
-      mobile: "0",
-      email: "0",
-      youthCenterName: "0",
-      admin: false,
-    );
+
     getUser();
   }
 
   getUser() async {
     await FirebaseFirestore.instance
-        .collection('Users')
+        .collection(MyConstants.userCollection)
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -53,6 +49,10 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
             Map<String, dynamic>? c = jsonDecode(json);
             centerUser = CenterUser.fromJson(c!);
             userDone = true;
+            SharedPrefHelper.setData(
+              MyConstants.prefCenterUser,
+              centerUser.toJson(),
+            );
           }
         });
   }
@@ -70,6 +70,6 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
       return const Center(child: Image(image: AssetImage("images/logo.jpg")));
     }
 
-    return  HomeScreen(centerUser: centerUser,);
+    return HomeScreen(centerUser: centerUser);
   }
 }
