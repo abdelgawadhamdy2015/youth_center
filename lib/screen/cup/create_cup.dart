@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/user_model.dart';
 
 class AddCupScreen extends StatefulWidget {
@@ -16,6 +20,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Tournament configuration
   int _teamCount = 8;
@@ -31,6 +36,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
   // UI constants
   final double _spacing = 16.0;
   final double _groupCardWidth = 150.0;
+  final List<Map<String, dynamic>> _matches = [];
 
   @override
   void initState() {
@@ -134,18 +140,68 @@ class _AddCupScreenState extends State<AddCupScreen> {
   }
 
   void _generateMatches() {
-    // Implement your match generation logic here
-    // This would create the round-robin matches for each group
+    _matches.clear(); // Clear any existing matches
+
+    for (var group in _groups) {
+      // Generate all unique pairings in the group (round-robin)
+      for (int i = 0; i < group.length; i++) {
+        for (int j = i + 1; j < group.length; j++) {
+          _matches.add({
+            MyConstants.team1: group[i],
+            MyConstants.team2: group[j],
+            MyConstants.cupGroup: 'Group ${_groups.indexOf(group) + 1}',
+            MyConstants.cupStartDate: Timestamp.fromDate(_selectedDate),
+            MyConstants.team1Score: 0,
+            MyConstants.team2Score: 0,
+            MyConstants.cupName: _nameController.text,
+          });
+        }
+      }
+    }
+
+    setState(() => _showMatches = true);
   }
 
   Future<void> _saveTournament() async {
-    // Implement your Firestore save logic here
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tournament saved successfully')),
+    if (_nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a tournament name')),
+      );
+      return;
+    }
+    final cupModel = CupModel(
+      id: _nameController.text.trim(),
+      name: _nameController.text,
+      teems: _teams,
+      timeStart: Timestamp.fromDate(_selectedDate),
+      youthCenterId: widget.center.youthCenterName,
+      matches: _matches,
+      finished: false,
     );
+    db
+        .collection(MyConstants.cupCollection)
+        .doc(_nameController.text.trim())
+        .set(cupModel.toJson())
+        .whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Tournament saved successfully'),
+              backgroundColor: Colors.green,
+              elevation: 10, //shadow
+            ),
+          );
 
-    // Reset form after save
-    _resetForm();
+          _resetForm();
+        })
+        .catchError(
+          (error) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error.toString()),
+              backgroundColor: Colors.redAccent,
+              elevation: 10, //shadow
+            ),
+          ),
+        );
   }
 
   void _resetForm() {
@@ -385,7 +441,6 @@ class _AddCupScreenState extends State<AddCupScreen> {
   }
 
   Widget _buildMatchesDisplay() {
-    // Implement your matches display here
     return Card(
       child: Padding(
         padding: EdgeInsets.all(_spacing),
@@ -397,8 +452,48 @@ class _AddCupScreenState extends State<AddCupScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: _spacing),
-            Text('Match list would be displayed here'),
-            // You would implement ListView.builder here to show matches
+
+            if (_matches.isEmpty)
+              Text('No matches generated yet')
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _matches.length,
+                itemBuilder: (context, index) {
+                  final match = _matches[index];
+                  return Card(
+                    margin: EdgeInsets.only(bottom: _spacing),
+                    child: Padding(
+                      padding: EdgeInsets.all(_spacing),
+                      child: Column(
+                        children: [
+                          Text(
+                            match['group'],
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: _spacing / 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(match[MyConstants.team1]),
+                              Text('vs'),
+                              Text(match[MyConstants.team2]),
+                            ],
+                          ),
+                          SizedBox(height: _spacing / 2),
+                          Text(
+                            DateFormat('dd/MM/yyyy').format(
+                              (match[MyConstants.cupStartDate].toDate()),
+                            ),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),

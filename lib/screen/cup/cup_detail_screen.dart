@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
 
-import '../../FetchData.dart';
+import '../../fetch_data.dart';
 
 class CupDetailScreen extends StatefulWidget {
   const CupDetailScreen({
@@ -18,13 +19,14 @@ class CupDetailScreen extends StatefulWidget {
     required this.cupModel,
   });
 
+  
+
   final CenterUser center;
   final CupModel cupModel;
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return CupDetail(center: center, cupModel: cupModel);
+    return CupDetail();
   }
 }
 
@@ -33,7 +35,7 @@ class CupDetail extends State<CupDetailScreen> {
 
   TextEditingController nameController = TextEditingController();
 
-  CupDetail({required this.center, required this.cupModel});
+  CupDetail();
 
   late QuerySnapshot<Map<String, dynamic>> snapshot1;
   bool finished = false;
@@ -49,7 +51,7 @@ class CupDetail extends State<CupDetailScreen> {
   late List<MatchModel> matchesModels;
 
   late DateTime iniDate = DateTime(2023, 5, 14, 30);
-  CenterUser center;
+  late CenterUser center;
   FirebaseFirestore db = FirebaseFirestore.instance;
   FetchData fetchData = FetchData();
   bool adminValue = true;
@@ -63,7 +65,8 @@ class CupDetail extends State<CupDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: implement initState
+    center = widget.center;
+    cupModel = widget.cupModel;
     nameController.text = cupModel.name;
     if (cupModel.teems.isNotEmpty && cupModel.teems.length >= 8) {
       print(cupModel.teems);
@@ -92,13 +95,13 @@ class CupDetail extends State<CupDetailScreen> {
     for (var element in map) {
       matchesModel.add(
         MatchModel(
-          firstTeem: element["firstTeem"],
-          secondTeem: element["secondTeem"],
-          time: element["time"],
-          firstTeemScore: element["firstTeemScore"],
-          secondTeemScore: element["secondTeemScore"],
-          youthCenterId: element["youthCenterId"],
-          cupName: element["cupName"]!,
+          team1: element[MyConstants.team1],
+          team2: element[MyConstants.team2],
+          cupStartDate: element[MyConstants.cupStartDate],
+          teem1Score: element[MyConstants.team1Score],
+          teem2Score: element[MyConstants.team2Score],
+          cupName: element[MyConstants.cupName],
+          cupGroup: element[MyConstants.cupGroup],
         ),
       );
     }
@@ -106,7 +109,7 @@ class CupDetail extends State<CupDetailScreen> {
   }
 
   TextStyle getTextStyle() {
-    return  TextStyle(
+    return TextStyle(
       fontSize: 18,
       color: Colors.black,
       backgroundColor: MyColors.primaryColor,
@@ -126,7 +129,7 @@ class CupDetail extends State<CupDetailScreen> {
   }
 
   Future saveCup() async {
-    List<dynamic> josonMatchesList = fetchData.listToJson(matchesModels);
+    List<dynamic> josonMatchesList = FetchData.listToJson(matchesModels);
     cupModel = CupModel(
       id: cupModel.id,
       name: nameController.text,
@@ -138,7 +141,7 @@ class CupDetail extends State<CupDetailScreen> {
     );
 
     db
-        .collection("Cups")
+        .collection(MyConstants.cupCollection)
         .doc(cupModel.id)
         .set(cupModel.toJson())
         .whenComplete(() {
@@ -164,14 +167,13 @@ class CupDetail extends State<CupDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference reference = db.collection("Cups");
+    CollectionReference reference = db.collection(MyConstants.cupCollection);
     reference.snapshots().listen((querySnapshot) {
-      querySnapshot.docs.forEach((change) {
+      for (var change in querySnapshot.docs) {
         setState(() {});
         // Do something with change
-      });
+      }
     });
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
@@ -192,8 +194,6 @@ class CupDetail extends State<CupDetailScreen> {
           primary: true,
           child: Column(
             children: [
-              //SizedBox
-              /** Checkbox Widget **/
               Visibility(
                 visible: center.admin,
                 child: Row(
@@ -203,7 +203,7 @@ class CupDetail extends State<CupDetailScreen> {
                     Text("Finished ?", style: getTextStyle()),
                     const SizedBox(width: 5),
                     Checkbox(
-                      fillColor: MaterialStateColor.resolveWith(
+                      fillColor: WidgetStateColor.resolveWith(
                         (states) => Colors.blue,
                       ),
                       checkColor: Colors.black,
@@ -533,18 +533,16 @@ class CupDetail extends State<CupDetailScreen> {
                       onSwipeRight: (offset) {
                         if (center.admin) {
                           setState(() {
-                            matchesModels.elementAt(index).secondTeemScore =
-                                matchesModels.elementAt(index).secondTeemScore -
-                                1;
+                            matchesModels.elementAt(index).teem2Score =
+                                matchesModels.elementAt(index).teem2Score - 1;
                           });
                         }
                       },
                       onSwipeLeft: (offset) {
                         if (center.admin) {
                           setState(() {
-                            matchesModels.elementAt(index).firstTeemScore =
-                                matchesModels.elementAt(index).firstTeemScore -
-                                1;
+                            matchesModels.elementAt(index).teem1Score =
+                                matchesModels.elementAt(index).teem1Score - 1;
                           });
                         }
                       },
@@ -577,15 +575,15 @@ class CupDetail extends State<CupDetailScreen> {
                                     setState(() {
                                       matchesModels
                                           .elementAt(index)
-                                          .firstTeemScore = matchesModels
+                                          .teem1Score = matchesModels
                                               .elementAt(index)
-                                              .firstTeemScore +
+                                              .teem1Score +
                                           1;
                                     });
                                   }
                                 },
                                 child: Text(
-                                  matchesModels.elementAt(index).firstTeem,
+                                  matchesModels.elementAt(index).team1,
                                   maxLines: 2,
                                 ),
                               ),
@@ -639,7 +637,7 @@ class CupDetail extends State<CupDetailScreen> {
                                         fetchData.getDateTime(
                                           matchesModels
                                               .elementAt(index)
-                                              .time
+                                              .cupStartDate
                                               .toDate(),
                                         ),
                                       ),
@@ -659,15 +657,15 @@ class CupDetail extends State<CupDetailScreen> {
                                     setState(() {
                                       matchesModels
                                           .elementAt(index)
-                                          .secondTeemScore = matchesModels
+                                          .teem2Score = matchesModels
                                               .elementAt(index)
-                                              .secondTeemScore +
+                                              .teem2Score +
                                           1;
                                     });
                                   }
                                 },
                                 child: Text(
-                                  matchesModels.elementAt(index).secondTeem,
+                                  matchesModels.elementAt(index).team2,
                                   maxLines: 2,
                                 ),
                               ),
@@ -684,7 +682,7 @@ class CupDetail extends State<CupDetailScreen> {
                 visible: center.admin,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
+                    backgroundColor: WidgetStateColor.resolveWith(
                       (states) => Colors.blue,
                     ),
                   ),

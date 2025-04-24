@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
@@ -45,6 +47,8 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Future<void> _fetchData() async {
     youthCenters = await bookingService.getAllCenters();
     youthCenterNames = youthCenters.map((e) => e.name).toSet().toList();
+    SharedPrefHelper.setData(MyConstants.prefCenterNames, youthCenterNames);
+
     await _loadBookings();
   }
 
@@ -198,7 +202,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             itemCount: bookings.length,
             itemBuilder: (context, index) {
               var booking = bookings[index];
-              return BookingCard(booking: booking, );
+              return BookingCard(booking: booking);
             },
           ),
         ),

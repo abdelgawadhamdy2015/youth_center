@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:intl/intl.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
@@ -11,7 +13,7 @@ import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/screen/cup/create_cup.dart';
 import 'package:youth_center/screen/cup/cup_detail_screen.dart';
 
-import '../../FetchData.dart';
+import '../../fetch_data.dart';
 
 class CupScreen extends StatefulWidget {
   const CupScreen({super.key, required this.center});
@@ -20,16 +22,16 @@ class CupScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return Cup(center: center);
+    return Cup();
   }
 }
 
 class Cup extends State<CupScreen> {
-  Cup({required this.center});
+  Cup();
 
   late QuerySnapshot<Map<String, dynamic>> snapshot1;
   List<String> youthCentersNames = ["كفر الحما", "الساقية", "شنواي"];
-
+  final dateFormat = DateFormat('dd/MM/y');
   late List<CupModel> cups = [];
 
   double groups = 2;
@@ -49,7 +51,7 @@ class Cup extends State<CupScreen> {
   late DateTime newDateTime = DateTime(2023, 5, 14, 30);
 
   //late Random random;
-  CenterUser center;
+  late CenterUser center;
   List<TextEditingController> controllers = [];
   FirebaseFirestore db = FirebaseFirestore.instance;
   late BookingModel booking;
@@ -64,22 +66,20 @@ class Cup extends State<CupScreen> {
   var dropdownValue = "شنواي";
   int teemsCount = 0;
 
-  //  late Timer timer;
   DateTime dateTime = DateTime(2023, 7, 18, 10, 30);
 
   @override
   void initState() {
     super.initState();
+    center = widget.center;
     getCups();
     adminValue = center.admin;
-    /* for (int i = 0; i < teemsCount; i++) {
-      controllers.add(TextEditingController());
-    }*/
+
     print(cups.length.toString());
   }
 
   TextStyle getTextStyle() {
-    return  TextStyle(
+    return TextStyle(
       fontSize: 18,
       color: Colors.black,
       backgroundColor: MyColors.primaryColor,
@@ -149,25 +149,17 @@ class Cup extends State<CupScreen> {
   }
 
   Future<List<CupModel>> getCups() async {
-    if (adminValue) {
-      snapshot1 =
-          await db
-              .collection("Cups")
-              .where("youthCenterId", isEqualTo: center.youthCenterName)
-              .get();
-      cups = snapshot1.docs.map((e) => CupModel.fromSnapshot(e)).toList();
-      print(cups.length.toString());
-      return cups;
-    } else {
-      snapshot1 =
-          await db
-              .collection("Cups")
-              .where("youthCenterId", isEqualTo: dropdownValue)
-              .get();
-      cups = snapshot1.docs.map((e) => CupModel.fromSnapshot(e)).toList();
-      print(cups.length.toString());
-      return cups;
-    }
+    snapshot1 =
+        await db
+            .collection(MyConstants.cupCollection)
+            .where(
+              MyConstants.youthCenterIdCollection,
+              isEqualTo: adminValue ? center.youthCenterName : dropdownValue,
+            )
+            .get();
+    cups = snapshot1.docs.map((e) => CupModel.fromSnapshot(e)).toList();
+    print(cups.length.toString());
+    return cups;
   }
 
   @override
@@ -279,12 +271,14 @@ class Cup extends State<CupScreen> {
                                           Expanded(
                                             child: Center(
                                               child: Text(
-                                                fetchData.getDateTime(
-                                                  cups
-                                                      .elementAt(index)
-                                                      .timeStart
-                                                      .toDate(),
-                                                ),
+                                                dateFormat
+                                                    .format(
+                                                      cups
+                                                          .elementAt(index)
+                                                          .timeStart
+                                                          .toDate(),
+                                                    )
+                                                    .toString(),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),

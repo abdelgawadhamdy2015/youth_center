@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
 
-import '../../FetchData.dart';
+import '../../fetch_data.dart';
 
 class MatchesOfActiveCups extends StatefulWidget {
   const MatchesOfActiveCups({super.key, required this.center});
@@ -21,7 +22,7 @@ class Matches extends State<MatchesOfActiveCups> {
   Matches();
 
   late QuerySnapshot<Map<String, dynamic>> snapshot1;
-  List<String> youthCentersNames = ["كفر الحما", "الساقية", "شنواي"];
+  List<String> youthCentersNames = [];
 
   late List<CupModel> cups = [];
 
@@ -54,7 +55,7 @@ class Matches extends State<MatchesOfActiveCups> {
   }
 
   TextStyle getTextStyle() {
-    return  TextStyle(
+    return TextStyle(
       fontSize: 18,
       color: Colors.black,
       backgroundColor: MyColors.primaryColor,
@@ -73,21 +74,15 @@ class Matches extends State<MatchesOfActiveCups> {
   }
 
   getCollection() {
-    if (adminValue) {
-      collection =
-          FirebaseFirestore.instance
-              .collection('Cups')
-              .where("youthCenterId", isEqualTo: center.youthCenterName)
-              .where("finished", isEqualTo: false)
-              .snapshots();
-    } else {
-      collection =
-          FirebaseFirestore.instance
-              .collection('Cups')
-              .where("youthCenterId", isEqualTo: dropdownValue)
-              .where("finished", isEqualTo: false)
-              .snapshots();
-    }
+    collection =
+        FirebaseFirestore.instance
+            .collection(MyConstants.cupCollection)
+            .where(
+              MyConstants.youthCenterIdCollection,
+              isEqualTo: adminValue ? center.youthCenterName : dropdownValue,
+            )
+            .where(MyConstants.finished, isEqualTo: false)
+            .snapshots();
 
     return collection;
   }
@@ -119,7 +114,7 @@ class Matches extends State<MatchesOfActiveCups> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference reference = db.collection("Cups");
+    CollectionReference reference = db.collection(MyConstants.cupCollection);
     reference.snapshots().listen((querySnapshot) {
       if (querySnapshot.docChanges.isNotEmpty) {
         for (var change in querySnapshot.docChanges) {
@@ -250,7 +245,7 @@ class Matches extends State<MatchesOfActiveCups> {
                                           Text(
                                             matchesModels
                                                 .elementAt(index)
-                                                .firstTeem,
+                                                .team1,
                                             maxLines: 2,
                                           ),
                                           SizedBox(width: getSizeBoxHight()),
@@ -273,7 +268,7 @@ class Matches extends State<MatchesOfActiveCups> {
                                                   fetchData.getDateTime(
                                                     matchesModels
                                                         .elementAt(index)
-                                                        .time
+                                                        .cupStartDate
                                                         .toDate(),
                                                   ),
                                                 ),
@@ -294,10 +289,10 @@ class Matches extends State<MatchesOfActiveCups> {
                                                 setState(() {
                                                   matchesModels
                                                           .elementAt(index)
-                                                          .secondTeemScore =
+                                                          .teem2Score =
                                                       matchesModels
                                                           .elementAt(index)
-                                                          .secondTeemScore +
+                                                          .teem2Score +
                                                       1;
                                                 });
                                               }
@@ -305,7 +300,7 @@ class Matches extends State<MatchesOfActiveCups> {
                                             child: Text(
                                               matchesModels
                                                   .elementAt(index)
-                                                  .secondTeem,
+                                                  .team2,
                                               maxLines: 2,
                                             ),
                                           ),
@@ -342,7 +337,7 @@ class Matches extends State<MatchesOfActiveCups> {
 
   String getStatus(CupModel cupModel) {
     if (cupModel.finished) {
-      return "finished";
+      return MyConstants.finished;
     } else {
       return "";
     }

@@ -27,6 +27,9 @@ class SharedPrefHelper {
       case const (String):
         await sharedPreferences.setString(key, value);
         break;
+      case const (List):
+        await sharedPreferences.setStringList(key, value);
+        break;
       case const (int):
         await sharedPreferences.setInt(key, value);
         break;
@@ -69,6 +72,12 @@ class SharedPrefHelper {
     return sharedPreferences.getString(key) ?? '';
   }
 
+  /// Gets an String value from SharedPreferences with given [key].
+  static getListString(String key) async {
+    debugPrint('SharedPrefHelper : getString with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getStringList(key) ?? '';
+  }
   // Saves a [value] with a [key] in the FlutterSecureStorage.
   // static setSecuredString(String key, String value) async {
   //   const flutterSecureStorage = FlutterSecureStorage();
@@ -91,19 +100,18 @@ class SharedPrefHelper {
   //   debugPrint('FlutterSecureStorage : all data has been cleared');
   // }
 
+  //   static Future<void> storeSecureToken(String token) async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //   await storage.write(token);
+  // }
 
-//   static Future<void> storeSecureToken(String token) async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//   await storage.write(token);
-// }
+  // static Future<String?> retrieveSecureToken() async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //   return await storage.read();
+  // }
 
-// static Future<String?> retrieveSecureToken() async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//   return await storage.read();
-// }
-
-// static Future<void> cleareSecureToken() async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//    await storage.delete();
-// }
+  // static Future<void> cleareSecureToken() async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //    await storage.delete();
+  // }
 }

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 
-import '../../FetchData.dart';
+import '../../fetch_data.dart';
 
 class AddBooking extends StatefulWidget {
   const AddBooking({super.key, required this.center});
@@ -13,12 +14,12 @@ class AddBooking extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return Add(centerName: center);
+    return Add();
   }
 }
 
 class Add extends State<AddBooking> {
-  Add({required this.centerName});
+  Add();
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   late BookingModel booking;
@@ -32,12 +33,11 @@ class Add extends State<AddBooking> {
   bool adminValue = true;
   var dropdownValue = "شنواي";
 
-  String centerName;
   @override
   void initState() {
     super.initState();
     if (kDebugMode) {
-      print(centerName);
+      print(widget.center);
     }
   }
 
@@ -51,13 +51,13 @@ class Add extends State<AddBooking> {
 
   Future addBooking(BookingModel booking) async {
     db
-        .collection("Bookings")
+        .collection(MyConstants.bookingCollection)
         .add(booking.toJson())
         .whenComplete(
           () => ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("success "),
-              backgroundColor: Colors.redAccent,
+            SnackBar(
+              content: Text(MyConstants.success),
+              backgroundColor: Colors.greenAccent,
               elevation: 10, //shadow
             ),
           ),
@@ -66,12 +66,10 @@ class Add extends State<AddBooking> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
         backgroundColor: MyColors.primaryColor,
-       
       ),
 
       body: Container(
@@ -155,34 +153,6 @@ class Add extends State<AddBooking> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  /*Container(
-                    color: MyColors.primaryColor,
-                    child: DropdownButton<String>(
-                      // Step 3.
-                        value: dropdownValue,
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.purple,
-                        ),
-                        // Step 4.
-                        items: youthCentersNames
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(fontSize: 30),
-                            ),
-                          );
-                        }).toList(),
-                        // Step 5.
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-
-                        }),
-                  ),*/
                 ],
               ),
               const SizedBox(height: 20),
@@ -201,7 +171,7 @@ class Add extends State<AddBooking> {
                             timeEnd: timeEndController.text.toString().trim(),
                             timeStart:
                                 timeStartController.text.toString().trim(),
-                            youthCenterId: centerName,
+                            youthCenterId: widget.center,
                           ),
                         );
                       },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/models/booking_model.dart';
 
 class UpdateBooking extends StatefulWidget {
@@ -18,11 +20,14 @@ class _UpdateBookingState extends State<UpdateBooking> {
   String dropdownValue = "شنواي";
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final List<String> youthCentersNames = ["شنواي", "الساقية", "كفر الحما"];
+  List<String> youthCentersNames = [];
 
   @override
   void initState() {
     super.initState();
+    youthCentersNames = SharedPrefHelper.getListString(
+      MyConstants.prefCenterNames,
+    );
     nameController = TextEditingController(text: widget.booking.name);
     mobileController = TextEditingController(text: widget.booking.mobile);
     timeStartController = TextEditingController(text: widget.booking.timeStart);
@@ -41,7 +46,7 @@ class _UpdateBookingState extends State<UpdateBooking> {
     );
 
     await db
-        .collection("Bookings")
+        .collection(MyConstants.bookingCollection)
         .doc(widget.booking.id)
         .set(updatedBooking.toJson());
     ScaffoldMessenger.of(context).showSnackBar(
