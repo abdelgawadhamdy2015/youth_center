@@ -1,3 +1,4 @@
+// Redesigned HomeScreenBody to match modern login theme
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -83,9 +84,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) =>
-                      AddBooking(center: widget.centerUser.youthCenterName),
+              builder: (context) => AddBooking(center: widget.centerUser.youthCenterName),
             ),
           );
         }
@@ -109,13 +108,20 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
-        title: Text(
-          'Youth Center',
-          style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+        backgroundColor: Colors.black.withOpacity(0.5),
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/icons/football_logo.png', height: 30),
+            const SizedBox(width: 8),
+            Text(
+              'Youth Center',
+              style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         centerTitle: true,
-
         bottom: TabBar(
           controller: widget.tabController,
           indicator: BoxDecoration(borderRadius: BorderRadius.circular(25.0)),
@@ -128,28 +134,24 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         ),
         actions: [
           PopupMenuButton<int>(
-            itemBuilder:
-                (context) => [
-                  PopupMenuItem(
-                    value: 0,
-                    child: _buildMenuItem(
-                      "حسابي",
-                      Icons.account_circle_outlined,
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 1,
-                    child: _buildMenuItem("اضافة حجز", Icons.add),
-                  ),
-                  PopupMenuItem(
-                    value: 2,
-                    child: _buildMenuItem("الدورات", Icons.sports_baseball),
-                  ),
-                  PopupMenuItem(
-                    value: 3,
-                    child: _buildMenuItem("تسجيل خروج", Icons.logout),
-                  ),
-                ],
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 0,
+                child: _buildMenuItem("حسابي", Icons.account_circle_outlined),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: _buildMenuItem("اضافة حجز", Icons.add),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: _buildMenuItem("الدورات", Icons.sports_baseball),
+              ),
+              PopupMenuItem(
+                value: 3,
+                child: _buildMenuItem("تسجيل خروج", Icons.logout),
+              ),
+            ],
             onSelected: _onMenuSelected,
             icon: const Icon(Icons.menu),
           ),
@@ -158,10 +160,14 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       body: SwipeDetector(
         onSwipeDown: (offset) => _loadBookings(),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/2f.jpg"),
-              fit: BoxFit.fill,
+              image: AssetImage("assets/images/stadium_bg.jpg"),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.6),
+                BlendMode.darken,
+              ),
             ),
           ),
           child: TabBarView(
@@ -179,23 +185,30 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Widget _buildBookingsTab() {
     return Column(
       children: [
-        SizedBox(height: 10),
-
+        const SizedBox(height: 10),
         if (!isAdmin)
-          DropdownButton<String>(
-            value: dropdownValue,
-            icon: const Icon(
-              Icons.arrow_drop_down_circle_outlined,
-              color: Colors.purple,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white54),
             ),
-            items:
-                youthCenterNames.map((String value) {
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                dropdownColor: Colors.blueGrey[900],
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                items: youthCenterNames.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value, style: const TextStyle(fontSize: 30)),
+                    child: Text(value, style: const TextStyle(color: Colors.white)),
                   );
                 }).toList(),
-            onChanged: _onDropdownChanged,
+                onChanged: _onDropdownChanged,
+              ),
+            ),
           ),
         Expanded(
           child: ListView.builder(

@@ -26,4 +26,8 @@ class MyConstants {
   static const String cupStartDate = 'cupStartDate';
   static const String id = "id";
   static const String cupGroup = 'group';
+
+  //images
+  static const String backgroundImagePath = 'assets/images/stadium_bg.jpg';
+static const String logoPath = 'assets/icons/football_logo.png';
 }

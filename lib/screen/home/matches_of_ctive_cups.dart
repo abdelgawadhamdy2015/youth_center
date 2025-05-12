@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
-import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
-
 import '../../fetch_data.dart';
 
 class MatchesOfActiveCups extends StatefulWidget {
@@ -15,331 +13,197 @@ class MatchesOfActiveCups extends StatefulWidget {
   final CenterUser center;
 
   @override
-  State<MatchesOfActiveCups> createState() => Matches();
+  State<MatchesOfActiveCups> createState() => _MatchesState();
 }
 
-class Matches extends State<MatchesOfActiveCups> {
-  Matches();
-
-  late QuerySnapshot<Map<String, dynamic>> snapshot1;
-  List<String> youthCentersNames = [];
-
-  late List<CupModel> cups = [];
-
-  late CupModel cupModel;
-
-  List<MatchModel> matchesModels = [];
-  late DateTime newDateTime = DateTime(2023, 5, 14, 30);
-  late Timestamp dateTime;
-
-  //late Random random;
+class _MatchesState extends State<MatchesOfActiveCups> {
   late CenterUser center;
-  List<TextEditingController> controllers = [];
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  late BookingModel booking;
-  TextEditingController nameController = TextEditingController();
+  late Stream<QuerySnapshot<Map<String, dynamic>>> collection;
+  final List<MatchModel> matchesModels = [];
+  final FetchData fetchData = FetchData();
 
-  List<String> teems = [];
-  FetchData fetchData = FetchData();
-  late bool adminValue = center.admin;
-  var dropdownValue = "";
-  int teemsCount = 0;
-  late Stream<QuerySnapshot<Map<String, dynamic>>> collection = getCollection();
+  String dropdownValue = '';
+  bool get isAdmin => center.admin;
 
   @override
   void initState() {
     super.initState();
     center = widget.center;
     dropdownValue = center.youthCenterName;
-    getCollection();
+    collection = getCollection();
   }
 
-  TextStyle getTextStyle() {
-    return TextStyle(
-      fontSize: 18,
-      color: Colors.black,
-      backgroundColor: MyColors.primaryColor,
-    );
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCollection() {
+    return FirebaseFirestore.instance
+        .collection(MyConstants.cupCollection)
+        .where(
+          MyConstants.youthCenterIdCollection,
+          isEqualTo: isAdmin ? center.youthCenterName : dropdownValue,
+        )
+        .where(MyConstants.finished, isEqualTo: false)
+        .snapshots();
   }
 
-  double getSizeBoxHight() {
-    return 10;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    getCollection();
-    nameController.dispose();
-  }
-
-  getCollection() {
-    collection =
-        FirebaseFirestore.instance
-            .collection(MyConstants.cupCollection)
-            .where(
-              MyConstants.youthCenterIdCollection,
-              isEqualTo: adminValue ? center.youthCenterName : dropdownValue,
-            )
-            .where(MyConstants.finished, isEqualTo: false)
-            .snapshots();
-
-    return collection;
-  }
-
-  getCupsFromSnapshot(AsyncSnapshot<QuerySnapshot<Object?>> s) {
-    cups =
-        s.data!.docs
+  List<MatchModel> extractMatches(QuerySnapshot snapshot) {
+    matchesModels.clear();
+    final cups =
+        snapshot.docs
             .map(
-              (e) => CupModel.fromSnapshot(
-                e as DocumentSnapshot<Map<String, dynamic>>,
+              (doc) => CupModel.fromSnapshot(
+                doc as DocumentSnapshot<Map<String, dynamic>>,
               ),
             )
             .toList();
-
-    for (var element in cups) {
-      getMatchesModel(element.matches);
+    for (final cup in cups) {
+      for (final match in cup.matches) {
+        matchesModels.add(MatchModel.fromMap(match));
+      }
     }
-  }
-
-  List<MatchModel> getMatchesModel(List<dynamic> map) {
-    for (var element in map) {
-      matchesModels.add(MatchModel.fromMap(element));
-    }
-    print(matchesModels.length.toString());
     return matchesModels;
   }
 
-  DateTime iniDate = DateTime(2023, 7, 14, 10, 30);
-
   @override
   Widget build(BuildContext context) {
-    CollectionReference reference = db.collection(MyConstants.cupCollection);
-    reference.snapshots().listen((querySnapshot) {
-      if (querySnapshot.docChanges.isNotEmpty) {
-        for (var change in querySnapshot.docChanges) {
-          // Do something with change
-          if (change.doc.exists) {
-          } else {
-            setState(() {
-              print("no changes");
-            });
-          }
-        }
-      }
-    });
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        //alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: Stack(
+      backgroundColor: MyColors.backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+        child: Column(
           children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: collection,
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot,
-              ) {
-                // Handling errors from firebase
-                if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                switch (snapshot.connectionState) {
-                  // Display if still loading data
-                  case ConnectionState.waiting:
-                    return Text('Loading...');
-                  case ConnectionState.none:
-                    return Text("no data ");
-                  case ConnectionState.done:
-                    return Text("done");
+            if (!isAdmin)
+              DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_drop_down),
+                items:
+                    [
+                          dropdownValue,
+                        ] // Replace with dynamic center names if needed
+                        .map(
+                          (value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      dropdownValue = value;
+                      collection = getCollection();
+                    });
+                  }
+                },
+              ),
+            const SizedBox(height: 20),
+            const Text(
+              "Active Cup Matches",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: collection,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return const Center(child: Text("Error loading data."));
+                  if (!snapshot.hasData)
+                    return const Center(child: CircularProgressIndicator());
 
-                  case ConnectionState.active:
-                    if (snapshot.hasData) {
-                      getCupsFromSnapshot(snapshot);
-                      return Column(
-                        children: [
-                          const Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20),
-                                Text(
-                                  "البطولات",
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                            visible: !adminValue,
-                            child: DropdownButton<String>(
-                              // Step 3.
-                              value: getValue(),
-                              icon: const Icon(
-                                Icons.arrow_drop_down_circle_outlined,
-                                color: Colors.purple,
-                              ),
-                              // Step 4.
-                              items:
-                                  youthCentersNames.map<
-                                    DropdownMenuItem<String>
-                                  >((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(fontSize: 30),
-                                      ),
-                                    );
-                                  }).toList(),
-                              // Step 5.
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  matchesModels.clear();
-                                  dropdownValue = newValue!;
-                                  getCollection();
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              itemCount: matchesModels.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  child: Card(
-                                    //semanticContainer: true,
-                                    margin: const EdgeInsets.all(10),
-                                    shape: const Border.symmetric(
-                                      vertical: BorderSide(
-                                        color: Colors.blueAccent,
-                                        width: 5,
-                                      ),
-                                      horizontal: BorderSide(
-                                        color: Colors.purple,
-                                        width: 5,
-                                      ),
-                                    ),
-                                    color: Colors.deepOrangeAccent,
-                                    child: Container(
-                                      width: 300,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: const BoxDecoration(),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            matchesModels
-                                                .elementAt(index)
-                                                .team1,
-                                            maxLines: 2,
-                                          ),
-                                          SizedBox(width: getSizeBoxHight()),
-                                          const Icon(Icons.sports_baseball),
-                                          SizedBox(width: getSizeBoxHight()),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  matchesModels
-                                                      .elementAt(index)
-                                                      .cupName,
-                                                ),
-                                                SizedBox(
-                                                  height: getSizeBoxHight(),
-                                                ),
-                                                Text(
-                                                  textAlign: TextAlign.center,
-                                                  //maxLines: 2,
-                                                  fetchData.getDateTime(
-                                                    matchesModels
-                                                        .elementAt(index)
-                                                        .cupStartDate
-                                                        .toDate(),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "${fetchData.getScore(matchesModels.elementAt(index), 1)} : ${fetchData.getScore(matchesModels.elementAt(index), 2)}",
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
+                  final matches = extractMatches(snapshot.data!);
+                  if (matches.isEmpty)
+                    return const Center(child: Text("No matches available."));
 
-                                          const SizedBox(width: 10),
-                                          const Icon(Icons.sports_baseball),
-                                          const SizedBox(width: 10),
-                                          InkWell(
-                                            onLongPress: () {
-                                              if (adminValue) {
-                                                setState(() {
-                                                  matchesModels
-                                                          .elementAt(index)
-                                                          .teem2Score =
-                                                      matchesModels
-                                                          .elementAt(index)
-                                                          .teem2Score +
-                                                      1;
-                                                });
-                                              }
-                                            },
-                                            child: Text(
-                                              matchesModels
-                                                  .elementAt(index)
-                                                  .team2,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: () => {if (adminValue) {}},
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                  return ListView.separated(
+                    itemCount: matches.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final match = matches[index];
+                      return MatchCard(
+                        match: match,
+                        isAdmin: isAdmin,
+                        onScoreTap: () {
+                          if (isAdmin) {
+                            setState(() {
+                              match.teem2Score++;
+                            });
+                          }
+                        },
                       );
-                    } else {
-                      return Text("no data ");
-                    }
-                }
-              },
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  String getValue() {
-    if (adminValue) {
-      return center.youthCenterName;
-    } else {
-      return dropdownValue;
-    }
-  }
+class MatchCard extends StatelessWidget {
+  const MatchCard({
+    super.key,
+    required this.match,
+    required this.isAdmin,
+    required this.onScoreTap,
+  });
 
-  String getStatus(CupModel cupModel) {
-    if (cupModel.finished) {
-      return MyConstants.finished;
-    } else {
-      return "";
-    }
+  final MatchModel match;
+  final bool isAdmin;
+  final VoidCallback onScoreTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final FetchData fetchData = FetchData();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: MyColors.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        title: Center(
+          child: Text(
+            match.cupName,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        subtitle: Column(
+          children: [
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(child: Text(match.team1, textAlign: TextAlign.center)),
+                const Icon(Icons.sports_soccer),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(fetchData.getDateTime(match.cupStartDate.toDate())),
+                      const SizedBox(height: 4),
+                      Text(
+                        "${fetchData.getScore(match, 1)} : ${fetchData.getScore(match, 2)}",
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.sports_soccer),
+                Expanded(
+                  child: GestureDetector(
+                    onLongPress: onScoreTap,
+                    child: Text(match.team2, textAlign: TextAlign.center),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

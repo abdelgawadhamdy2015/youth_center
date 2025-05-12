@@ -1,174 +1,124 @@
-import 'dart:core';
-import 'package:firebase_auth/firebase_auth.dart';
+// Redesigned Login Screen to match modern football cup app UI
+ 
+
 import 'package:flutter/material.dart';
-import 'package:youth_center/core/themes/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => Login();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class Login extends State<LoginScreen> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
-    super.dispose();
     usernameController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
-  Future signIn() async {
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(
-          email: usernameController.text.trim(),
-          password: passwordController.text.trim(),
-        )
-        .catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error.toString()),
-              backgroundColor: Colors.redAccent,
-              elevation: 10, //shadow
-            ),
-          );
-          throw error; // Rethrow the error to maintain the expected type
-        });
+  Future<void> signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: usernameController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Youth Center"),
-        backgroundColor: MyColors.primaryColor,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            MyConstants.backgroundImagePath,
             fit: BoxFit.cover,
           ),
-        ),
-        alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  Image.asset("images/logo.jpg", width: 50, height: 50),
-
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.person),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "username",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.lock),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "password",
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
+          Container(
+            color: Colors.black.withOpacity(0.5),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 0),
+                  Image.asset(MyConstants.logoPath, width: 100, height: 100),
+                  const SizedBox(height: 40),
+                  _buildTextField(usernameController, "Email", Icons.email, false),
+                  const SizedBox(height: 20),
+                  _buildTextField(passwordController, "Password", Icons.lock, true),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
                     child: ElevatedButton(
-                      onPressed: () {
-                        signIn();
-                      },
+                      onPressed: signIn,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
+                        backgroundColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
-                      child: const Text(
-                        "submit",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 70),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        debugPrint("clear");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
-                        foregroundColor: Colors.black,
-                      ),
-                      child: const Text(
-                        "clear",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 50),
-                child: Row(
-                  children: [
-                    const Text(
-                      "not have account yet?",
-                      style: TextStyle(
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => Navigator.pushReplacementNamed(context, 'signupScreen'),
+                    child: Text(
+                      "Don't have an account? Sign Up",
+                      style: GoogleFonts.tajawal(
+                        fontSize: 16,
                         color: Colors.white,
-                        fontSize: 18,
                         decoration: TextDecoration.underline,
                       ),
                     ),
-                    const SizedBox(width: 0),
-                    MaterialButton(
-                      onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).pushReplacementNamed('signupScreen');
-                      },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(color: Colors.blue, fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  // signup() async {
-  // Navigator.of(context).pushReplacementNamed('signupScreen');
-  //   // Future.delayed(Duration.zero, () {
-  //   //   Navigator.of(context).pushReplacementNamed('signupScreen');
-  //   // });
-  // }
+  Widget _buildTextField(TextEditingController controller, String hint, IconData icon, bool isObscure) {
+    return TextField(
+      controller: controller,
+      obscureText: isObscure,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        prefixIcon: Icon(icon, color: Colors.white),
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white70),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
 }
