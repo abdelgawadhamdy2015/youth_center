@@ -55,6 +55,11 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Group `
+  String get group {
+    return Intl.message('Group ', name: 'group', desc: '', args: []);
+  }
+
   /// `Group 1`
   String get group1 {
     return Intl.message('Group 1', name: 'group1', desc: '', args: []);
@@ -110,9 +115,9 @@ class S {
     return Intl.message('active', name: 'active', desc: '', args: []);
   }
 
-  /// `Caup Name`
+  /// `Tournament Name`
   String get cupName {
-    return Intl.message('Caup Name', name: 'cupName', desc: '', args: []);
+    return Intl.message('Tournament Name', name: 'cupName', desc: '', args: []);
   }
 
   /// `Youth Center`
@@ -120,10 +125,10 @@ class S {
     return Intl.message('Youth Center', name: 'appName', desc: '', args: []);
   }
 
-  /// `cup saved successfully`
+  /// ` saved successfully`
   String get successSave {
     return Intl.message(
-      'cup saved successfully',
+      ' saved successfully',
       name: 'successSave',
       desc: '',
       args: [],
@@ -168,6 +173,36 @@ class S {
   /// `Sign Up`
   String get signup {
     return Intl.message('Sign Up', name: 'signup', desc: '', args: []);
+  }
+
+  /// `Please enter all team names`
+  String get enterNames {
+    return Intl.message(
+      'Please enter all team names',
+      name: 'enterNames',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a tournament name`
+  String get enterCupName {
+    return Intl.message(
+      'Please enter a tournament name',
+      name: 'enterCupName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Creat Tournament`
+  String get createCup {
+    return Intl.message(
+      'Creat Tournament',
+      name: 'createCup',
+      desc: '',
+      args: [],
+    );
   }
 }
 

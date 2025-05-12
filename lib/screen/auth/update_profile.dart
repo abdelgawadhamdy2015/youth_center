@@ -82,7 +82,7 @@ class Update extends State<UpdateProfile> {
               mobileController.text = centerUser.mobile.toString().trim();
               dropdownValue = centerUser.youthCenterName.toString().trim();
               adminValue = centerUser.admin;
-              //  print(centerUser.name);
+                
             });
           } else {
             print("error: no document found");
@@ -146,11 +146,11 @@ class Update extends State<UpdateProfile> {
                           ),
                         );
                       }).toList(),
-                  onChanged: (value) {
+                  onChanged: !adminValue? (value) {
                     setState(() {
                       dropdownValue = value!;
                     });
-                  },
+                  }: null,
                 ),
               ),
             ),
@@ -168,7 +168,7 @@ class Update extends State<UpdateProfile> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueGrey,
+                backgroundColor: Colors.blueAccent,
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -176,7 +176,7 @@ class Update extends State<UpdateProfile> {
               ),
               child: Text(
                 "تحديث الملف الشخصي",
-                style: GoogleFonts.tajawal(fontSize: 16),
+                style: GoogleFonts.cairo(fontSize: 16,color: Colors.white),
               ),
             ),
           ],

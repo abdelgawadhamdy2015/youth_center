@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/models/booking_model.dart';
@@ -25,14 +26,19 @@ class _UpdateBookingState extends State<UpdateBooking> {
   @override
   void initState() {
     super.initState();
-    youthCentersNames = SharedPrefHelper.getListString(
-      MyConstants.prefCenterNames,
-    );
+    initData();
+  }
+
+  initData() async {
     nameController = TextEditingController(text: widget.booking.name);
     mobileController = TextEditingController(text: widget.booking.mobile);
     timeStartController = TextEditingController(text: widget.booking.timeStart);
     timeEndController = TextEditingController(text: widget.booking.timeEnd);
     dropdownValue = widget.booking.youthCenterId;
+    youthCentersNames = await SharedPrefHelper.getListString(
+      MyConstants.prefCenterNames,
+    );
+    setState(() {});
   }
 
   Future<void> updateBooking() async {
@@ -83,25 +89,25 @@ class _UpdateBookingState extends State<UpdateBooking> {
                 height: 60,
               ),
               const SizedBox(height: 20),
-              _buildTextField(
+              HelperMethods.buildTextField(
                 Icons.person,
                 "enter who booking name",
                 nameController,
               ),
               const SizedBox(height: 10),
-              _buildTextField(
+              HelperMethods.buildTextField(
                 Icons.phone,
                 "enter who booking mobile",
                 mobileController,
               ),
               const SizedBox(height: 10),
-              _buildTextField(
+              HelperMethods.buildTextField(
                 Icons.timer_rounded,
                 "enter start time ex : 22:30",
                 timeStartController,
               ),
               const SizedBox(height: 10),
-              _buildTextField(
+              HelperMethods.buildTextField(
                 Icons.timer,
                 "enter end time ex : 22:30",
                 timeEndController,
@@ -133,29 +139,7 @@ class _UpdateBookingState extends State<UpdateBooking> {
     );
   }
 
-  Widget _buildTextField(
-    IconData icon,
-    String hint,
-    TextEditingController controller,
-  ) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.blueGrey),
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.9),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDropdown() {
     return Container(

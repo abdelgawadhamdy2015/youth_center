@@ -28,6 +28,12 @@ class MyConstants {
   static const String cupGroup = 'group';
 
   //images
-  static const String backgroundImagePath = 'assets/images/stadium_bg.jpg';
-static const String logoPath = 'assets/icons/football_logo.png';
+  static const String backgroundImagePath = 'images/1f.jpg';
+static const String logoPath = 'images/logo.jpg';
+static const String imag1 = 'images/2f.jpg';
+
+static const String imag2 = 'images/2f.jpg';
+
+static const String imag3 = 'images/3f.jpg';
+
 }

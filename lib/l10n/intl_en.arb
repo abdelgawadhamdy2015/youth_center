@@ -1,4 +1,5 @@
 {
+    "group": "Group ",
     "group1": "Group 1",
     "group2": "Group 2",
     "group3": "Group 3",
@@ -8,17 +9,19 @@
     "group7": "Group 7",
     "group8": "Group 8",
     "save": "Save",
-    "finished":"Finished",
-    "active":"active",
-    "cupName":"Caup Name",
+    "finished": "Finished",
+    "active": "active",
+    "cupName": "Tournament Name",
     "appName": "Youth Center",
-    "successSave":"cup saved successfully",
+    "successSave": " saved successfully",
     "noElemnts": "no elements",
-    "password":"Password",
-    "username":"User Name",
-    "submit":"Submit",
-    "clear":"Clear",
-    "notHaveAccount":"not have account yet?",
-    "signup":"Sign Up"
-
+    "password": "Password",
+    "username": "User Name",
+    "submit": "Submit",
+    "clear": "Clear",
+    "notHaveAccount": "not have account yet?",
+    "signup": "Sign Up",
+    "enterNames":"Please enter all team names",
+    "enterCupName":"Please enter a tournament name",
+    "createCup": "Creat Tournament"
 }

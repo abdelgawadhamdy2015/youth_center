@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +24,7 @@ class SharedPrefHelper {
   /// Saves a [value] with a [key] in the SharedPreferences.
   static setData(String key, value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    debugPrint("SharedPrefHelper : setData with key : $key and value : $value");
+    log("SharedPrefHelper : setData with key : $key and value : $value");
     switch (value.runtimeType) {
       case const (String):
         await sharedPreferences.setString(key, value);
@@ -66,17 +68,20 @@ class SharedPrefHelper {
   }
 
   /// Gets an String value from SharedPreferences with given [key].
-  static getString(String key) async {
+  static  getString(String key) async {
     debugPrint('SharedPrefHelper : getString with key : $key');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(key) ?? '';
   }
 
   /// Gets an String value from SharedPreferences with given [key].
-  static getListString(String key) async {
+  static Future<List<String>> getListString(String key) async {
+    List<String> list;
     debugPrint('SharedPrefHelper : getString with key : $key');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getStringList(key) ?? '';
+    list= sharedPreferences.getStringList(key) ?? [];
+    log(list.toString());
+    return list;
   }
   // Saves a [value] with a [key] in the FlutterSecureStorage.
   // static setSecuredString(String key, String value) async {

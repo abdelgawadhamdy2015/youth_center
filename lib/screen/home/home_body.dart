@@ -108,12 +108,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.blueGrey,
         elevation: 0,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Image.asset('assets/icons/football_logo.png', height: 30),
+            Image.asset(MyConstants.logoPath, height: 30),
             const SizedBox(width: 8),
             Text(
               'Youth Center',
@@ -162,7 +162,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/stadium_bg.jpg"),
+              image: AssetImage(MyConstants.imag2),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
                 Colors.black.withOpacity(0.6),
@@ -193,7 +193,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white54),
+              border: Border.all(color: Colors.blueGrey),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(

@@ -243,17 +243,8 @@ class Cup extends State<CupScreen> {
                                   child: Card(
                                     //semanticContainer: true,
                                     margin: const EdgeInsets.all(10),
-                                    shape: const Border.symmetric(
-                                      vertical: BorderSide(
-                                        color: Colors.blueAccent,
-                                        width: 5,
-                                      ),
-                                      horizontal: BorderSide(
-                                        color: Colors.purple,
-                                        width: 5,
-                                      ),
-                                    ),
-                                    color: Colors.deepOrangeAccent,
+                                    
+                                    color: Colors.white,
                                     child: Container(
                                       alignment: Alignment.center,
                                       padding: const EdgeInsets.all(10),

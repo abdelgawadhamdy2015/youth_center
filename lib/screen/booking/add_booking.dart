@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/models/booking_model.dart';
 
@@ -73,121 +75,68 @@ class Add extends State<AddBooking> {
       ),
 
       body: Container(
+        height: SizeConfig.screenHeight,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("images/3f.jpg"),
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           ),
         ),
-        alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Image(
-                    image: AssetImage("images/icon1.jpg"),
-                    width: 50,
-                    height: 50,
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.person, color: Colors.red),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "enter who booking name ",
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
+        child: Column(
+          children: [
+            HelperMethods.buildTextField(
+              Icons.person,
+              "enter who booking name ",
+              nameController,
+            ),
+            
+            const SizedBox(height: 20),
+            HelperMethods.buildTextField(
+              Icons.phone,
+              "enter who booking mobile ",
+              mobileController,
+            ),
+            
+            const SizedBox(height: 20),
+            HelperMethods.buildTextField(
+             Icons.timer_rounded,
+              "enter start time ex : 22:30",
+              timeStartController,
+            ),
+            
+            const SizedBox(height: 20),
+             HelperMethods.buildTextField(
+             Icons.timer,
+               "enter end  time ex : 22:30",
+              timeEndController,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              margin: const EdgeInsets.only(left: 0),
+              child: ElevatedButton(
+                onPressed: () {
+                  addBooking(
+                    BookingModel(
+                      name: nameController.text.toString().trim(),
+                      mobile: mobileController.text.toString().trim(),
+                      timeEnd: timeEndController.text.toString().trim(),
+                      timeStart:
+                          timeStartController.text.toString().trim(),
+                      youthCenterId: widget.center,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: false,
-                    controller: mobileController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.phone, color: Colors.red),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "enter who booking mobile ",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: false,
-                    controller: timeStartController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.timer_rounded, color: Colors.red),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "enter start time ex : 22:30",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: false,
-                    controller: timeEndController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.timer, color: Colors.red),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "enter end  time ex : 22:30",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                ),
+                child: const Text(
+                  "add to Bookings",
+                  style: TextStyle(fontSize: 15, color: Colors.white),
+                ),
               ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        addBooking(
-                          BookingModel(
-                            name: nameController.text.toString().trim(),
-                            mobile: mobileController.text.toString().trim(),
-                            timeEnd: timeEndController.text.toString().trim(),
-                            timeStart:
-                                timeStartController.text.toString().trim(),
-                            youthCenterId: widget.center,
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
-                      ),
-                      child: const Text(
-                        "add to Bookings",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -34,10 +34,12 @@ dependencies:
   firebase_core: ^3.13.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_screenutil: ^5.9.3
   flutter_swipe_detector: ^2.0.0
   google_fonts: ^6.2.1
-  intl: ^0.20.2
+  intl: ^0.19.0
   shared_preferences: ^2.5.3
 
 dev_dependencies:

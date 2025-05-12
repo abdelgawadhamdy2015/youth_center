@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/user_model.dart';
 
@@ -102,7 +103,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
     for (var controller in _teamControllers) {
       if (controller.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter all team names')),
+           SnackBar(content: Text(S.of(context).enterNames)),
         );
         return;
       }
@@ -129,7 +130,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
           _matches.add({
             MyConstants.team1: group[i],
             MyConstants.team2: group[j],
-            MyConstants.cupGroup: 'Group ${_groups.indexOf(group) + 1}',
+            MyConstants.cupGroup: '${S.of(context).group} ${_groups.indexOf(group) + 1}',
             MyConstants.cupStartDate: Timestamp.fromDate(_selectedDate),
             MyConstants.team1Score: 0,
             MyConstants.team2Score: 0,
@@ -144,7 +145,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Future<void> _saveTournament() async {
     if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a tournament name')),
+         SnackBar(content: Text(S.of(context).enterCupName)),
       );
       return;
     }
@@ -163,7 +164,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
         .set(cup.toJson())
         .then((_) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Tournament saved successfully'), backgroundColor: Colors.green, elevation: 10),
+             SnackBar(content: Text(S.of(context).successSave), backgroundColor: Colors.green, elevation: 10),
           );
           _resetForm();
         })
@@ -190,7 +191,9 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Tournament'),
+        title:  Text(
+          S.of(context).createCup
+        ),
         backgroundColor: MyColors.primaryColor,
       ),
       body: SingleChildScrollView(

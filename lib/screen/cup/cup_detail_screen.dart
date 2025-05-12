@@ -135,7 +135,7 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
+            image: AssetImage(MyConstants.imag3),
             fit: BoxFit.cover,
           ),
         ),
@@ -176,7 +176,7 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               Wrap(
                 spacing: 20,
                 runSpacing: 20,
-                children: List.generate(groupedTeams.length, (i) => _buildGroupCard(groupedTeams[i], lang.group1 + ' ${i + 1}')),
+                children: List.generate(groupedTeams.length, (i) => _buildGroupCard(groupedTeams[i], '${lang.group} ${i + 1}')),
               ),
 
               const SizedBox(height: 20),

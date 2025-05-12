@@ -25,8 +25,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "active": MessageLookupByLibrary.simpleMessage("active"),
     "appName": MessageLookupByLibrary.simpleMessage("Youth Center"),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
-    "cupName": MessageLookupByLibrary.simpleMessage("Caup Name"),
+    "createCup": MessageLookupByLibrary.simpleMessage("Creat Tournament"),
+    "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
+    "enterCupName": MessageLookupByLibrary.simpleMessage(
+      "Please enter a tournament name",
+    ),
+    "enterNames": MessageLookupByLibrary.simpleMessage(
+      "Please enter all team names",
+    ),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
+    "group": MessageLookupByLibrary.simpleMessage("Group "),
     "group1": MessageLookupByLibrary.simpleMessage("Group 1"),
     "group2": MessageLookupByLibrary.simpleMessage("Group 2"),
     "group3": MessageLookupByLibrary.simpleMessage("Group 3"),
@@ -43,9 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
-    "successSave": MessageLookupByLibrary.simpleMessage(
-      "cup saved successfully",
-    ),
+    "successSave": MessageLookupByLibrary.simpleMessage(" saved successfully"),
     "username": MessageLookupByLibrary.simpleMessage("User Name"),
   };
 }
