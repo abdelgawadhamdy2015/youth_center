@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
@@ -34,14 +35,17 @@ class _MatchesState extends State<MatchesOfActiveCups> {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getCollection() {
-    return FirebaseFirestore.instance
-        .collection(MyConstants.cupCollection)
-        .where(
-          MyConstants.youthCenterIdCollection,
-          isEqualTo: isAdmin ? center.youthCenterName : dropdownValue,
-        )
-        .where(MyConstants.finished, isEqualTo: false)
-        .snapshots();
+    Stream<QuerySnapshot<Map<String, dynamic>>> collections =
+        FirebaseFirestore.instance
+            .collection(MyConstants.cupCollection)
+            .where(
+              MyConstants.youthCenterIdCollection,
+              isEqualTo: isAdmin ? center.youthCenterName : dropdownValue,
+            )
+            .where(MyConstants.finished, isEqualTo: false)
+            .snapshots();
+
+    return collections;
   }
 
   List<MatchModel> extractMatches(QuerySnapshot snapshot) {
@@ -59,11 +63,13 @@ class _MatchesState extends State<MatchesOfActiveCups> {
         matchesModels.add(MatchModel.fromMap(match));
       }
     }
+
     return matchesModels;
   }
 
   @override
   Widget build(BuildContext context) {
+    var lang = S.of(context);
     return Scaffold(
       backgroundColor: MyColors.backgroundColor,
       body: Padding(
@@ -77,7 +83,7 @@ class _MatchesState extends State<MatchesOfActiveCups> {
                 items:
                     [
                           dropdownValue,
-                        ] // Replace with dynamic center names if needed
+                        ] 
                         .map(
                           (value) => DropdownMenuItem(
                             value: value,
@@ -95,8 +101,8 @@ class _MatchesState extends State<MatchesOfActiveCups> {
                 },
               ),
             const SizedBox(height: 20),
-            const Text(
-              "Active Cup Matches",
+            Text(
+              lang.activeCupMatches,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -104,14 +110,17 @@ class _MatchesState extends State<MatchesOfActiveCups> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: collection,
                 builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return const Center(child: Text("Error loading data."));
-                  if (!snapshot.hasData)
+                  if (snapshot.hasError) {
+                    return Center(child: Text(lang.wrong));
+                  }
+                  if (!snapshot.hasData) {
                     return const Center(child: CircularProgressIndicator());
+                  }
 
                   final matches = extractMatches(snapshot.data!);
-                  if (matches.isEmpty)
-                    return const Center(child: Text("No matches available."));
+                  if (matches.isEmpty) {
+                    return Center(child: Text(lang.NoMatches));
+                  }
 
                   return ListView.separated(
                     itemCount: matches.length,
@@ -159,7 +168,7 @@ class MatchCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: MyColors.cardColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
@@ -183,8 +192,9 @@ class MatchCard extends StatelessWidget {
                 const Icon(Icons.sports_soccer),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(fetchData.getDateTime(match.cupStartDate.toDate())),
+                      FittedBox(child: Text(fetchData.getDateTime(match.cupStartDate.toDate()), textAlign: TextAlign.center,)),
                       const SizedBox(height: 4),
                       Text(
                         "${fetchData.getScore(match, 1)} : ${fetchData.getScore(match, 2)}",

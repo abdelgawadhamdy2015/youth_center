@@ -6,6 +6,7 @@ import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:intl/intl.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
@@ -164,9 +165,10 @@ class Cup extends State<CupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Youth Center"),
+        title: Text(lang.tournament),
         backgroundColor: MyColors.primaryColor,
       ),
       body: SwipeDetector(
@@ -176,7 +178,7 @@ class Cup extends State<CupScreen> {
           width: double.infinity,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/3f.jpg"),
+              image: AssetImage(MyConstants.imag3),
               fit: BoxFit.cover,
             ),
           ),
@@ -191,19 +193,6 @@ class Cup extends State<CupScreen> {
                     if (snapshot.hasData) {
                       return Column(
                         children: [
-                          const Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20),
-                                Text(
-                                  "Hello for the Youth Center",
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
                           Visibility(
                             visible: !adminValue,
                             child: DropdownButton<String>(
@@ -241,9 +230,8 @@ class Cup extends State<CupScreen> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   child: Card(
-                                    //semanticContainer: true,
                                     margin: const EdgeInsets.all(10),
-                                    
+
                                     color: Colors.white,
                                     child: Container(
                                       alignment: Alignment.center,
@@ -312,12 +300,12 @@ class Cup extends State<CupScreen> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text(snapshot.error.toString()));
                     } else if (!snapshot.hasData || cups.isEmpty) {
-                      return const Center(child: Text("no data"));
+                      return  Center(child: Text(S.of(context).noData));
                     } else {
-                      return const Center(child: Text("Some thing went wrong"));
+                      return  Center(child: Text(S.of(context).wrong));
                     }
                   } else if (cups.isEmpty) {
-                    return const Center(child: Text("no data"));
+                    return  Center(child: Text(S.of(context).noData));
                   } else {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -358,9 +346,9 @@ class Cup extends State<CupScreen> {
 
   String getStatus(CupModel cupModel) {
     if (cupModel.finished) {
-      return "finished";
+      return S.of(context).finished;
     } else {
-      return "active";
+      return S.of(context).active;
     }
   }
 

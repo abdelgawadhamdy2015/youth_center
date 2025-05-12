@@ -67,7 +67,7 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
       Future.delayed(Duration(seconds: 3), () {
         setState(() {});
       });
-      return const Center(child: Image(image: AssetImage("images/logo.jpg")));
+      return  Center(child: Image(image: AssetImage(MyConstants.logoPath)));
     }
 
     return HomeScreen(centerUser: centerUser);

@@ -4,7 +4,7 @@ class MyConstants {
   static const String prefCenterNames = 'CenterNames';
  
   // status
-  static const String finished = 'Finished';
+  static const String finished = 'finished';
   static const String success = 'Success';
   static const String failed = 'Failed';
 

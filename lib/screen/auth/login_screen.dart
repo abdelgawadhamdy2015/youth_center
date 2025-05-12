@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/routes/routes.dart';
+import 'package:youth_center/generated/l10n.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang=S.of(context);
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -61,9 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Image.asset(MyConstants.logoPath, width: 100, height: 100),
                   const SizedBox(height: 40),
-                  _buildTextField(usernameController, "Email", Icons.email, false),
+                  _buildTextField(usernameController,lang.username , Icons.email, false),
                   const SizedBox(height: 20),
-                  _buildTextField(passwordController, "Password", Icons.lock, true),
+                  _buildTextField(passwordController, lang.password, Icons.lock, true),
                   const SizedBox(height: 30),
                   SizedBox(
                     width: double.infinity,
@@ -77,16 +80,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       child: Text(
-                        "Login",
+                       lang.login,
                         style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   TextButton(
-                    onPressed: () => Navigator.pushReplacementNamed(context, 'signupScreen'),
+                    onPressed: () => Navigator.pushReplacementNamed(context, Routes.signupScreen),
                     child: Text(
-                      "Don't have an account? Sign Up",
+                     lang.DonotHaveAccount,
                       style: GoogleFonts.tajawal(
                         fontSize: 16,
                         color: Colors.white,

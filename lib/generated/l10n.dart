@@ -145,9 +145,29 @@ class S {
     return Intl.message('Password', name: 'password', desc: '', args: []);
   }
 
+  /// `enter Password`
+  String get enterPassword {
+    return Intl.message(
+      'enter Password',
+      name: 'enterPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `User Name`
   String get username {
     return Intl.message('User Name', name: 'username', desc: '', args: []);
+  }
+
+  /// ` enter User Name`
+  String get enterUsername {
+    return Intl.message(
+      ' enter User Name',
+      name: 'enterUsername',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Submit`
@@ -158,16 +178,6 @@ class S {
   /// `Clear`
   String get clear {
     return Intl.message('Clear', name: 'clear', desc: '', args: []);
-  }
-
-  /// `not have account yet?`
-  String get notHaveAccount {
-    return Intl.message(
-      'not have account yet?',
-      name: 'notHaveAccount',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Sign Up`
@@ -204,13 +214,311 @@ class S {
       args: [],
     );
   }
+
+  /// `enter your Name`
+  String get entername {
+    return Intl.message(
+      'enter your Name',
+      name: 'entername',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `enter your mobile`
+  String get enterMobile {
+    return Intl.message(
+      'enter your mobile',
+      name: 'enterMobile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `enter start time ex : 22:30`
+  String get enterStartTime {
+    return Intl.message(
+      'enter start time ex : 22:30',
+      name: 'enterStartTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `enter end time ex : 22:30`
+  String get enterEndTime {
+    return Intl.message(
+      'enter end time ex : 22:30',
+      name: 'enterEndTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get update {
+    return Intl.message('Update', name: 'update', desc: '', args: []);
+  }
+
+  /// `Tournament`
+  String get tournament {
+    return Intl.message('Tournament', name: 'tournament', desc: '', args: []);
+  }
+
+  /// `Start Date`
+  String get startDate {
+    return Intl.message('Start Date', name: 'startDate', desc: '', args: []);
+  }
+
+  /// `Team Configuration`
+  String get teamConfiguration {
+    return Intl.message(
+      'Team Configuration',
+      name: 'teamConfiguration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Number of Teams: `
+  String get numberOfTeams {
+    return Intl.message(
+      'Number of Teams: ',
+      name: 'numberOfTeams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Distribution Mode: `
+  String get distributionMode {
+    return Intl.message(
+      'Distribution Mode: ',
+      name: 'distributionMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Random`
+  String get random {
+    return Intl.message('Random', name: 'random', desc: '', args: []);
+  }
+
+  /// `Manual`
+  String get manual {
+    return Intl.message('Manual', name: 'manual', desc: '', args: []);
+  }
+
+  /// `Team`
+  String get team {
+    return Intl.message('Team', name: 'team', desc: '', args: []);
+  }
+
+  /// `Required`
+  String get required {
+    return Intl.message('Required', name: 'required', desc: '', args: []);
+  }
+
+  /// `Groups Distribution`
+  String get groupsDistribution {
+    return Intl.message(
+      'Groups Distribution',
+      name: 'groupsDistribution',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generated Matches`
+  String get generatedMatches {
+    return Intl.message(
+      'Generated Matches',
+      name: 'generatedMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No matches generated yet`
+  String get NoMatches {
+    return Intl.message(
+      'No matches generated yet',
+      name: 'NoMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message('Reset', name: 'reset', desc: '', args: []);
+  }
+
+  /// `Save Tournament`
+  String get saveTournament {
+    return Intl.message(
+      'Save Tournament',
+      name: 'saveTournament',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generate Matches`
+  String get generateMatches {
+    return Intl.message(
+      'Generate Matches',
+      name: 'generateMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Distribute Teams`
+  String get distributeTeams {
+    return Intl.message(
+      'Distribute Teams',
+      name: 'distributeTeams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No data`
+  String get noData {
+    return Intl.message('No data', name: 'noData', desc: '', args: []);
+  }
+
+  /// `Some thing went wrong`
+  String get wrong {
+    return Intl.message(
+      'Some thing went wrong',
+      name: 'wrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get from {
+    return Intl.message('From', name: 'from', desc: '', args: []);
+  }
+
+  /// `To`
+  String get to {
+    return Intl.message('To', name: 'to', desc: '', args: []);
+  }
+
+  /// `Bookings`
+  String get bookings {
+    return Intl.message('Bookings', name: 'bookings', desc: '', args: []);
+  }
+
+  /// `Tournaments`
+  String get tournaments {
+    return Intl.message('Tournaments', name: 'tournaments', desc: '', args: []);
+  }
+
+  /// `My Account`
+  String get myAccount {
+    return Intl.message('My Account', name: 'myAccount', desc: '', args: []);
+  }
+
+  /// `Add Booking`
+  String get addBooking {
+    return Intl.message('Add Booking', name: 'addBooking', desc: '', args: []);
+  }
+
+  /// `LogOut`
+  String get logOut {
+    return Intl.message('LogOut', name: 'logOut', desc: '', args: []);
+  }
+
+  /// `LogIn`
+  String get login {
+    return Intl.message('LogIn', name: 'login', desc: '', args: []);
+  }
+
+  /// `Active Cup Matches`
+  String get activeCupMatches {
+    return Intl.message(
+      'Active Cup Matches',
+      name: 'activeCupMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't have an account? Sign Up`
+  String get DonotHaveAccount {
+    return Intl.message(
+      'Don\'t have an account? Sign Up',
+      name: 'DonotHaveAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `user registered successfully `
+  String get userRegistered {
+    return Intl.message(
+      'user registered successfully ',
+      name: 'userRegistered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register`
+  String get register {
+    return Intl.message('Register', name: 'register', desc: '', args: []);
+  }
+
+  /// `already have account? `
+  String get alreadyHaveAccount {
+    return Intl.message(
+      'already have account? ',
+      name: 'alreadyHaveAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SignIn`
+  String get signIn {
+    return Intl.message('SignIn', name: 'signIn', desc: '', args: []);
+  }
+
+  /// `Home Page`
+  String get homePage {
+    return Intl.message('Home Page', name: 'homePage', desc: '', args: []);
+  }
+
+  /// `Profile updated successfully`
+  String get profileUpdated {
+    return Intl.message(
+      'Profile updated successfully',
+      name: 'profileUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name {
+    return Intl.message('Name', name: 'name', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
-    return const <Locale>[Locale.fromSubtags(languageCode: 'en')];
+    return const <Locale>[
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ar'),
+    ];
   }
 
   @override

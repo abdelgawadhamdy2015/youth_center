@@ -58,15 +58,19 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
   }
 
   List<MatchModel> _parseMatches(List<dynamic> rawMatches) {
-    return rawMatches.map((match) => MatchModel(
-      team1: match[MyConstants.team1],
-      team2: match[MyConstants.team2],
-      cupStartDate: match[MyConstants.cupStartDate],
-      teem1Score: match[MyConstants.team1Score],
-      teem2Score: match[MyConstants.team2Score],
-      cupName: match[MyConstants.cupName],
-      cupGroup: match[MyConstants.cupGroup],
-    )).toList();
+    return rawMatches
+        .map(
+          (match) => MatchModel(
+            team1: match[MyConstants.team1],
+            team2: match[MyConstants.team2],
+            cupStartDate: match[MyConstants.cupStartDate],
+            teem1Score: match[MyConstants.team1Score],
+            teem2Score: match[MyConstants.team2Score],
+            cupName: match[MyConstants.cupName],
+            cupGroup: match[MyConstants.cupGroup],
+          ),
+        )
+        .toList();
   }
 
   Future<void> _saveCup(S lang) async {
@@ -81,20 +85,31 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
     );
 
     try {
-      await db.collection(MyConstants.cupCollection).doc(cupModel.id).set(updatedCup.toJson());
+      await db
+          .collection(MyConstants.cupCollection)
+          .doc(cupModel.id)
+          .set(updatedCup.toJson());
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(lang.successSave), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text(lang.successSave),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString()), backgroundColor: Colors.redAccent),
+        SnackBar(
+          content: Text(error.toString()),
+          backgroundColor: Colors.redAccent,
+        ),
       );
     }
   }
 
-  String _getStatusText(bool status, S lang) => status ? lang.finished : lang.active;
+  String _getStatusText(bool status, S lang) =>
+      status ? lang.finished : lang.active;
 
-  TextStyle _headerStyle() => const TextStyle(fontSize: 18, color: Colors.white);
+  TextStyle _headerStyle() =>
+      const TextStyle(fontSize: 18, color: Colors.white);
 
   Widget _buildGroupCard(List<String> group, String title) {
     return Visibility(
@@ -111,10 +126,18 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
-              children: group.map((e) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Text(e, style: const TextStyle(color: Colors.white)),
-              )).toList(),
+              children:
+                  group
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Text(
+                            e,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
+                      .toList(),
             ),
           ),
         ],
@@ -150,12 +173,16 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                     Text("${lang.finished}?", style: _headerStyle()),
                     Checkbox(
                       value: cupModel.getStatus(),
-                      onChanged: (val) => setState(() => cupModel.finished = val!),
+                      onChanged:
+                          (val) => setState(() => cupModel.finished = val!),
                     ),
                   ],
                 )
               else
-                Text(_getStatusText(cupModel.getStatus(), lang), style: _headerStyle()),
+                Text(
+                  _getStatusText(cupModel.getStatus(), lang),
+                  style: _headerStyle(),
+                ),
 
               const SizedBox(height: 10),
               TextField(
@@ -174,9 +201,16 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               const SizedBox(height: 20),
 
               Wrap(
+                alignment: WrapAlignment.center,
                 spacing: 20,
                 runSpacing: 20,
-                children: List.generate(groupedTeams.length, (i) => _buildGroupCard(groupedTeams[i], '${lang.group} ${i + 1}')),
+                children: List.generate(
+                  groupedTeams.length,
+                  (i) => _buildGroupCard(
+                    groupedTeams[i],
+                    '${lang.group} ${i + 1}',
+                  ),
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -198,7 +232,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
-                              onLongPress: () => setState(() => match.teem1Score++),
+                              onLongPress:
+                                  () => setState(() => match.teem1Score++),
                               child: Text(match.team1),
                             ),
                             Column(
@@ -215,7 +250,9 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
 
                                     TimeOfDay? newTime = await showTimePicker(
                                       context: context,
-                                      initialTime: TimeOfDay.fromDateTime(iniDate),
+                                      initialTime: TimeOfDay.fromDateTime(
+                                        iniDate,
+                                      ),
                                     );
                                     if (newTime == null) return;
 
@@ -231,13 +268,20 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                                       match.setTime(dateTime);
                                     });
                                   },
-                                  child: Text(fetchData.getDateTime(match.cupStartDate.toDate())),
+                                  child: Text(
+                                    fetchData.getDateTime(
+                                      match.cupStartDate.toDate(),
+                                    ),
+                                  ),
                                 ),
-                                Text("${match.teem1Score} : ${match.teem2Score}"),
+                                Text(
+                                  "${match.teem1Score} : ${match.teem2Score}",
+                                ),
                               ],
                             ),
                             InkWell(
-                              onLongPress: () => setState(() => match.teem2Score++),
+                              onLongPress:
+                                  () => setState(() => match.teem2Score++),
                               child: Text(match.team2),
                             ),
                           ],
@@ -252,7 +296,10 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                 ElevatedButton(
                   onPressed: () => _saveCup(lang),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  child: Text(lang.save, style: const TextStyle(color: Colors.white)),
+                  child: Text(
+                    lang.save,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
             ],
           ),

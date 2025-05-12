@@ -5,6 +5,7 @@ import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
@@ -106,6 +107,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
 
   @override
   Widget build(BuildContext context) {
+    var lang=S.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey,
@@ -116,7 +118,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             Image.asset(MyConstants.logoPath, height: 30),
             const SizedBox(width: 8),
             Text(
-              'Youth Center',
+              lang.appName,
               style: GoogleFonts.tajawal(fontWeight: FontWeight.bold),
             ),
           ],
@@ -127,9 +129,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           indicator: BoxDecoration(borderRadius: BorderRadius.circular(25.0)),
           unselectedLabelColor: Colors.white60,
           labelColor: Colors.white,
-          tabs: const [
-            Tab(child: Text("الحجوزات")),
-            Tab(child: Text("البطولات")),
+          tabs:  [
+            Tab(child: Text(lang.bookings)),
+            Tab(child: Text(lang.tournaments)),
           ],
         ),
         actions: [
@@ -137,19 +139,19 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 0,
-                child: _buildMenuItem("حسابي", Icons.account_circle_outlined),
+                child: _buildMenuItem(lang.myAccount, Icons.account_circle_outlined),
               ),
               PopupMenuItem(
                 value: 1,
-                child: _buildMenuItem("اضافة حجز", Icons.add),
+                child: _buildMenuItem(lang.addBooking, Icons.add),
               ),
               PopupMenuItem(
                 value: 2,
-                child: _buildMenuItem("الدورات", Icons.sports_baseball),
+                child: _buildMenuItem(lang.tournaments, Icons.sports_baseball),
               ),
               PopupMenuItem(
                 value: 3,
-                child: _buildMenuItem("تسجيل خروج", Icons.logout),
+                child: _buildMenuItem(lang.logOut, Icons.logout),
               ),
             ],
             onSelected: _onMenuSelected,

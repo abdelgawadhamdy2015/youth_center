@@ -110,8 +110,9 @@ class FetchData {
         ("${dateTime.day} "
             "/ ${dateTime.month} "
             "/ ${dateTime.year}"
-            "\n ${dateTime.hour}"
-            ": ${dateTime.minute}");
+            "\n ${dateTime.minute}"
+            ": ${dateTime.hour
+            }");
     return dateTimeStr;
   }
 }

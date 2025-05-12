@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import '../../models/user_model.dart';
@@ -56,14 +58,14 @@ class SignUp extends State<SignUpScreen> {
         )
         .then(
           (value) => db
-              .collection("Users")
+              .collection(MyConstants.userCollection)
               .doc(value.user!.uid)
               .set(centerUser.toJson())
               .whenComplete(() {
                 this.centerUser = centerUser;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("user registered successfully "),
+                   SnackBar(
+                    content: Text(S.of(context).userRegistered),
                     backgroundColor: Colors.green,
                     elevation: 10, //shadow
                   ),
@@ -102,7 +104,7 @@ class SignUp extends State<SignUpScreen> {
   }
 
   getAllCenters() async {
-    snapshot1 = await db.collection("youthCenters").get();
+    snapshot1 = await db.collection(MyConstants.youthCentersCollection).get();
     youthCenters =
         snapshot1.docs.map((e) => YouthCenterModel.fromSnapshot(e)).toList();
     for (int i = 0; i < youthCenters.length; i++) {
@@ -117,13 +119,13 @@ class SignUp extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Youth Center"),
+        title:  Text(S.of(context).appName),
         backgroundColor: MyColors.primaryColor,
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
+            image: AssetImage(MyConstants.imag2),
             fit: BoxFit.cover,
           ),
         ),
@@ -136,11 +138,7 @@ class SignUp extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Image(
-                    image: AssetImage("images/logo.jpg"),
-                    width: 50,
-                    height: 50,
-                  ),
+                 
                   const SizedBox(height: 20),
                   TextField(
                     inputFormatters: [],
@@ -153,7 +151,7 @@ class SignUp extends State<SignUpScreen> {
                       icon: const Icon(Icons.person, color: Colors.red),
                       filled: true,
                       fillColor: MyColors.primaryColor,
-                      hintText: "ُEmail",
+                      hintText: S.of(context).username,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -168,7 +166,7 @@ class SignUp extends State<SignUpScreen> {
                       icon: const Icon(Icons.nature, color: Colors.red),
                       filled: true,
                       fillColor: MyColors.primaryColor,
-                      hintText: "name",
+                      hintText:S.of(context).entername,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -187,7 +185,7 @@ class SignUp extends State<SignUpScreen> {
                       ),
                       filled: true,
                       fillColor: MyColors.primaryColor,
-                      hintText: "mobile",
+                      hintText: S.of(context).enterMobile,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -202,7 +200,7 @@ class SignUp extends State<SignUpScreen> {
                       icon: const Icon(Icons.lock, color: Colors.red),
                       filled: true,
                       fillColor: MyColors.primaryColor,
-                      hintText: "password",
+                      hintText: S.of(context).enterPassword,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -272,8 +270,8 @@ class SignUp extends State<SignUpScreen> {
                         backgroundColor: MyColors.primaryColor,
                         //foregroundColor: Colors.black,
                       ),
-                      child: const Text(
-                        "Register",
+                      child:  Text(
+                       S.of(context).register,
                         style: TextStyle(fontSize: 15, color: Colors.blue),
                       ),
                     ),
@@ -283,8 +281,8 @@ class SignUp extends State<SignUpScreen> {
                     alignment: Alignment.center,
                     child: Row(
                       children: [
-                        const Text(
-                          "already have account? ",
+                         Text(
+                         S.of(context).alreadyHaveAccount,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 19,
@@ -296,8 +294,8 @@ class SignUp extends State<SignUpScreen> {
                           onPressed: () {
                             Navigator.of(context).pushReplacementNamed('/');
                           },
-                          child: const Text(
-                            "Sign in",
+                          child:  Text(
+                           S.of(context).signIn,
                             style: TextStyle(color: Colors.blue, fontSize: 18),
                           ),
                         ),

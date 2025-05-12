@@ -5,6 +5,7 @@ import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 
 import '../../fetch_data.dart';
@@ -68,9 +69,10 @@ class Add extends State<AddBooking> {
 
   @override
   Widget build(BuildContext context) {
+    var lang=S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Youth Center"),
+        title:  Text(lang.appName),
         backgroundColor: MyColors.primaryColor,
       ),
 
@@ -78,7 +80,7 @@ class Add extends State<AddBooking> {
         height: SizeConfig.screenHeight,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
+            image: AssetImage(MyConstants.imag3),
             fit: BoxFit.fill,
           ),
         ),
@@ -87,28 +89,28 @@ class Add extends State<AddBooking> {
           children: [
             HelperMethods.buildTextField(
               Icons.person,
-              "enter who booking name ",
+             lang.entername,
               nameController,
             ),
             
             const SizedBox(height: 20),
             HelperMethods.buildTextField(
               Icons.phone,
-              "enter who booking mobile ",
+             lang.enterMobile,
               mobileController,
             ),
             
             const SizedBox(height: 20),
             HelperMethods.buildTextField(
              Icons.timer_rounded,
-              "enter start time ex : 22:30",
+             lang.enterStartTime,
               timeStartController,
             ),
             
             const SizedBox(height: 20),
              HelperMethods.buildTextField(
              Icons.timer,
-               "enter end  time ex : 22:30",
+              lang.enterEndTime,
               timeEndController,
             ),
             const SizedBox(height: 20),
@@ -130,8 +132,8 @@ class Add extends State<AddBooking> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                 ),
-                child: const Text(
-                  "add to Bookings",
+                child:  Text(
+                 lang.addBooking,
                   style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
               ),

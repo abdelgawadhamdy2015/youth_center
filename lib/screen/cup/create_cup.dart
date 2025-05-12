@@ -102,9 +102,9 @@ class _AddCupScreenState extends State<AddCupScreen> {
     _teams.clear();
     for (var controller in _teamControllers) {
       if (controller.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text(S.of(context).enterNames)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(S.of(context).enterNames)));
         return;
       }
       _teams.add(controller.text.trim());
@@ -118,7 +118,9 @@ class _AddCupScreenState extends State<AddCupScreen> {
     final teams = List<String>.from(_teams);
     if (_randomDistribution) teams.shuffle();
     for (int i = 0; i < teams.length; i += 4) {
-      _groups.add(teams.sublist(i, (i + 4 < teams.length) ? i + 4 : teams.length));
+      _groups.add(
+        teams.sublist(i, (i + 4 < teams.length) ? i + 4 : teams.length),
+      );
     }
   }
 
@@ -130,7 +132,8 @@ class _AddCupScreenState extends State<AddCupScreen> {
           _matches.add({
             MyConstants.team1: group[i],
             MyConstants.team2: group[j],
-            MyConstants.cupGroup: '${S.of(context).group} ${_groups.indexOf(group) + 1}',
+            MyConstants.cupGroup:
+                '${S.of(context).group} ${_groups.indexOf(group) + 1}',
             MyConstants.cupStartDate: Timestamp.fromDate(_selectedDate),
             MyConstants.team1Score: 0,
             MyConstants.team2Score: 0,
@@ -144,9 +147,9 @@ class _AddCupScreenState extends State<AddCupScreen> {
 
   Future<void> _saveTournament() async {
     if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(S.of(context).enterCupName)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(S.of(context).enterCupName)));
       return;
     }
     final cup = CupModel(
@@ -164,13 +167,21 @@ class _AddCupScreenState extends State<AddCupScreen> {
         .set(cup.toJson())
         .then((_) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text(S.of(context).successSave), backgroundColor: Colors.green, elevation: 10),
+            SnackBar(
+              content: Text(S.of(context).successSave),
+              backgroundColor: Colors.green,
+              elevation: 10,
+            ),
           );
           _resetForm();
         })
         .catchError((error) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.toString()), backgroundColor: Colors.redAccent, elevation: 10),
+            SnackBar(
+              content: Text(error.toString()),
+              backgroundColor: Colors.redAccent,
+              elevation: 10,
+            ),
           );
         });
   }
@@ -191,9 +202,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
-          S.of(context).createCup
-        ),
+        title: Text(S.of(context).createCup),
         backgroundColor: MyColors.primaryColor,
       ),
       body: SingleChildScrollView(
@@ -227,16 +236,18 @@ class _AddCupScreenState extends State<AddCupScreen> {
           TextFormField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: 'Tournament Name',
+              labelText: S.of(context).tournament,
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.emoji_events),
             ),
-            validator: (value) => value?.isEmpty ?? true ? 'Please enter a tournament name' : null,
+            validator:
+                (value) =>
+                    value?.isEmpty ?? true ? S.of(context).enterCupName : null,
           ),
           SizedBox(height: _spacing),
           ListTile(
             leading: Icon(Icons.calendar_today),
-            title: Text('Start Date'),
+            title: Text(S.of(context).startDate),
             subtitle: Text(DateFormat('dd/MM/yyyy').format(_selectedDate)),
             trailing: Icon(Icons.edit),
             onTap: () => _selectDate(context),
@@ -252,7 +263,10 @@ class _AddCupScreenState extends State<AddCupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Team Configuration', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            S.of(context).teamConfiguration,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           SizedBox(height: _spacing),
           _buildTeamCountSelector(),
           SizedBox(height: _spacing),
@@ -267,12 +281,18 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Widget _buildTeamCountSelector() => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      const Text('Number of Teams:'),
+      Text(S.of(context).numberOfTeams),
       Row(
         children: [
-          IconButton(icon: const Icon(Icons.remove), onPressed: () => _updateTeamCount(-4)),
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: () => _updateTeamCount(-4),
+          ),
           Text('$_teamCount'),
-          IconButton(icon: const Icon(Icons.add), onPressed: () => _updateTeamCount(4)),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _updateTeamCount(4),
+          ),
         ],
       ),
     ],
@@ -281,13 +301,19 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Widget _buildDistributionToggle() => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      const Text('Distribution Mode:'),
+      Text(S.of(context).distributionMode),
       ToggleButtons(
         isSelected: [_randomDistribution, !_randomDistribution],
         onPressed: (_) => _toggleDistributionMode(),
-        children: const [
-          Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('Random')),
-          Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('Manual')),
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(S.of(context).random),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(S.of(context).manual),
+          ),
         ],
       ),
     ],
@@ -296,7 +322,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
   Widget _buildTeamInputs() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text('Enter Team Names:'),
+      Text(S.of(context).enterNames),
       SizedBox(height: _spacing),
       GridView.builder(
         shrinkWrap: true,
@@ -308,14 +334,15 @@ class _AddCupScreenState extends State<AddCupScreen> {
           mainAxisSpacing: _spacing,
         ),
         itemCount: _teamCount,
-        itemBuilder: (_, index) => TextFormField(
-          controller: _teamControllers[index],
-          decoration: InputDecoration(
-            labelText: 'Team ${index + 1}',
-            border: OutlineInputBorder(),
-          ),
-          validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
-        ),
+        itemBuilder:
+            (_, index) => TextFormField(
+              controller: _teamControllers[index],
+              decoration: InputDecoration(
+                labelText: "${S.of(context).team} ${index + 1}",
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) => value?.isEmpty ?? true ? S.of(context).required : null,
+            ),
       ),
     ],
   );
@@ -326,12 +353,20 @@ class _AddCupScreenState extends State<AddCupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Groups Distribution', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            S.of(context).groupsDistribution,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           SizedBox(height: _spacing),
           Wrap(
             spacing: _spacing,
             runSpacing: _spacing,
-            children: _groups.asMap().entries.map((entry) => _buildGroupCard(entry.key, entry.value)).toList(),
+            children:
+                _groups
+                    .asMap()
+                    .entries
+                    .map((entry) => _buildGroupCard(entry.key, entry.value))
+                    .toList(),
           ),
         ],
       ),
@@ -353,9 +388,14 @@ class _AddCupScreenState extends State<AddCupScreen> {
             color: Colors.blue,
             borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
           ),
-          child: Text('Group ${index + 1}', style: TextStyle(color: Colors.white)),
+          child: Text(
+            "S.of(context).group ${index + 1}",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-        ...teams.map((team) => Padding(padding: EdgeInsets.all(8), child: Text(team))),
+        ...teams.map(
+          (team) => Padding(padding: EdgeInsets.all(8), child: Text(team)),
+        ),
       ],
     ),
   );
@@ -366,16 +406,19 @@ class _AddCupScreenState extends State<AddCupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Generated Matches', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+          S.of(context).generatedMatches,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           SizedBox(height: _spacing),
           _matches.isEmpty
-              ? const Text('No matches generated yet')
+              ?  Text(S.of(context).NoMatches)
               : ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: _matches.length,
-                  itemBuilder: (_, index) => _buildMatchCard(_matches[index]),
-                ),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _matches.length,
+                itemBuilder: (_, index) => _buildMatchCard(_matches[index]),
+              ),
         ],
       ),
     ),
@@ -387,7 +430,10 @@ class _AddCupScreenState extends State<AddCupScreen> {
       padding: EdgeInsets.all(_spacing),
       child: Column(
         children: [
-          Text(match[MyConstants.cupGroup], style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            match[MyConstants.cupGroup],
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: _spacing / 2),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -398,7 +444,12 @@ class _AddCupScreenState extends State<AddCupScreen> {
             ],
           ),
           SizedBox(height: _spacing / 2),
-          Text(DateFormat('dd/MM/yyyy').format(match[MyConstants.cupStartDate].toDate()), style: TextStyle(color: Colors.grey)),
+          Text(
+            DateFormat(
+              'dd/MM/yyyy',
+            ).format(match[MyConstants.cupStartDate].toDate()),
+            style: TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     ),
@@ -408,14 +459,23 @@ class _AddCupScreenState extends State<AddCupScreen> {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[300], foregroundColor: Colors.black),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey[300],
+          foregroundColor: Colors.black,
+        ),
         onPressed: _resetForm,
-        child: const Text('Reset'),
+        child:  Text(S.of(context).reset),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: MyColors.primaryColor),
         onPressed: _validateAndProceed,
-        child: Text(_showMatches ? 'Save Tournament' : _showGroups ? 'Generate Matches' : 'Distribute Teams'),
+        child: Text(
+          _showMatches
+              ? S.of(context).saveTournament
+              : _showGroups
+              ? S.of(context).generateMatches
+              : S.of(context).distributeTeams,
+        ),
       ),
     ],
   );

@@ -22,18 +22,51 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "DonotHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "Don\'t have an account? Sign Up",
+    ),
+    "NoMatches": MessageLookupByLibrary.simpleMessage(
+      "No matches generated yet",
+    ),
     "active": MessageLookupByLibrary.simpleMessage("active"),
+    "activeCupMatches": MessageLookupByLibrary.simpleMessage(
+      "Active Cup Matches",
+    ),
+    "addBooking": MessageLookupByLibrary.simpleMessage("Add Booking"),
+    "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
+      "already have account? ",
+    ),
     "appName": MessageLookupByLibrary.simpleMessage("Youth Center"),
+    "bookings": MessageLookupByLibrary.simpleMessage("Bookings"),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "createCup": MessageLookupByLibrary.simpleMessage("Creat Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
+    "distributeTeams": MessageLookupByLibrary.simpleMessage("Distribute Teams"),
+    "distributionMode": MessageLookupByLibrary.simpleMessage(
+      "Distribution Mode: ",
+    ),
     "enterCupName": MessageLookupByLibrary.simpleMessage(
       "Please enter a tournament name",
     ),
+    "enterEndTime": MessageLookupByLibrary.simpleMessage(
+      "enter end time ex : 22:30",
+    ),
+    "enterMobile": MessageLookupByLibrary.simpleMessage("enter your mobile"),
     "enterNames": MessageLookupByLibrary.simpleMessage(
       "Please enter all team names",
     ),
+    "enterPassword": MessageLookupByLibrary.simpleMessage("enter Password"),
+    "enterStartTime": MessageLookupByLibrary.simpleMessage(
+      "enter start time ex : 22:30",
+    ),
+    "enterUsername": MessageLookupByLibrary.simpleMessage(" enter User Name"),
+    "entername": MessageLookupByLibrary.simpleMessage("enter your Name"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
+    "from": MessageLookupByLibrary.simpleMessage("From"),
+    "generateMatches": MessageLookupByLibrary.simpleMessage("Generate Matches"),
+    "generatedMatches": MessageLookupByLibrary.simpleMessage(
+      "Generated Matches",
+    ),
     "group": MessageLookupByLibrary.simpleMessage("Group "),
     "group1": MessageLookupByLibrary.simpleMessage("Group 1"),
     "group2": MessageLookupByLibrary.simpleMessage("Group 2"),
@@ -43,15 +76,45 @@ class MessageLookup extends MessageLookupByLibrary {
     "group6": MessageLookupByLibrary.simpleMessage("Group 6"),
     "group7": MessageLookupByLibrary.simpleMessage("Group 7"),
     "group8": MessageLookupByLibrary.simpleMessage("Group 8"),
-    "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
-    "notHaveAccount": MessageLookupByLibrary.simpleMessage(
-      "not have account yet?",
+    "groupsDistribution": MessageLookupByLibrary.simpleMessage(
+      "Groups Distribution",
     ),
+    "homePage": MessageLookupByLibrary.simpleMessage("Home Page"),
+    "logOut": MessageLookupByLibrary.simpleMessage("LogOut"),
+    "login": MessageLookupByLibrary.simpleMessage("LogIn"),
+    "manual": MessageLookupByLibrary.simpleMessage("Manual"),
+    "myAccount": MessageLookupByLibrary.simpleMessage("My Account"),
+    "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "noData": MessageLookupByLibrary.simpleMessage("No data"),
+    "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
+    "numberOfTeams": MessageLookupByLibrary.simpleMessage("Number of Teams: "),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "profileUpdated": MessageLookupByLibrary.simpleMessage(
+      "Profile updated successfully",
+    ),
+    "random": MessageLookupByLibrary.simpleMessage("Random"),
+    "register": MessageLookupByLibrary.simpleMessage("Register"),
+    "required": MessageLookupByLibrary.simpleMessage("Required"),
+    "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "saveTournament": MessageLookupByLibrary.simpleMessage("Save Tournament"),
+    "signIn": MessageLookupByLibrary.simpleMessage("SignIn"),
     "signup": MessageLookupByLibrary.simpleMessage("Sign Up"),
+    "startDate": MessageLookupByLibrary.simpleMessage("Start Date"),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "successSave": MessageLookupByLibrary.simpleMessage(" saved successfully"),
+    "team": MessageLookupByLibrary.simpleMessage("Team"),
+    "teamConfiguration": MessageLookupByLibrary.simpleMessage(
+      "Team Configuration",
+    ),
+    "to": MessageLookupByLibrary.simpleMessage("To"),
+    "tournament": MessageLookupByLibrary.simpleMessage("Tournament"),
+    "tournaments": MessageLookupByLibrary.simpleMessage("Tournaments"),
+    "update": MessageLookupByLibrary.simpleMessage("Update"),
+    "userRegistered": MessageLookupByLibrary.simpleMessage(
+      "user registered successfully ",
+    ),
     "username": MessageLookupByLibrary.simpleMessage("User Name"),
+    "wrong": MessageLookupByLibrary.simpleMessage("Some thing went wrong"),
   };
 }

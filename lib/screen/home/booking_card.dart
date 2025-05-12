@@ -1,5 +1,6 @@
 // booking_card.dart
 import 'package:flutter/material.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/screen/booking/update_booking.dart';
@@ -21,6 +22,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var lang =S.of(context);
     return GestureDetector(
       onTap: () => onClick(context),
       child: Card(
@@ -44,7 +46,7 @@ class BookingCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    "من ${booking.timeStart} إلى ${booking.timeEnd}",
+                    "${lang.from} ${booking.timeStart} ${lang.to} ${booking.timeEnd}",
                     style: GoogleFonts.tajawal(),
                   ),
                 ],
