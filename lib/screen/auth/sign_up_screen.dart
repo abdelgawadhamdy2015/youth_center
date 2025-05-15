@@ -120,7 +120,7 @@ class SignUp extends State<SignUpScreen> {
     return Scaffold(
       appBar: AppBar(
         title:  Text(S.of(context).appName),
-        backgroundColor: MyColors.primaryColor,
+        backgroundColor: ColorManger.mainBlue,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -150,7 +150,7 @@ class SignUp extends State<SignUpScreen> {
                       ),
                       icon: const Icon(Icons.person, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor: ColorManger.mainBlue,
                       hintText: S.of(context).username,
                     ),
                   ),
@@ -165,7 +165,7 @@ class SignUp extends State<SignUpScreen> {
                       ),
                       icon: const Icon(Icons.nature, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor: ColorManger.mainBlue,
                       hintText:S.of(context).entername,
                     ),
                   ),
@@ -184,7 +184,7 @@ class SignUp extends State<SignUpScreen> {
                         color: Colors.red,
                       ),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor: ColorManger.mainBlue,
                       hintText: S.of(context).enterMobile,
                     ),
                   ),
@@ -199,7 +199,7 @@ class SignUp extends State<SignUpScreen> {
                       ),
                       icon: const Icon(Icons.lock, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor: ColorManger.mainBlue,
                       hintText: S.of(context).enterPassword,
                     ),
                   ),
@@ -213,13 +213,13 @@ class SignUp extends State<SignUpScreen> {
                         Visibility(
                           visible: true,
                           child: DropdownButton<String>(
-                            style: TextStyle(color: MyColors.primaryColor),
+                            style: TextStyle(color: ColorManger.mainBlue),
 
                             // Step 3.
                             value: dropdownValue,
                             icon: Icon(
                               Icons.arrow_drop_down_circle_outlined,
-                              color: MyColors.primaryColor,
+                              color: ColorManger.mainBlue,
                             ),
                             // Step 4.
                             items:
@@ -267,7 +267,7 @@ class SignUp extends State<SignUpScreen> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
+                        backgroundColor: ColorManger.mainBlue,
                         //foregroundColor: Colors.black,
                       ),
                       child:  Text(

@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
     "numberOfTeams": MessageLookupByLibrary.simpleMessage("Number of Teams: "),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "pleaseFill": MessageLookupByLibrary.simpleMessage("Please Fill"),
     "profileUpdated": MessageLookupByLibrary.simpleMessage(
       "Profile updated successfully",
     ),

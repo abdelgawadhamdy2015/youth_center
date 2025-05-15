@@ -2,10 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
+import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
+import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/screen/cup/group_card.dart';
+import 'package:youth_center/screen/home/match_card.dart';
 
 class AddCupScreen extends StatefulWidget {
   final CenterUser center;
@@ -29,10 +37,9 @@ class _AddCupScreenState extends State<AddCupScreen> {
   final List<TextEditingController> _teamControllers = [];
   final List<String> _teams = [];
   final List<List<String>> _groups = [];
-  final List<Map<String, dynamic>> _matches = [];
+  final List<MatchModel> _matches = [];
 
   final double _spacing = 16.0;
-  final double _groupCardWidth = 150.0;
 
   @override
   void initState() {
@@ -129,16 +136,17 @@ class _AddCupScreenState extends State<AddCupScreen> {
     for (var group in _groups) {
       for (int i = 0; i < group.length; i++) {
         for (int j = i + 1; j < group.length; j++) {
-          _matches.add({
-            MyConstants.team1: group[i],
-            MyConstants.team2: group[j],
-            MyConstants.cupGroup:
-                '${S.of(context).group} ${_groups.indexOf(group) + 1}',
-            MyConstants.cupStartDate: Timestamp.fromDate(_selectedDate),
-            MyConstants.team1Score: 0,
-            MyConstants.team2Score: 0,
-            MyConstants.cupName: _nameController.text,
-          });
+          _matches.add(
+            MatchModel(
+              team1: group[i],
+              team2: group[j],
+              cupStartDate: Timestamp.fromDate(_selectedDate),
+              teem1Score: 0,
+              teem2Score: 0,
+              cupName: _nameController.text,
+              cupGroup: '${S.of(context).group} ${_groups.indexOf(group) + 1}',
+            ),
+          );
         }
       }
     }
@@ -201,24 +209,32 @@ class _AddCupScreenState extends State<AddCupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).createCup),
-        backgroundColor: MyColors.primaryColor,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(_spacing),
-        child: Form(
-          key: _formKey,
+      body: GradientContainer(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTournamentInfoSection(),
-              SizedBox(height: _spacing),
-              _buildTeamConfigurationSection(),
-              SizedBox(height: _spacing),
-              if (_showGroups) _buildGroupsDisplay(),
-              if (_showMatches) _buildMatchesDisplay(),
-              _buildActionButtons(),
+              Header(title: S.of(context).createCup),
+              BodyContainer(
+                height: SizeConfig.screenHeight! * .85,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(_spacing),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildTournamentInfoSection(),
+                        SizedBox(height: _spacing),
+                        _buildTeamConfigurationSection(),
+                        SizedBox(height: _spacing),
+                        if (_showGroups) _buildGroupsDisplay(),
+                        if (_showMatches) _buildMatchesDisplay(),
+                        _buildActionButtons(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -248,7 +264,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
           ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text(S.of(context).startDate),
-            subtitle: Text(DateFormat('dd/MM/yyyy').format(_selectedDate)),
+            subtitle: Text(DateFormat('yyyy/MM/dd').format(_selectedDate)),
             trailing: Icon(Icons.edit),
             onTap: () => _selectDate(context),
           ),
@@ -341,40 +357,24 @@ class _AddCupScreenState extends State<AddCupScreen> {
                 labelText: "${S.of(context).team} ${index + 1}",
                 border: OutlineInputBorder(),
               ),
-              validator: (value) => value?.isEmpty ?? true ? S.of(context).required : null,
+              validator:
+                  (value) =>
+                      value?.isEmpty ?? true ? S.of(context).required : null,
             ),
       ),
     ],
   );
 
-  Widget _buildGroupsDisplay() => Card(
-    child: Padding(
-      padding: EdgeInsets.all(_spacing),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            S.of(context).groupsDistribution,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          SizedBox(height: _spacing),
-          Wrap(
-            spacing: _spacing,
-            runSpacing: _spacing,
-            children:
-                _groups
-                    .asMap()
-                    .entries
-                    .map((entry) => _buildGroupCard(entry.key, entry.value))
-                    .toList(),
-          ),
-        ],
-      ),
-    ),
+Widget _buildGroupsDisplay() {
+  return GroupsDisplayCard(
+    title: S.of(context).groupsDistribution,
+    groups: _groups,
+    groupCardBuilder: (index,List<String> group) => _buildGroupCard(index, group),
   );
-
+}
+  
   Widget _buildGroupCard(int index, List<String> teams) => Container(
-    width: _groupCardWidth,
+    width:SizeConfig.screenWidth! * .3,
     decoration: BoxDecoration(
       color: Colors.blue[50],
       borderRadius: BorderRadius.circular(8),
@@ -389,7 +389,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
             borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
           ),
           child: Text(
-            "S.of(context).group ${index + 1}",
+            "${S.of(context).group} ${index + 1}",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -407,12 +407,12 @@ class _AddCupScreenState extends State<AddCupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-          S.of(context).generatedMatches,
+            S.of(context).generatedMatches,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: _spacing),
           _matches.isEmpty
-              ?  Text(S.of(context).NoMatches)
+              ? Text(S.of(context).NoMatches)
               : ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -424,35 +424,10 @@ class _AddCupScreenState extends State<AddCupScreen> {
     ),
   );
 
-  Widget _buildMatchCard(Map<String, dynamic> match) => Card(
-    margin: EdgeInsets.only(bottom: _spacing),
-    child: Padding(
-      padding: EdgeInsets.all(_spacing),
-      child: Column(
-        children: [
-          Text(
-            match[MyConstants.cupGroup],
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: _spacing / 2),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(match[MyConstants.team1]),
-              const Text('vs'),
-              Text(match[MyConstants.team2]),
-            ],
-          ),
-          SizedBox(height: _spacing / 2),
-          Text(
-            DateFormat(
-              'dd/MM/yyyy',
-            ).format(match[MyConstants.cupStartDate].toDate()),
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    ),
+  Widget _buildMatchCard(MatchModel match) => InteractiveMatchCard(
+    match: match,
+    isAdmin: widget.center.admin,
+    canUpdate: true,
   );
 
   Widget _buildActionButtons() => Row(
@@ -460,14 +435,14 @@ class _AddCupScreenState extends State<AddCupScreen> {
     children: [
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[300],
-          foregroundColor: Colors.black,
+          backgroundColor: ColorManger.redButtonColor,
+         
         ),
         onPressed: _resetForm,
-        child:  Text(S.of(context).reset),
+        child: Text(S.of(context).reset,style:  TextStyles.whiteBoldStyle(SizeConfig.fontSize3!)),
       ),
       ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: MyColors.primaryColor),
+        style: ElevatedButton.styleFrom(backgroundColor: ColorManger.buttonGreen),
         onPressed: _validateAndProceed,
         child: Text(
           _showMatches
@@ -475,6 +450,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
               : _showGroups
               ? S.of(context).generateMatches
               : S.of(context).distributeTeams,
+              style: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
         ),
       ),
     ],

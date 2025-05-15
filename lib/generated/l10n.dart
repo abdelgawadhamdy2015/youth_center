@@ -509,6 +509,11 @@ class S {
   String get name {
     return Intl.message('Name', name: 'name', desc: '', args: []);
   }
+
+  /// `Please Fill`
+  String get pleaseFill {
+    return Intl.message('Please Fill', name: 'pleaseFill', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

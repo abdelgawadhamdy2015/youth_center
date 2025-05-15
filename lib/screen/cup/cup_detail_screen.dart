@@ -2,13 +2,18 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/screen/home/home_screen.dart';
+import 'package:youth_center/screen/home/match_card.dart';
 import '../../fetch_data.dart';
 
 class CupDetailScreen extends StatefulWidget {
@@ -95,6 +100,13 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
           backgroundColor: Colors.green,
         ),
       );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) {
+            return HomeScreen(centerUser: widget.center);
+          },
+        ),
+      );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -122,7 +134,7 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
             padding: const EdgeInsets.all(10),
             width: 100,
             decoration: BoxDecoration(
-              color: Colors.cyan.shade700,
+              color: ColorManger.backGroundGray,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -133,7 +145,7 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Text(
                             e,
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ),
                       )
@@ -150,159 +162,91 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
     final lang = S.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lang.appName),
-        backgroundColor: MyColors.primaryColor,
-      ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(MyConstants.imag3),
-            fit: BoxFit.cover,
-          ),
+      body: GradientContainer(
+        child: Column(
+          children: [Header(title: lang.tournament), _buildBody(lang)],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (center.admin)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("${lang.finished}?", style: _headerStyle()),
-                    Checkbox(
-                      value: cupModel.getStatus(),
-                      onChanged:
-                          (val) => setState(() => cupModel.finished = val!),
-                    ),
-                  ],
-                )
-              else
-                Text(
-                  _getStatusText(cupModel.getStatus(), lang),
-                  style: _headerStyle(),
-                ),
+      ),
+    );
+  }
 
-              const SizedBox(height: 10),
-              TextField(
-                controller: nameController,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: lang.cupName,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+  _buildBody(var lang) {
+    return BodyContainer(
+      height: SizeConfig.screenHeight! * .85,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (center.admin)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("${lang.finished}", style: _headerStyle()),
+                  Checkbox(
+                    value: cupModel.getStatus(),
+                    onChanged:
+                        (val) => setState(() => cupModel.finished = val!),
                   ),
-                  contentPadding: const EdgeInsets.all(10),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 20,
-                runSpacing: 20,
-                children: List.generate(
-                  groupedTeams.length,
-                  (i) => _buildGroupCard(
-                    groupedTeams[i],
-                    '${lang.group} ${i + 1}',
-                  ),
-                ),
+                ],
+              )
+            else
+              Text(
+                _getStatusText(cupModel.getStatus(), lang),
+                style: _headerStyle(),
               ),
 
-              const SizedBox(height: 20),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: matchesModels.length,
-                itemBuilder: (context, index) {
-                  final match = matchesModels[index];
-
-                  return SwipeDetector(
-                    onSwipeRight: (_) => setState(() => match.teem2Score--),
-                    onSwipeLeft: (_) => setState(() => match.teem1Score--),
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onLongPress:
-                                  () => setState(() => match.teem1Score++),
-                              child: Text(match.team1),
-                            ),
-                            Column(
-                              children: [
-                                MaterialButton(
-                                  onPressed: () async {
-                                    DateTime? newDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: iniDate,
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2100),
-                                    );
-                                    if (newDate == null) return;
-
-                                    TimeOfDay? newTime = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.fromDateTime(
-                                        iniDate,
-                                      ),
-                                    );
-                                    if (newTime == null) return;
-
-                                    iniDate = DateTime(
-                                      newDate.year,
-                                      newDate.month,
-                                      newDate.day,
-                                      newTime.hour,
-                                      newTime.minute,
-                                    );
-                                    setState(() {
-                                      dateTime = Timestamp.fromDate(iniDate);
-                                      match.setTime(dateTime);
-                                    });
-                                  },
-                                  child: Text(
-                                    fetchData.getDateTime(
-                                      match.cupStartDate.toDate(),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  "${match.teem1Score} : ${match.teem2Score}",
-                                ),
-                              ],
-                            ),
-                            InkWell(
-                              onLongPress:
-                                  () => setState(() => match.teem2Score++),
-                              child: Text(match.team2),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-
-              if (center.admin)
-                ElevatedButton(
-                  onPressed: () => _saveCup(lang),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  child: Text(
-                    lang.save,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: nameController,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: lang.cupName,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-            ],
-          ),
+                contentPadding: const EdgeInsets.all(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: SizeConfig.screenWidth! / 5,
+              runSpacing: SizeConfig.screenWidth! * .01,
+              children: List.generate(
+                groupedTeams.length,
+                (i) =>
+                    _buildGroupCard(groupedTeams[i], '${lang.group} ${i + 1}'),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: matchesModels.length,
+              itemBuilder: (context, index) {
+                final match = matchesModels[index];
+                return InteractiveMatchCard(
+                  canUpdate: true,
+                  match: match,
+                  isAdmin: widget.center.admin,
+                );
+              },
+            ),
+
+            if (center.admin)
+              ElevatedButton(
+                onPressed: () => _saveCup(lang),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: Text(
+                  lang.save,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+          ],
         ),
       ),
     );

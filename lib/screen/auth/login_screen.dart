@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/routes/routes.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,62 +47,64 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var lang=S.of(context);
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            MyConstants.backgroundImagePath,
-            fit: BoxFit.cover,
-          ),
-          Container(
-            color: Colors.black.withOpacity(0.5),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(MyConstants.logoPath, width: 100, height: 100),
-                  const SizedBox(height: 40),
-                  _buildTextField(usernameController,lang.username , Icons.email, false),
-                  const SizedBox(height: 20),
-                  _buildTextField(passwordController, lang.password, Icons.lock, true),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: signIn,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+      body: GradientContainer(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Image.asset(
+            //   MyConstants.backgroundImagePath,
+            //   fit: BoxFit.cover,
+            // ),
+            Container(
+              color: Colors.black.withOpacity(0.5),
+            ),
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(MyConstants.logoPath, width: 100, height: 100),
+                    const SizedBox(height: 40),
+                    _buildTextField(usernameController,lang.username , Icons.email, false),
+                    const SizedBox(height: 20),
+                    _buildTextField(passwordController, lang.password, Icons.lock, true),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: signIn,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text(
+                         lang.login,
+                          style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () => Navigator.pushReplacementNamed(context, Routes.signupScreen),
                       child: Text(
-                       lang.login,
-                        style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
+                       lang.DonotHaveAccount,
+                        style: GoogleFonts.tajawal(
+                          fontSize: 16,
+                          color: Colors.white,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () => Navigator.pushReplacementNamed(context, Routes.signupScreen),
-                    child: Text(
-                     lang.DonotHaveAccount,
-                      style: GoogleFonts.tajawal(
-                        fontSize: 16,
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

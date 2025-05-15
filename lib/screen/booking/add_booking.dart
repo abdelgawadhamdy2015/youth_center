@@ -5,15 +5,22 @@ import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
+import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
+import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../../fetch_data.dart';
 
 class AddBooking extends StatefulWidget {
   const AddBooking({super.key, required this.center});
 
-  final String center;
+  final CenterUser center;
 
   @override
   State<StatefulWidget> createState() {
@@ -31,11 +38,10 @@ class Add extends State<AddBooking> {
   TextEditingController timeEndController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
 
-  //var youthCentersNames=["شنواي","الساقية", "كفر الحما"];
   FetchData fetchDate = FetchData();
   bool adminValue = true;
   var dropdownValue = "شنواي";
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -56,87 +62,104 @@ class Add extends State<AddBooking> {
     db
         .collection(MyConstants.bookingCollection)
         .add(booking.toJson())
-        .whenComplete(
-          () => ScaffoldMessenger.of(context).showSnackBar(
+        .whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(MyConstants.success),
-              backgroundColor: Colors.greenAccent,
-              elevation: 10, //shadow
+              content: Text(S.of(context).successSave),
+              backgroundColor: ColorManger.buttonGreen,
+              elevation: 10,
             ),
-          ),
-        );
+
+          );
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+            return HomeScreen(centerUser: widget.center);
+          }));
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    var lang=S.of(context);
+    var lang = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title:  Text(lang.appName),
-        backgroundColor: MyColors.primaryColor,
-      ),
-
-      body: Container(
-        height: SizeConfig.screenHeight,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(MyConstants.imag3),
-            fit: BoxFit.fill,
+      body: GradientContainer(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Header(title: S.of(context).addBooking),
+              _buildBody(lang),
+            ],
           ),
         ),
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
+      ),
+    );
+  }
+
+  _buildBody(var lang) {
+    return BodyContainer(
+      height: SizeConfig.screenHeight! * .85,
+
+      child: Form(
+        key:_formKey ,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             HelperMethods.buildTextField(
               Icons.person,
-             lang.entername,
+              lang.entername,
               nameController,
+              validator:
+                (value) =>
+                    value?.isEmpty ?? true ? S.of(context).entername : null,
             ),
-            
+        
             const SizedBox(height: 20),
             HelperMethods.buildTextField(
               Icons.phone,
-             lang.enterMobile,
+              lang.enterMobile,
               mobileController,
+             validator:
+                (value) =>
+                    value?.isEmpty ?? true ? S.of(context).enterMobile : null,
             ),
-            
+        
             const SizedBox(height: 20),
             HelperMethods.buildTextField(
-             Icons.timer_rounded,
-             lang.enterStartTime,
+              Icons.timer_rounded,
+              lang.enterStartTime,
               timeStartController,
+               validator:
+                (value) =>
+                    value?.isEmpty ?? true ? S.of(context).enterStartTime : null,
             ),
-            
+        
             const SizedBox(height: 20),
-             HelperMethods.buildTextField(
-             Icons.timer,
+            HelperMethods.buildTextField(
+              Icons.timer,
               lang.enterEndTime,
               timeEndController,
+              validator:
+                (value) =>
+                    value?.isEmpty ?? true ? S.of(context).enterEndTime : null,
             ),
             const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.only(left: 0),
-              child: ElevatedButton(
-                onPressed: () {
-                  addBooking(
-                    BookingModel(
-                      name: nameController.text.toString().trim(),
-                      mobile: mobileController.text.toString().trim(),
-                      timeEnd: timeEndController.text.toString().trim(),
-                      timeStart:
-                          timeStartController.text.toString().trim(),
-                      youthCenterId: widget.center,
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                ),
-                child:  Text(
-                 lang.addBooking,
-                  style: TextStyle(fontSize: 15, color: Colors.white),
-                ),
-              ),
+        
+            AppButtonText(
+              backGroundColor: ColorManger.buttonGreen,
+              buttonWidth: SizeConfig.screenWidth! * .5,
+              textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
+              butonText: lang.addBooking,
+              onPressed: () {
+           if( _formKey.currentState!.validate()){    addBooking(
+                 BookingModel(
+                    name: nameController.text.toString().trim(),
+                    mobile: mobileController.text.toString().trim(),
+                    timeEnd: timeEndController.text.toString().trim(),
+                    timeStart: timeStartController.text.toString().trim(),
+                    youthCenterId: widget.center.youthCenterName,
+                  ),
+                );
+           }
+              },
             ),
           ],
         ),

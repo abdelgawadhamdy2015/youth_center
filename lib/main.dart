@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/firebase_options.dart';
@@ -17,23 +17,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(displayMedium: GoogleFonts.cairo(fontSize: 14)),
-        appBarTheme: const AppBarTheme(color: Colors.purple),
-        bannerTheme: const MaterialBannerThemeData(),
-        primarySwatch: Colors.blue,
+    return ScreenUtilInit(
+      child: MaterialApp(
+       
+        debugShowCheckedModeBanner: false,
+       localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+        home: const Auth(),
       ),
-      debugShowCheckedModeBanner: false,
-     localizationsDelegates: [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-      home: const Auth(),
     );
   }
 }

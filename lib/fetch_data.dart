@@ -52,7 +52,7 @@ class FetchData {
             context,
             MaterialPageRoute(
               builder:
-                  (context) => AddBooking(center: centerUser.youthCenterName),
+                  (context) => AddBooking(center: centerUser),
             ),
           );
         }

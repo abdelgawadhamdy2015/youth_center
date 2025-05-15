@@ -35,5 +35,7 @@ static const String imag1 = 'images/2f.jpg';
 static const String imag2 = 'images/2f.jpg';
 
 static const String imag3 = 'images/3f.jpg';
+  static const double containerRadius = 25;
+
 
 }
