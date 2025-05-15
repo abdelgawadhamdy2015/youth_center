@@ -1,12 +1,16 @@
 // Redesigned Login Screen to match modern football cup app UI
- 
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/routes/routes.dart';
+import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/passwordtext.dart';
 import 'package:youth_center/generated/l10n.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -45,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var lang=S.of(context);
+    var lang = S.of(context);
     return Scaffold(
       body: GradientContainer(
         child: Stack(
@@ -55,9 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
             //   MyConstants.backgroundImagePath,
             //   fit: BoxFit.cover,
             // ),
-            Container(
-              color: Colors.black.withOpacity(0.5),
-            ),
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -66,39 +67,71 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Image.asset(MyConstants.logoPath, width: 100, height: 100),
                     const SizedBox(height: 40),
-                    _buildTextField(usernameController,lang.username , Icons.email, false),
-                    const SizedBox(height: 20),
-                    _buildTextField(passwordController, lang.password, Icons.lock, true),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: signIn,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        child: Text(
-                         lang.login,
-                          style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
-                        ),
-                      ),
+
+                    HelperMethods.buildTextField(
+                      Icons.person,
+
+                      lang.username,
+                      usernameController,
+                      validator:
+                          (value) =>
+                              value?.isEmpty ?? true
+                                  ? S.of(context).enterUsername
+                                  : null,
                     ),
+                    const SizedBox(height: 30),
+
+                    PasswordText(
+                      
+                      fillColor: ColorManger.whiteColor,
+                      hint: lang.password,
+                      obsecur: true,
+                      control: passwordController,
+                    ),
+                    const SizedBox(height: 30),
+                    AppButtonText(
+                      backGroundColor: ColorManger.darkBlue,
+                      borderRadius: SizeConfig.screenWidth! * .05,
+                      textStyle: GoogleFonts.tajawal(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                      butonText: lang.login,
+                      onPressed: signIn,
+                    ),
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   height: 50,
+                    //   child: ElevatedButton(
+                    //     onPressed: signIn,
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.blueAccent,
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(30),
+                    //       ),
+                    //     ),
+                    //     child: Text(
+                    //      lang.login,
+                    //       style: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(context, Routes.signupScreen),
+                      onPressed:
+                          () => Navigator.pushReplacementNamed(
+                            context,
+                            Routes.signupScreen,
+                          ),
                       child: Text(
-                       lang.DonotHaveAccount,
+                        lang.DonotHaveAccount,
                         style: GoogleFonts.tajawal(
                           fontSize: 16,
                           color: Colors.white,
                           decoration: TextDecoration.underline,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -109,22 +142,5 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, IconData icon, bool isObscure) {
-    return TextField(
-      controller: controller,
-      obscureText: isObscure,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.2),
-        prefixIcon: Icon(icon, color: Colors.white),
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
+  
 }

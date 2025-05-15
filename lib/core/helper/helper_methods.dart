@@ -10,6 +10,7 @@ class HelperMethods {
     var validator,
   }) {
     return MyTextForm(
+     
       fillColor: ColorManger.whiteColor,
       hint: hint,
       icon: Icon(icon),

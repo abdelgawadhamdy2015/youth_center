@@ -97,11 +97,10 @@ class Add extends State<AddBooking> {
   _buildBody(var lang) {
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
-
+    padding: SizeConfig().getScreenPadding(vertical: .1,horizintal: .08),
       child: Form(
         key:_formKey ,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             HelperMethods.buildTextField(
               Icons.person,
@@ -145,7 +144,7 @@ class Add extends State<AddBooking> {
         
             AppButtonText(
               backGroundColor: ColorManger.buttonGreen,
-              buttonWidth: SizeConfig.screenWidth! * .5,
+             // buttonWidth: SizeConfig.screenWidth! * .5,
               textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
               butonText: lang.addBooking,
               onPressed: () {

@@ -120,6 +120,7 @@ class Update extends State<UpdateProfile> {
             children: [
               Header(title: S.of(context).myAccount),
               BodyContainer(
+                padding: SizeConfig().getScreenPadding(vertical: .1,horizintal: .08),
                 height: SizeConfig.screenHeight! * .85,
                 child: SingleChildScrollView(
                   child: Column(

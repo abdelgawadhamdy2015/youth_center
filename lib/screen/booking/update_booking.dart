@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
+import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 
@@ -70,63 +76,68 @@ class _UpdateBookingState extends State<UpdateBooking> {
   Widget build(BuildContext context) {
     var lang = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lang.appName),
-        backgroundColor: Colors.blueGrey,
-        leading: const BackButton(color: Colors.white),
-      ),
-      body: Container(
-        height: SizeConfig.screenHeight,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(MyConstants.imag3),
-            fit: BoxFit.fill,
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      body: GradientContainer(
         child: Column(
           children: [
-            HelperMethods.buildTextField(
-              Icons.person,
-              lang.entername,
-              nameController,
-            ),
-            const SizedBox(height: 10),
-            HelperMethods.buildTextField(
-              Icons.phone,
-              lang.enterMobile,
-              mobileController,
-            ),
-            const SizedBox(height: 10),
-            HelperMethods.buildTextField(
-              Icons.timer_rounded,
-              lang.enterStartTime,
-              timeStartController,
-            ),
-            const SizedBox(height: 10),
-            HelperMethods.buildTextField(
-              Icons.timer,
-              lang.enterEndTime,
-              timeEndController,
-            ),
-            const SizedBox(height: 10),
-            //  _buildDropdown(),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: updateBooking,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueGrey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 15,
-                ),
-              ),
-              child: Text(
-                lang.update,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+            Header(title: S.of(context).bookings),
+            BodyContainer(
+              height: SizeConfig.screenHeight! * .85,
+              padding: SizeConfig().getScreenPadding(vertical: .1,horizintal: .08),
+              child: Column(
+                children: [
+                  HelperMethods.buildTextField(
+                    Icons.person,
+                    lang.entername,
+                    nameController,
+                  ),
+                  const SizedBox(height: 10),
+                  HelperMethods.buildTextField(
+                    Icons.phone,
+                    lang.enterMobile,
+                    mobileController,
+                  ),
+                  const SizedBox(height: 10),
+                  HelperMethods.buildTextField(
+                    Icons.timer_rounded,
+                    lang.enterStartTime,
+                    timeStartController,
+                  ),
+                  const SizedBox(height: 10),
+                  HelperMethods.buildTextField(
+                    Icons.timer,
+                    lang.enterEndTime,
+                    timeEndController,
+                  ),
+                  const SizedBox(height: 10),
+                  //  _buildDropdown(),
+                  const SizedBox(height: 20),
+                  AppButtonText(
+                    backGroundColor: ColorManger.buttonGreen,
+                    textStyle: GoogleFonts.tajawal(
+                      color: Colors.white,
+                      fontSize: SizeConfig.fontSize3!,
+                    ),
+                    butonText: lang.update,
+                    onPressed: updateBooking,
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: updateBooking,
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.blueGrey,
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(30),
+                  //     ),
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 30,
+                  //       vertical: 15,
+                  //     ),
+                  //   ),
+                  //   child: Text(
+                  //     lang.update,
+                  //     style: TextStyle(color: Colors.white, fontSize: 16),
+                  //   ),
+                  // ),
+                ],
               ),
             ),
           ],

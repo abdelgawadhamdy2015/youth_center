@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
@@ -230,21 +232,22 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               itemBuilder: (context, index) {
                 final match = matchesModels[index];
                 return InteractiveMatchCard(
-                  canUpdate: true,
+                  canUpdate: (center.admin && !cupModel.finished),
                   match: match,
                   isAdmin: widget.center.admin,
                 );
               },
             ),
 
-            if (center.admin)
-              ElevatedButton(
-                onPressed: () => _saveCup(lang),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                child: Text(
-                  lang.save,
-                  style: const TextStyle(color: Colors.white),
+            if (widget.center.admin)
+              AppButtonText(
+                backGroundColor: ColorManger.buttonGreen,
+                textStyle: GoogleFonts.tajawal(
+                  color: Colors.white,
+                  fontSize: SizeConfig.fontSize3!,
                 ),
+                butonText: lang.save,
+                onPressed: () => _saveCup(lang),
               ),
           ],
         ),

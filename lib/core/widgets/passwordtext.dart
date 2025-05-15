@@ -45,19 +45,20 @@ class _PasswordTextState extends State<PasswordText> {
     return SizedBox(
       height: hight,
       child: TextFormField(
+        
         style: widget.inputTextStyle,
         controller: widget.control,
         textAlignVertical: TextAlignVertical.center,
         obscureText: obsecured,
         obscuringCharacter: "*",
         decoration: InputDecoration(
-         
+         prefixIcon: Icon(Icons.lock,),
             fillColor: widget.fillColor ?? ColorManger.morelightGray,
             filled: true,
             hintText: widget.hint,
             hintStyle: widget.hintStyle ??
                 TextStyle(
-                  fontSize: 10.sp,
+                  fontSize: 14.sp,
                 ),
             enabledBorder:  OutlineInputBorder(
             borderRadius:BorderRadius.circular(SizeConfig.screenWidth! *.02),
