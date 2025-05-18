@@ -8,10 +8,12 @@ import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
+import 'package:youth_center/screen/home/home_screen.dart';
 
 class UpdateBooking extends StatefulWidget {
   const UpdateBooking({super.key, required this.booking});
@@ -28,13 +30,22 @@ class _UpdateBookingState extends State<UpdateBooking> {
   late TextEditingController timeEndController;
   String dropdownValue = "شنواي";
   FirebaseFirestore db = FirebaseFirestore.instance;
-
+  late String _selectedDay;
+  List<String> _weekdays = [];
   List<String> youthCentersNames = [];
 
   @override
   void initState() {
     super.initState();
-    initData();
+   
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+     _weekdays = HelperMethods.getWeekDays(context);
+             initData();
+
   }
 
   initData() async {
@@ -43,14 +54,19 @@ class _UpdateBookingState extends State<UpdateBooking> {
     timeStartController = TextEditingController(text: widget.booking.timeStart);
     timeEndController = TextEditingController(text: widget.booking.timeEnd);
     dropdownValue = widget.booking.youthCenterId;
+     _selectedDay= widget.booking.day;
+
     youthCentersNames = await SharedPrefHelper.getListString(
       MyConstants.prefCenterNames,
     );
-    setState(() {});
+   
+         
+   
   }
 
   Future<void> updateBooking() async {
     BookingModel updatedBooking = BookingModel(
+      day: _selectedDay,
       id: widget.booking.id,
       name: nameController.text.trim(),
       mobile: mobileController.text.trim(),
@@ -70,10 +86,14 @@ class _UpdateBookingState extends State<UpdateBooking> {
         elevation: 10,
       ),
     );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+      return HomeScreen(centerUser: MyConstants.centerUser);
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
+
     var lang = S.of(context);
     return Scaffold(
       body: GradientContainer(
@@ -82,35 +102,49 @@ class _UpdateBookingState extends State<UpdateBooking> {
             Header(title: S.of(context).bookings),
             BodyContainer(
               height: SizeConfig.screenHeight! * .85,
-              padding: SizeConfig().getScreenPadding(vertical: .1,horizintal: .08),
+              padding: SizeConfig().getScreenPadding(
+                vertical: .1,
+                horizintal: .08,
+              ),
               child: Column(
                 children: [
+                  DayDropdown(
+                    days: _weekdays,
+                    selectedDay: _selectedDay,
+
+                    onChanged: (newDay) {
+                      setState(() {
+                        _selectedDay = newDay!;
+                      });
+                    },
+                  ),
+                              HelperMethods.verticalSpace(.03),
+
                   HelperMethods.buildTextField(
                     Icons.person,
                     lang.entername,
                     nameController,
                   ),
-                  const SizedBox(height: 10),
+            HelperMethods.verticalSpace(.03),
                   HelperMethods.buildTextField(
                     Icons.phone,
                     lang.enterMobile,
                     mobileController,
                   ),
-                  const SizedBox(height: 10),
+            HelperMethods.verticalSpace(.03),
                   HelperMethods.buildTextField(
                     Icons.timer_rounded,
                     lang.enterStartTime,
                     timeStartController,
                   ),
-                  const SizedBox(height: 10),
+            HelperMethods.verticalSpace(.03),
                   HelperMethods.buildTextField(
                     Icons.timer,
                     lang.enterEndTime,
                     timeEndController,
                   ),
-                  const SizedBox(height: 10),
-                  //  _buildDropdown(),
-                  const SizedBox(height: 20),
+            HelperMethods.verticalSpace(.03),
+                 
                   AppButtonText(
                     backGroundColor: ColorManger.buttonGreen,
                     textStyle: GoogleFonts.tajawal(
@@ -120,23 +154,7 @@ class _UpdateBookingState extends State<UpdateBooking> {
                     butonText: lang.update,
                     onPressed: updateBooking,
                   ),
-                  // ElevatedButton(
-                  //   onPressed: updateBooking,
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.blueGrey,
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(30),
-                  //     ),
-                  //     padding: const EdgeInsets.symmetric(
-                  //       horizontal: 30,
-                  //       vertical: 15,
-                  //     ),
-                  //   ),
-                  //   child: Text(
-                  //     lang.update,
-                  //     style: TextStyle(color: Colors.white, fontSize: 16),
-                  //   ),
-                  // ),
+                
                 ],
               ),
             ),

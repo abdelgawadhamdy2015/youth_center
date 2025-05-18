@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+import 'package:youth_center/models/user_model.dart';
+
 class MyConstants {
   //shared pref constants
   static const String prefCenterUser = 'centerUser';
@@ -8,8 +11,12 @@ class MyConstants {
   static const String success = 'Success';
   static const String failed = 'Failed';
 
+  static const String arabic = 'ar';
+  static const String english = 'en';
 
+  static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
 
+  static CenterUser centerUser=CenterUser(name: "", mobile: "", email: "", youthCenterName: "", admin: false);
 
   //collections
   static const String userCollection = 'Users';

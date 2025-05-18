@@ -65,5 +65,13 @@
     "homePage":"Home Page",
     "profileUpdated": "Profile updated successfully",
     "name": "Name",
-    "pleaseFill":"Please Fill"
+    "pleaseFill":"Please Fill",
+    "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "selectDay":"Select a day"
 }

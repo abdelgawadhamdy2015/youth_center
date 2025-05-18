@@ -48,6 +48,7 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
             String json = jsonEncode(documentSnapshot.data());
             Map<String, dynamic>? c = jsonDecode(json);
             centerUser = CenterUser.fromJson(c!);
+            MyConstants.centerUser=centerUser;
             userDone = true;
             SharedPrefHelper.setData(
               MyConstants.prefCenterUser,

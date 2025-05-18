@@ -8,6 +8,7 @@ import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
@@ -29,25 +30,51 @@ class AddBooking extends StatefulWidget {
 }
 
 class Add extends State<AddBooking> {
-  Add();
-
   FirebaseFirestore db = FirebaseFirestore.instance;
   late BookingModel booking;
   TextEditingController nameController = TextEditingController();
+  TextEditingController dayController = TextEditingController();
+
   TextEditingController timeStartController = TextEditingController();
   TextEditingController timeEndController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
-
+  DateTime startTime = DateTime.now();
+  DateTime endTime = DateTime.now();
   FetchData fetchDate = FetchData();
   bool adminValue = true;
   var dropdownValue = "شنواي";
+  late String _selectedDay;
+  List<String> _weekdays = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
+
     if (kDebugMode) {
       print(widget.center);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _weekdays = HelperMethods.getWeekDays(context);
+    _selectedDay = _weekdays.first;
+  }
+
+  void _handlePickTime(bool isStart) async {
+    DateTime? selected = await HelperMethods.pickTime(context);
+    if (selected == null) return;
+
+    setState(() {
+      if (isStart) {
+        startTime = selected;
+        timeStartController.text = MyConstants.hourFormat.format(startTime);
+      } else {
+        endTime = selected;
+        timeEndController.text = MyConstants.hourFormat.format(endTime);
+      }
+    });
   }
 
   @override
@@ -69,11 +96,14 @@ class Add extends State<AddBooking> {
               backgroundColor: ColorManger.buttonGreen,
               elevation: 10,
             ),
-
           );
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-            return HomeScreen(centerUser: widget.center);
-          }));
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) {
+                return HomeScreen(centerUser: widget.center);
+              },
+            ),
+          );
         });
   }
 
@@ -97,72 +127,96 @@ class Add extends State<AddBooking> {
   _buildBody(var lang) {
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
-    padding: SizeConfig().getScreenPadding(vertical: .1,horizintal: .08),
+      padding: SizeConfig().getScreenPadding(vertical: .1, horizintal: .08),
       child: Form(
-        key:_formKey ,
+        key: _formKey,
         child: Column(
           children: [
+            _buildDayDropDown(),
+            HelperMethods.verticalSpace(.03),
+
             HelperMethods.buildTextField(
               Icons.person,
               lang.entername,
               nameController,
               validator:
-                (value) =>
-                    value?.isEmpty ?? true ? S.of(context).entername : null,
+                  (value) =>
+                      value?.isEmpty ?? true ? S.of(context).entername : null,
             ),
-        
-            const SizedBox(height: 20),
+
+            HelperMethods.verticalSpace(.03),
             HelperMethods.buildTextField(
               Icons.phone,
               lang.enterMobile,
               mobileController,
-             validator:
-                (value) =>
-                    value?.isEmpty ?? true ? S.of(context).enterMobile : null,
+              validator:
+                  (value) =>
+                      value?.isEmpty ?? true ? S.of(context).enterMobile : null,
             ),
-        
-            const SizedBox(height: 20),
+
+            HelperMethods.verticalSpace(.03),
             HelperMethods.buildTextField(
+              onTab: () => _handlePickTime(true),
               Icons.timer_rounded,
               lang.enterStartTime,
               timeStartController,
-               validator:
-                (value) =>
-                    value?.isEmpty ?? true ? S.of(context).enterStartTime : null,
+              validator:
+                  (value) =>
+                      value?.isEmpty ?? true
+                          ? S.of(context).enterStartTime
+                          : null,
             ),
-        
-            const SizedBox(height: 20),
+
+            HelperMethods.verticalSpace(.03),
             HelperMethods.buildTextField(
+              onTab: () => _handlePickTime(false),
               Icons.timer,
               lang.enterEndTime,
               timeEndController,
               validator:
-                (value) =>
-                    value?.isEmpty ?? true ? S.of(context).enterEndTime : null,
+                  (value) =>
+                      value?.isEmpty ?? true
+                          ? S.of(context).enterEndTime
+                          : null,
             ),
-            const SizedBox(height: 20),
-        
+            HelperMethods.verticalSpace(.03),
+
             AppButtonText(
               backGroundColor: ColorManger.buttonGreen,
-             // buttonWidth: SizeConfig.screenWidth! * .5,
+              // buttonWidth: SizeConfig.screenWidth! * .5,
               textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
               butonText: lang.addBooking,
               onPressed: () {
-           if( _formKey.currentState!.validate()){    addBooking(
-                 BookingModel(
-                    name: nameController.text.toString().trim(),
-                    mobile: mobileController.text.toString().trim(),
-                    timeEnd: timeEndController.text.toString().trim(),
-                    timeStart: timeStartController.text.toString().trim(),
-                    youthCenterId: widget.center.youthCenterName,
-                  ),
-                );
-           }
+                if (_formKey.currentState!.validate()) {
+                  addBooking(
+                    BookingModel(
+                      day: _selectedDay,
+                      name: nameController.text.toString().trim(),
+                      mobile: mobileController.text.toString().trim(),
+                      timeEnd: timeEndController.text.toString().trim(),
+                      timeStart: timeStartController.text.toString().trim(),
+                      youthCenterId: widget.center.youthCenterName,
+                    ),
+                  );
+                }
               },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  _buildDayDropDown() {
+    return DayDropdown(
+      days: _weekdays,
+      selectedDay: _selectedDay,
+
+      onChanged: (newDay) {
+        setState(() {
+          _selectedDay = newDay!;
+        });
+      },
     );
   }
 }

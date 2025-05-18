@@ -65,5 +65,13 @@
   "signIn": "تسجيل الدخول",
   "homePage": "الصفحة الرئيسية",
   "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
-  "name": "الاسم"
+  "name": "الاسم",
+  "monday": "الاثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "sunday": "الأحد",
+  "selectDay": "اختر يوماً"
 }
