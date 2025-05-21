@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
@@ -131,7 +132,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
       child: Column(
         children: [
           Text(title, style: _headerStyle()),
-          const SizedBox(height: 10),
+                                           HelperMethods.verticalSpace(.02),
+
           Container(
             padding: const EdgeInsets.all(10),
             width: 100,
@@ -197,7 +199,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                 style: _headerStyle(),
               ),
 
-            const SizedBox(height: 10),
+                                             HelperMethods.verticalSpace(.02),
+
             TextField(
               controller: nameController,
               textAlign: TextAlign.center,
@@ -211,7 +214,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
                 contentPadding: const EdgeInsets.all(10),
               ),
             ),
-            const SizedBox(height: 20),
+                                             HelperMethods.verticalSpace(.02),
+
 
             Wrap(
               alignment: WrapAlignment.spaceBetween,
@@ -224,7 +228,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               ),
             ),
 
-            const SizedBox(height: 20),
+                                             HelperMethods.verticalSpace(.02),
+
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

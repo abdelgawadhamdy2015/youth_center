@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:intl/intl.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
@@ -192,154 +193,136 @@ class Cup extends State<CupScreen> {
         onSwipeDown: (offset) => setState(() {}),
         child: GradientContainer(
           child: Column(
-            children: [
-              Header(title: S.of(context).tournaments),
-             _buildBody()
-            ],
+            children: [Header(title: S.of(context).tournaments), _buildBody()],
           ),
         ),
       ),
     );
   }
 
-  _buildBody(){
+  _buildBody() {
     return BodyContainer(
-      height: SizeConfig.screenHeight! *.85,
-      child:  Stack(
-                children: [
-                  FutureBuilder(
-                    future: getCups(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: [
-                              Visibility(
-                                visible: !adminValue,
-                                child: DropdownButton<String>(
-                                  value: getValue(),
-                                  icon: const Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    
+      height: SizeConfig.screenHeight! * .85,
+      child: Stack(
+        children: [
+          FutureBuilder(
+            future: getCups(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Visibility(
+                        visible: !adminValue,
+                        child: DropdownButton<String>(
+                          value: getValue(),
+                          icon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                          ),
+                          items:
+                              youthCentersNames.map<DropdownMenuItem<String>>((
+                                String value,
+                              ) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(fontSize: 30),
                                   ),
-                                  items:
-                                      youthCentersNames
-                                          .map<DropdownMenuItem<String>>((
-                                            String value,
-                                          ) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(
-                                                value,
-                                                style: const TextStyle(
-                                                  fontSize: 30,
-                                                ),
-                                              ),
-                                            );
-                                          })
-                                          .toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      dropdownValue = newValue!;
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: cups.length,
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      child: Card(
-                                        margin: const EdgeInsets.all(10),
+                                );
+                              }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                      HelperMethods.verticalSpace(.02),
 
-                                        color: Colors.white,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: const BoxDecoration(),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(cups.elementAt(index).name),
-                                              const SizedBox(width: 10),
-                                              const Icon(Icons.sports_baseball),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Center(
-                                                  child: Text(
-                                                    dateFormat
-                                                        .format(
-                                                          cups
-                                                              .elementAt(index)
-                                                              .timeStart
-                                                              .toDate(),
-                                                        )
-                                                        .toString(),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Text(
-                                                getStatus(
-                                                  cups.elementAt(index),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              const Icon(Icons.sports_baseball),
-                                              const SizedBox(width: 10),
-                                              Text(
-                                                cups
-                                                    .elementAt(index)
-                                                    .youthCenterId,
-                                              ),
-                                            ],
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: cups.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              child: Card(
+                                margin: const EdgeInsets.all(10),
+
+                                color: Colors.white,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: const BoxDecoration(),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(cups.elementAt(index).name),
+                                      const SizedBox(width: 10),
+                                      const Icon(Icons.sports_baseball),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            dateFormat
+                                                .format(
+                                                  cups
+                                                      .elementAt(index)
+                                                      .timeStart
+                                                      .toDate(),
+                                                )
+                                                .toString(),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),
-                                      onTap:
-                                          () => {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) =>
-                                                        CupDetailScreen(
-                                                          cupModel: cups
-                                                              .elementAt(index),
-                                                          center: center,
-                                                        ),
-                                              ),
-                                            ),
-                                          },
-                                    );
-                                  },
+                                      const SizedBox(width: 10),
+                                      Text(getStatus(cups.elementAt(index))),
+                                      const SizedBox(width: 10),
+                                      const Icon(Icons.sports_baseball),
+                                      const SizedBox(width: 10),
+                                      Text(cups.elementAt(index).youthCenterId),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text(snapshot.error.toString()));
-                        } else if (!snapshot.hasData || cups.isEmpty) {
-                          return Center(child: Text(S.of(context).noData));
-                        } else {
-                          return Center(child: Text(S.of(context).wrong));
-                        }
-                      } else if (cups.isEmpty) {
-                        return Center(child: Text(S.of(context).noData));
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
-                  
-                ],
-              ),);
+                              onTap:
+                                  () => {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => CupDetailScreen(
+                                              cupModel: cups.elementAt(index),
+                                              center: center,
+                                            ),
+                                      ),
+                                    ),
+                                  },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                } else if (!snapshot.hasData || cups.isEmpty) {
+                  return Center(child: Text(S.of(context).noData));
+                } else {
+                  return Center(child: Text(S.of(context).wrong));
+                }
+              } else if (cups.isEmpty) {
+                return Center(child: Text(S.of(context).noData));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   String getValue() {

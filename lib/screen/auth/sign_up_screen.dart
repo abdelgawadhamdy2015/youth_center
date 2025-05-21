@@ -3,7 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
+import 'package:youth_center/core/widgets/day_drop_down.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/core/themes/colors.dart';
@@ -64,7 +69,7 @@ class SignUp extends State<SignUpScreen> {
               .whenComplete(() {
                 this.centerUser = centerUser;
                 ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(
+                  SnackBar(
                     content: Text(S.of(context).userRegistered),
                     backgroundColor: Colors.green,
                     elevation: 10, //shadow
@@ -118,196 +123,150 @@ class SignUp extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:  Text(S.of(context).appName),
-        backgroundColor: ColorManger.mainBlue,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(MyConstants.imag2),
-            fit: BoxFit.cover,
-          ),
-        ),
-        alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: SingleChildScrollView(
-          child: Column(
+      
+      body: GradientContainer(
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                 
-                  const SizedBox(height: 20),
-                  TextField(
-                    inputFormatters: [],
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.person, color: Colors.red),
-                      filled: true,
-                      fillColor: ColorManger.mainBlue,
-                      hintText: S.of(context).username,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: false,
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.nature, color: Colors.red),
-                      filled: true,
-                      fillColor: ColorManger.mainBlue,
-                      hintText:S.of(context).entername,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    inputFormatters: [],
-                    obscureText: false,
-                    controller: mobileController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(
-                        Icons.phone_in_talk_rounded,
-                        color: Colors.red,
-                      ),
-                      filled: true,
-                      fillColor: ColorManger.mainBlue,
-                      hintText: S.of(context).enterMobile,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.lock, color: Colors.red),
-                      filled: true,
-                      fillColor: ColorManger.mainBlue,
-                      hintText: S.of(context).enterPassword,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Center(
-                    // margin: EdgeInsets.only(left: 70,top: 10),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-
-                        Visibility(
-                          visible: true,
-                          child: DropdownButton<String>(
-                            style: TextStyle(color: ColorManger.mainBlue),
-
-                            // Step 3.
-                            value: dropdownValue,
-                            icon: Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: ColorManger.mainBlue,
-                            ),
-                            // Step 4.
-                            items:
-                                youthCentersNames.map<DropdownMenuItem<String>>(
-                                  (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(fontSize: 30),
+              Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: SizeConfig().getScreenPadding(vertical: .2,horizintal: .1),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment:CrossAxisAlignment.center ,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  HelperMethods.buildTextField(
+                                    Icons.email,
+                                    S.of(context).username,
+                                    usernameController,
+                                    validator:
+                                        (value) =>
+                                            value?.isEmpty ?? true
+                                                ? S.of(context).enterUsername
+                                                : null,
+                                  ),
+                      
+                                  HelperMethods.verticalSpace(.02),
+                                  HelperMethods.buildTextField(
+                                    Icons.person,
+                                    S.of(context).name,
+                                    nameController,
+                                    validator:
+                                        (value) =>
+                                            value?.isEmpty ?? true
+                                                ? S.of(context).entername
+                                                : null,
+                                  ),
+                      
+                                  HelperMethods.verticalSpace(.02),
+                      
+                                  HelperMethods.buildTextField(
+                                    Icons.phone_in_talk_rounded,
+                                    S.of(context).name,
+                                    mobileController,
+                                    validator:
+                                        (value) =>
+                                            value?.isEmpty ?? true
+                                                ? S.of(context).enterMobile
+                                                : null,
+                                  ),
+                                  HelperMethods.verticalSpace(.02),
+                                
+                      
+                                  HelperMethods.buildTextField(
+                                    Icons.lock,
+                                    S.of(context).password,
+                                    passwordController,
+                                    validator:
+                                        (value) =>
+                                            value?.isEmpty ?? true
+                                                ? S.of(context).enterPassword
+                                                : null,
+                                    obsecur: true,
+                                  ),
+                                  HelperMethods.verticalSpace(.02),
+                                  DayDropdown(days:youthCentersNames , selectedDay: dropdownValue, onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue!;
+                                      });
+                                    },)
+                                 
+                                ],
+                              ),
+                                  HelperMethods.verticalSpace(.02),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(left: 0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        signUp(
+                                          CenterUser(
+                                            name: nameController.text.toString().trim(),
+                                            email: usernameController.text.toString().trim(),
+                                            mobile: mobileController.text.toString().trim(),
+                                            admin: false,
+                                            youthCenterName: dropdownValue,
+                                          ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: ColorManger.mainBlue,
+                                        //foregroundColor: Colors.black,
                                       ),
-                                    );
-                                  },
-                                ).toList(),
-                            // Step 5.
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownValue = newValue!;
-                              });
-                            },
-                          ),
-                        ), //
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        signUp(
-                          CenterUser(
-                            name: nameController.text.toString().trim(),
-                            email: usernameController.text.toString().trim(),
-                            mobile: mobileController.text.toString().trim(),
-                            admin: false,
-                            youthCenterName: dropdownValue,
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorManger.mainBlue,
-                        //foregroundColor: Colors.black,
-                      ),
-                      child:  Text(
-                       S.of(context).register,
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 50),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                         Text(
-                         S.of(context).alreadyHaveAccount,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 19,
-                            decoration: TextDecoration.underline,
+                                      child: Text(
+                                        S.of(context).register,
+                                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          S.of(context).alreadyHaveAccount,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 19,
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                  HelperMethods.verticalSpace(.02),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pushReplacementNamed('/');
+                                          },
+                                          child: Text(
+                                            S.of(context).signIn,
+                                            style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 0),
-                        MaterialButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacementNamed('/');
-                          },
-                          child:  Text(
-                           S.of(context).signIn,
-                            style: TextStyle(color: Colors.blue, fontSize: 18),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
         ),
-      ),
     );
   }
 }

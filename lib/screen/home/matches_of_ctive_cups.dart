@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
@@ -94,12 +95,14 @@ class _MatchesState extends State<MatchesOfActiveCups> {
               }
             },
           ),
-      if(!isAdmin)  const SizedBox(height: 20),
+      if(!isAdmin)                                   HelperMethods.verticalSpace(.02),
+
         Text(
           lang.activeCupMatches,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10),
+                                         HelperMethods.verticalSpace(.02),
+
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: collection,
@@ -118,7 +121,8 @@ class _MatchesState extends State<MatchesOfActiveCups> {
     
               return ListView.separated(
                 itemCount: matches.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, __) =>                                  HelperMethods.verticalSpace(.02),
+
                 itemBuilder: (context, index) {
                   final match = matches[index];
                   return InteractiveMatchCard(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/fetch_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,7 +107,8 @@ final bool canUpdate  = (widget.isAdmin && widget.canUpdate);
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                                                   HelperMethods.verticalSpace(.02),
+
                   Text("${match.teem1Score} : ${match.teem2Score}"),
                 ],
               ),

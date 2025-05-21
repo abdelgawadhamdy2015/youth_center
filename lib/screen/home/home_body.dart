@@ -172,32 +172,10 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     return Column(
       children: [
         if (!isAdmin)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.blueGrey),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: dropdownValue,
-                dropdownColor: Colors.blueGrey[900],
-                icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
-                items:
-                    youthCenterNames.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }).toList(),
-                onChanged: _onDropdownChanged,
-              ),
-            ),
+          DayDropdown(
+            days: youthCenterNames,
+            selectedDay: dropdownValue,
+            onChanged: _onDropdownChanged,
           ),
 
         DayDropdown(
@@ -247,7 +225,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 Row(
                   children: [
                     Image.asset(MyConstants.logoPath, height: 30),
-                    const SizedBox(width: 8),
+                    HelperMethods.verticalSpace(.02),
                     Text(
                       lang.appName,
                       style: GoogleFonts.tajawal(
@@ -292,7 +270,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            HelperMethods.verticalSpace(.02),
 
             // TabBar mimic (you can replace this with your own TabBar if needed)
             Container(

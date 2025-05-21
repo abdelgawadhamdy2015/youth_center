@@ -11,8 +11,10 @@ class HelperMethods {
     TextEditingController controller, {
     var validator,
     VoidCallback? onTab,
+    bool obsecur = false,
   }) {
     return MyTextForm(
+      obsecure: obsecur,
       readOnly: onTab!=null? true:false,
       onTab: onTab,
       fillColor: ColorManger.whiteColor,
