@@ -92,13 +92,14 @@ class CupDetail extends State<CupDetailScreen> {
     for (var element in map) {
       matchesModel.add(
         MatchModel(
-          firstTeem: element["firstTeem"],
-          secondTeem: element["secondTeem"],
-          time: element["time"],
-          firstTeemScore: element["firstTeemScore"],
-          secondTeemScore: element["secondTeemScore"],
-          youthCenterId: element["youthCenterId"],
+         
           cupName: element["cupName"]!,
+          team1: element["team1"],
+          team2: element["team2"],
+          cupStartDate: element["cupStartDate"],
+          teem1Score: element["teem1Score"],
+          teem2Score: element["teem2Score"],
+          cupGroup: element["cupGroup"],
         ),
       );
     }
@@ -126,7 +127,7 @@ class CupDetail extends State<CupDetailScreen> {
   }
 
   Future saveCup() async {
-    List<dynamic> josonMatchesList = fetchData.listToJson(matchesModels);
+    List<dynamic> josonMatchesList = FetchData.listToJson(matchesModels);
     cupModel = CupModel(
       id: cupModel.id,
       name: nameController.text,
@@ -533,18 +534,18 @@ class CupDetail extends State<CupDetailScreen> {
                       onSwipeRight: (offset) {
                         if (center.admin) {
                           setState(() {
-                            matchesModels.elementAt(index).secondTeemScore =
-                                matchesModels.elementAt(index).secondTeemScore -
-                                1;
+                            // matchesModels.elementAt(index).secondTeemScore =
+                            //     matchesModels.elementAt(index).secondTeemScore -
+                            //     1;
                           });
                         }
                       },
                       onSwipeLeft: (offset) {
                         if (center.admin) {
                           setState(() {
-                            matchesModels.elementAt(index).firstTeemScore =
-                                matchesModels.elementAt(index).firstTeemScore -
-                                1;
+                            // matchesModels.elementAt(index).firstTeemScore =
+                            //     matchesModels.elementAt(index).firstTeemScore -
+                            //     1;
                           });
                         }
                       },
@@ -574,18 +575,18 @@ class CupDetail extends State<CupDetailScreen> {
                               InkWell(
                                 onLongPress: () {
                                   if (center.admin) {
-                                    setState(() {
-                                      matchesModels
-                                          .elementAt(index)
-                                          .firstTeemScore = matchesModels
-                                              .elementAt(index)
-                                              .firstTeemScore +
-                                          1;
-                                    });
+                                    // setState(() {
+                                    //   matchesModels
+                                    //       .elementAt(index)
+                                    //       .firstTeemScore = matchesModels
+                                    //           .elementAt(index)
+                                    //           .firstTeemScore +
+                                    //       1;
+                                    // });
                                   }
                                 },
                                 child: Text(
-                                  matchesModels.elementAt(index).firstTeem,
+                                  "matchesModels.elementAt(index).firstTeem",
                                   maxLines: 2,
                                 ),
                               ),
@@ -636,14 +637,10 @@ class CupDetail extends State<CupDetailScreen> {
                                       child: Text(
                                         textAlign: TextAlign.center,
                                         //maxLines: 2,
-                                        fetchData.getDateTime(
-                                          matchesModels
-                                              .elementAt(index)
-                                              .time
-                                              .toDate(),
-                                        ),
+                                       " fetchData.getDateTime"
+                                       ),
                                       ),
-                                    ),
+                                    
                                     Text(
                                       "${fetchData.getScore(matchesModels.elementAt(index), 1)} : ${fetchData.getScore(matchesModels.elementAt(index), 2)}",
                                     ),
@@ -657,17 +654,17 @@ class CupDetail extends State<CupDetailScreen> {
                                 onLongPress: () {
                                   if (center.admin) {
                                     setState(() {
-                                      matchesModels
-                                          .elementAt(index)
-                                          .secondTeemScore = matchesModels
-                                              .elementAt(index)
-                                              .secondTeemScore +
-                                          1;
+                                      // matchesModels
+                                      //     .elementAt(index)
+                                      //     .secondTeemScore = matchesModels
+                                      //         .elementAt(index)
+                                      //         .secondTeemScore +
+                                      //     1;
                                     });
                                   }
                                 },
                                 child: Text(
-                                  matchesModels.elementAt(index).secondTeem,
+                                 " matchesModels.elementAt(index).secondTeem",
                                   maxLines: 2,
                                 ),
                               ),

@@ -201,7 +201,7 @@ class Add extends State<AddBooking> {
                             timeEnd: timeEndController.text.toString().trim(),
                             timeStart:
                                 timeStartController.text.toString().trim(),
-                            youthCenterId: centerName,
+                            youthCenterId: centerName, day: '',
                           ),
                         );
                       },

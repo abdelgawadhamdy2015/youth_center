@@ -7,46 +7,52 @@ class BookingModel {
   final String timeEnd;
   final String timeStart;
   final String youthCenterId;
+  final String day;
 
-  const BookingModel(
-      {this.id,
-      required this.name,
-      required this.mobile,
-      required this.timeEnd,
-      required this.timeStart,
-      required this.youthCenterId});
+  const BookingModel({
+    this.id,
+    required this.name,
+    required this.mobile,
+    required this.timeEnd,
+    required this.timeStart,
+    required this.youthCenterId,
+    required this.day,
+  });
 
   toJson() {
     return {
+      "day": day,
       "name": name,
       "mobile": mobile,
       "timeStart": timeStart,
       "timeEnd": timeEnd,
-      "youthCenterId": youthCenterId
+      "youthCenterId": youthCenterId,
     };
   }
 
   factory BookingModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     final data = document.data();
     return BookingModel(
-        id: document.id,
-        name: data!["name"],
-        mobile: data["mobile"],
-        timeStart: data["timeStart"],
-        timeEnd: data["timeEnd"],
-        youthCenterId: data["youthCenterId"]);
+      day: data!["day"],
+      id: document.id,
+      name: data["name"],
+      mobile: data["mobile"],
+      timeStart: data["timeStart"],
+      timeEnd: data["timeEnd"],
+      youthCenterId: data["youthCenterId"],
+    );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
+      "day": day,
       "name": name,
       "mobile": mobile,
       "timeEnd": timeEnd,
       "timeStart": timeStart,
       "youthCenterId": youthCenterId,
-
     };
   }
-
 }

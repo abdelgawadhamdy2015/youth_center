@@ -1,78 +1,84 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 
 class MatchModel {
   final String? id;
-  final String firstTeem;
-  final String secondTeem;
-  Timestamp time;
-  int firstTeemScore;
-  int secondTeemScore;
-  final String youthCenterId;
-  final String cupName;
-
+  final String team1;
+  final String team2;
+  Timestamp cupStartDate;
+  int teem1Score;
+  int teem2Score;
+  String cupName;
+  String cupGroup;
   getTime() {
-    return time;
+    return cupStartDate;
   }
 
   setTime(Timestamp dateTime) {
-    time = dateTime;
+    cupStartDate = dateTime;
   }
 
-  MatchModel(
-      {this.id,
-      required this.firstTeem,
-      required this.secondTeem,
-      required this.time,
-      required this.firstTeemScore,
-      required this.secondTeemScore,
-      required this.youthCenterId,
-      required this.cupName});
+  MatchModel({
+    this.id,
+    required this.team1,
+    required this.team2,
+    required this.cupStartDate,
+    required this.teem1Score,
+    required this.teem2Score,
+    required this.cupName,
+    required this.cupGroup,
+  });
 
   toJson() {
     return {
-      "firstTeem": firstTeem,
-      "secondTeem": secondTeem,
-      "time": time,
-      "firstTeemScore": firstTeemScore,
-      "secondTeemScore": secondTeemScore,
-      "youthCenterId": youthCenterId,
-      "cupName": cupName
+      MyConstants.team1: team1,
+      MyConstants.team2: team2,
+      MyConstants.cupStartDate: cupStartDate,
+      MyConstants.team1Score: teem1Score,
+      MyConstants.team2Score: teem2Score,
+      MyConstants.cupName: cupName,
+      MyConstants.cupGroup: cupGroup,
     };
   }
 
   factory MatchModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     final data = document.data();
     return MatchModel(
-        id: document.id,
-        firstTeem: data!["firstTeem"],
-        secondTeem: data["secondTeem"],
-        time: data["time"],
-        firstTeemScore: data["firstTeemScore"],
-        secondTeemScore: data["secondTeemScore"],
-        youthCenterId: data["youthCenterId"],
-        cupName: data["cupName"]);
+      id: document.id,
+      team1: data![MyConstants.team1],
+      team2: data[MyConstants.team2],
+      cupStartDate: data[MyConstants.cupStartDate],
+      teem1Score: data[MyConstants.team1Score],
+      teem2Score: data[MyConstants.team2Score],
+      cupName: data[MyConstants.cupName],
+      cupGroup: data[MyConstants.cupGroup],
+    );
   }
 
   factory MatchModel.fromMap(Map data) {
     return MatchModel(
-        id: data['id'] ?? '',
-        firstTeem: data['firstTeem'] ?? '',
-        secondTeem: data['secondTeem'] ?? '',
-        time: data['time'] ?? '',
-        youthCenterId: data['youthCenterId'] ?? '',
-        firstTeemScore: data['firstTeemScore'] ?? '',
-        secondTeemScore: data['secondTeemScore'] ?? '',
-        cupName: data['cupName'] ?? '');
+      id: data[MyConstants.id] ?? '',
+      team1: data[MyConstants.team1] ?? '',
+      team2: data[MyConstants.team2] ?? '',
+      cupStartDate: data[MyConstants.cupStartDate] ?? '',
+      teem1Score: data[MyConstants.team1Score] ?? '',
+      teem2Score: data[MyConstants.team2Score] ?? '',
+      cupName: data[MyConstants.cupName],
+      cupGroup: MyConstants.cupGroup,
+    );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      "firstTeem": firstTeem,
-      "secondTeem": secondTeem,
-      "time": time,
-      "secondTeemScore": secondTeemScore,
-      "youthCenterId": youthCenterId,
+      MyConstants.team1: team1,
+      MyConstants.team2: team2,
+      MyConstants.cupStartDate: cupStartDate,
+      MyConstants.team2Score: teem2Score,
+      MyConstants.team1Score: teem1Score,
+      MyConstants.cupName: cupName,
+      cupGroup: MyConstants.cupGroup,
     };
   }
 }

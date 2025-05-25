@@ -37,7 +37,7 @@ class _UpdateBookingState extends State<UpdateBooking> {
       mobile: mobileController.text.trim(),
       timeStart: timeStartController.text.trim(),
       timeEnd: timeEndController.text.trim(),
-      youthCenterId: dropdownValue,
+      youthCenterId: dropdownValue, day: '',
     );
 
     await db
