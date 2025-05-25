@@ -112,7 +112,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddBooking(center: widget.centerUser.youthCenterName),
+              builder: (context) => AddBooking(center: widget.centerUser),
             ),
           );
         }
