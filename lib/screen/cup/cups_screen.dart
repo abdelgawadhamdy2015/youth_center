@@ -82,7 +82,7 @@ class Cup extends State<CupScreen> {
     return  TextStyle(
       fontSize: 18,
       color: Colors.black,
-      backgroundColor: MyColors.primaryColor,
+      backgroundColor:ColorManger.mainBlue,
     );
   }
 
@@ -175,7 +175,7 @@ class Cup extends State<CupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: MyColors.primaryColor,
+        backgroundColor:ColorManger.mainBlue,
       ),
       body: SwipeDetector(
         onSwipeDown: (offset) => setState(() {}),

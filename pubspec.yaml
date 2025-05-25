@@ -41,6 +41,9 @@ dependencies:
   google_fonts: ^6.2.1
   shared_preferences: ^2.5.3
   flutter_screenutil: ^5.9.3
+  flutter_localizations:
+    sdk: flutter
+  svg_flutter: ^0.0.1
 
 dev_dependencies:
   flutter_test:

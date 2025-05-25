@@ -165,7 +165,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create New Tournament'),
-        backgroundColor: MyColors.primaryColor,
+        backgroundColor:ColorManger.mainBlue,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(_spacing),
@@ -419,7 +419,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: MyColors.primaryColor,
+            backgroundColor:ColorManger.mainBlue,
           ),
           onPressed: _validateAndProceed,
           child: Text(

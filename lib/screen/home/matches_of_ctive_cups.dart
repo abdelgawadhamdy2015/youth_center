@@ -57,7 +57,7 @@ class Matches extends State<MatchesOfActiveCups> {
     return  TextStyle(
       fontSize: 18,
       color: Colors.black,
-      backgroundColor: MyColors.primaryColor,
+      backgroundColor:ColorManger.mainBlue,
     );
   }
 

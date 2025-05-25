@@ -4,9 +4,13 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/FetchData.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
+import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../models/user_model.dart';
@@ -67,7 +71,15 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
       Future.delayed(Duration(seconds: 3), () {
         setState(() {});
       });
-      return const Center(child: Image(image: AssetImage("images/logo.jpg")));
+      return  Center(child:
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(MyConstants.logoSvg),
+          HelperMethods.verticalSpace(.02),
+          Text("YOUTH CENTER", style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!),)
+        ],
+      ));
     }
 
     return HomeScreen(centerUser: centerUser);

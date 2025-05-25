@@ -109,7 +109,7 @@ class CupDetail extends State<CupDetailScreen> {
     return  TextStyle(
       fontSize: 18,
       color: Colors.black,
-      backgroundColor: MyColors.primaryColor,
+      backgroundColor:ColorManger.mainBlue,
     );
   }
 
@@ -175,7 +175,7 @@ class CupDetail extends State<CupDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: MyColors.primaryColor,
+        backgroundColor:ColorManger.mainBlue,
       ),
       body: Container(
         height: double.infinity,

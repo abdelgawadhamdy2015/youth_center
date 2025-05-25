@@ -70,7 +70,7 @@ class Add extends State<AddBooking> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Youth Center"),
-        backgroundColor: MyColors.primaryColor,
+        backgroundColor:ColorManger.mainBlue,
        
       ),
 
@@ -105,7 +105,7 @@ class Add extends State<AddBooking> {
                       ),
                       icon: const Icon(Icons.person, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor:ColorManger.mainBlue,
                       hintText: "enter who booking name ",
                     ),
                   ),
@@ -120,7 +120,7 @@ class Add extends State<AddBooking> {
                       ),
                       icon: const Icon(Icons.phone, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor:ColorManger.mainBlue,
                       hintText: "enter who booking mobile ",
                     ),
                   ),
@@ -135,7 +135,7 @@ class Add extends State<AddBooking> {
                       ),
                       icon: const Icon(Icons.timer_rounded, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor:ColorManger.mainBlue,
                       hintText: "enter start time ex : 22:30",
                     ),
                   ),
@@ -150,13 +150,13 @@ class Add extends State<AddBooking> {
                       ),
                       icon: const Icon(Icons.timer, color: Colors.red),
                       filled: true,
-                      fillColor: MyColors.primaryColor,
+                      fillColor:ColorManger.mainBlue,
                       hintText: "enter end  time ex : 22:30",
                     ),
                   ),
                   const SizedBox(height: 10),
                   /*Container(
-                    color: MyColors.primaryColor,
+                    color:ColorManger.mainBlue,
                     child: DropdownButton<String>(
                       // Step 3.
                         value: dropdownValue,
@@ -206,7 +206,7 @@ class Add extends State<AddBooking> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
+                        backgroundColor:ColorManger.mainBlue,
                       ),
                       child: const Text(
                         "add to Bookings",

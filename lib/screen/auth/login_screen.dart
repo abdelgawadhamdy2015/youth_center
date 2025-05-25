@@ -1,7 +1,18 @@
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/passwordtext.dart';
+import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/screen/auth/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,124 +52,78 @@ class Login extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lang = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Youth Center"),
-        backgroundColor: MyColors.primaryColor,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/3f.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        alignment: AlignmentDirectional.topStart,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  Image.asset("images/logo.jpg", width: 50, height: 50),
+      extendBodyBehindAppBar: true,
+      body: GradientContainer(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: SizeConfig().getScreenPadding(horizintal: .05),
+            child: Column(
+              children: [
+                SvgPicture.asset(MyConstants.logoSvg, width: 100, height: 100),
+                HelperMethods.verticalSpace(.02),
 
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.person),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "username",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(10),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                      ),
-                      icon: const Icon(Icons.lock),
-                      filled: true,
-                      fillColor: MyColors.primaryColor,
-                      hintText: "password",
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        signIn();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
-                      ),
-                      child: const Text(
-                        "submit",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 70),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        debugPrint("clear");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColors.primaryColor,
-                        foregroundColor: Colors.black,
-                      ),
-                      child: const Text(
-                        "clear",
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 50),
-                child: Row(
-                  children: [
-                    const Text(
-                      "not have account yet?",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                    const SizedBox(width: 0),
-                    MaterialButton(
-                      onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).pushReplacementNamed('signupScreen');
-                      },
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(color: Colors.blue, fontSize: 18),
-                      ),
-                    ),
-                  ],
+                Text(
+                  "YOUTH CENTER",
+                  style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize5!),
                 ),
-              ),
-            ],
+                HelperMethods.verticalSpace(.02),
+                HelperMethods.buildTextField(
+                  Icons.person,
+
+                  lang.username,
+                  usernameController,
+                  validator:
+                      (value) =>
+                          value?.isEmpty ?? true
+                              ? S.of(context).enterUsername
+                              : null,
+                ),
+                HelperMethods.verticalSpace(.02),
+
+                PasswordText(
+                  fillColor: ColorManger.whiteColor,
+                  hint: lang.password,
+                  obsecur: true,
+                  control: passwordController,
+                ),
+                HelperMethods.verticalSpace(.02),
+
+                AppButtonText(
+                  backGroundColor: ColorManger.darkBlue,
+                  borderRadius: SizeConfig.screenWidth! * .05,
+                  textStyle: GoogleFonts.tajawal(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  butonText: lang.login,
+                  onPressed: signIn,
+                ),
+
+                HelperMethods.verticalSpace(.02),
+
+                TextButton(
+                  onPressed:
+                      () => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return SignUpScreen();
+                          },
+                        ),
+                      ),
+                  child: Text(
+                    lang.DonotHaveAccount,
+                    style: GoogleFonts.tajawal(
+                      fontSize: 16,
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

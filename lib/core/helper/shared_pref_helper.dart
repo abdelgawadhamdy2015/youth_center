@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,10 +24,13 @@ class SharedPrefHelper {
   /// Saves a [value] with a [key] in the SharedPreferences.
   static setData(String key, value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    debugPrint("SharedPrefHelper : setData with key : $key and value : $value");
+    log("SharedPrefHelper : setData with key : $key and value : $value");
     switch (value.runtimeType) {
       case const (String):
         await sharedPreferences.setString(key, value);
+        break;
+      case const (List):
+        await sharedPreferences.setStringList(key, value);
         break;
       case const (int):
         await sharedPreferences.setInt(key, value);
@@ -63,12 +68,21 @@ class SharedPrefHelper {
   }
 
   /// Gets an String value from SharedPreferences with given [key].
-  static getString(String key) async {
+  static  getString(String key) async {
     debugPrint('SharedPrefHelper : getString with key : $key');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString(key) ?? '';
   }
 
+  /// Gets a list  String value from SharedPreferences with given [key].
+  static Future<List<String>> getListString(String key) async {
+    List<String> list;
+    debugPrint('SharedPrefHelper : getString with key : $key');
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    list= sharedPreferences.getStringList(key) ?? [];
+    log(list.toString());
+    return list;
+  }
   // Saves a [value] with a [key] in the FlutterSecureStorage.
   // static setSecuredString(String key, String value) async {
   //   const flutterSecureStorage = FlutterSecureStorage();
@@ -91,19 +105,18 @@ class SharedPrefHelper {
   //   debugPrint('FlutterSecureStorage : all data has been cleared');
   // }
 
+  //   static Future<void> storeSecureToken(String token) async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //   await storage.write(token);
+  // }
 
-//   static Future<void> storeSecureToken(String token) async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//   await storage.write(token);
-// }
+  // static Future<String?> retrieveSecureToken() async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //   return await storage.read();
+  // }
 
-// static Future<String?> retrieveSecureToken() async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//   return await storage.read();
-// }
-
-// static Future<void> cleareSecureToken() async {
-//   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
-//    await storage.delete();
-// }
+  // static Future<void> cleareSecureToken() async {
+  //   final storage = await BiometricStorage().getStorage(MyConstants.myToken);
+  //    await storage.delete();
+  // }
 }
