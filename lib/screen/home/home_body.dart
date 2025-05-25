@@ -76,6 +76,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       youthCenters = await bookingService.getAllCenters();
       youthCenterNames = youthCenters.map((e) => e.name).toSet().toList();
       SharedPrefHelper.setData(MyConstants.prefCenterNames, youthCenterNames);
+    MyConstants.centerNames = youthCenterNames;
+    } else {
+      youthCenters = await bookingService.getAllCenters();
     }
     await _loadBookings();
   }
@@ -159,7 +162,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       padding: SizeConfig().getScreenPadding(
         vertical: .05,
       ), //EdgeInsets.only(bottom: SizeConfig.screenHeight! * .05),
-      height: SizeConfig.screenHeight! * .8,
+      height: SizeConfig.screenHeight! * .85,
       child: SwipeDetector(
         onSwipeDown: (offset) => _loadBookings(),
         child: TabBarView(
@@ -223,18 +226,17 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               // Logo and App Name
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+             
                   SvgPicture.asset(
                     MyConstants.logoSvg,
-                    height: SizeConfig.screenHeight! * .12,
-                    width: SizeConfig.screenWidth! * .12,
+                    height: SizeConfig.screenHeight! * .05,
+                    //width: SizeConfig.screenWidth! * .05,
                   ),
-                  // Image.asset(MyConstants.logoPath, height: 50, width: 50),
+                                      HelperMethods.horizintalSpace(.02),
+
                   Text(
                     lang.appName,
                     style: GoogleFonts.tajawal(
@@ -243,8 +245,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       fontSize: 18,
                     ),
                   ),
-                ],
-              ),
+              
       
               // Popup Menu Icon
               PopupMenuButton<int>(

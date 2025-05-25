@@ -57,6 +57,7 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
               MyConstants.prefCenterUser,
               centerUser.toJson(),
             );
+            MyConstants.centerUser = centerUser;
           }
         });
   }

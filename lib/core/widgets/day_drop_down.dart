@@ -32,7 +32,7 @@ class DayDropdown extends StatelessWidget {
         isDense: true,
         filled: true,
         fillColor: ColorManger.darkListColor,
-        hintText:lableText?? S.of(context).selectDay,
+        hintText:selectedDay?? S.of(context).selectDay,
         hintStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
