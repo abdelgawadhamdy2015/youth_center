@@ -151,7 +151,7 @@ class _AddCupScreenState extends State<AddCupScreen> {
               cupGroup: '${S.of(context).group} ${_groups.indexOf(group) + 1}',
             ),
           );
-            _jsonMatches.add(
+          _jsonMatches.add(
             MatchModel(
               team1: group[i],
               team2: group[j],
@@ -184,8 +184,8 @@ class _AddCupScreenState extends State<AddCupScreen> {
       matches: _jsonMatches,
       finished: false,
     );
-    log( 'Saving cup: ${cup.toJson()}');
-  
+    log('Saving cup: ${cup.toJson()}');
+
     await db
         .collection(MyConstants.cupCollection)
         .doc(cup.id)
@@ -214,13 +214,21 @@ class _AddCupScreenState extends State<AddCupScreen> {
 
   void _resetForm() {
     setState(() {
-      _nameController.clear();
-      _teamCount = 8;
-      _initializeTeamControllers();
-      _teams.clear();
-      _groups.clear();
-      _showGroups = false;
-      _showMatches = false;
+      if (_showMatches) {
+        _matches.clear();
+        _jsonMatches.clear();
+        _showMatches = false;
+      } else if (_showGroups) {
+        _groups.clear();
+        _showGroups = false;
+      } else {
+        _teams.clear();
+        _teamCount = 8;
+        _initializeTeamControllers();
+        _nameController.clear();
+      }
+
+      
     });
   }
 
@@ -383,16 +391,17 @@ class _AddCupScreenState extends State<AddCupScreen> {
     ],
   );
 
-Widget _buildGroupsDisplay() {
-  return GroupsDisplayCard(
-    title: S.of(context).groupsDistribution,
-    groups: _groups,
-    groupCardBuilder: (index,List<String> group) => _buildGroupCard(index, group),
-  );
-}
-  
+  Widget _buildGroupsDisplay() {
+    return GroupsDisplayCard(
+      title: S.of(context).groupsDistribution,
+      groups: _groups,
+      groupCardBuilder:
+          (index, List<String> group) => _buildGroupCard(index, group),
+    );
+  }
+
   Widget _buildGroupCard(int index, List<String> teams) => Container(
-    width:SizeConfig.screenWidth! * .3,
+    width: SizeConfig.screenWidth! * .3,
     decoration: BoxDecoration(
       color: Colors.blue[50],
       borderRadius: BorderRadius.circular(8),
@@ -454,13 +463,17 @@ Widget _buildGroupsDisplay() {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorManger.redButtonColor,
-         
         ),
         onPressed: _resetForm,
-        child: Text(S.of(context).reset,style:  TextStyles.whiteBoldStyle(SizeConfig.fontSize3!)),
+        child: Text(
+          S.of(context).reset,
+          style: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
+        ),
       ),
       ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: ColorManger.buttonGreen),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ColorManger.buttonGreen,
+        ),
         onPressed: _validateAndProceed,
         child: Text(
           _showMatches
@@ -468,7 +481,7 @@ Widget _buildGroupsDisplay() {
               : _showGroups
               ? S.of(context).generateMatches
               : S.of(context).distributeTeams,
-              style: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
+          style: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
         ),
       ),
     ],
