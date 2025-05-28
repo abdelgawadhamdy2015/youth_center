@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "logOut": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "manual": MessageLookupByLibrary.simpleMessage("يدوي"),
+    "mobile": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "monday": MessageLookupByLibrary.simpleMessage("الاثنين"),
     "myAccount": MessageLookupByLibrary.simpleMessage("حسابي"),
     "name": MessageLookupByLibrary.simpleMessage("الاسم"),

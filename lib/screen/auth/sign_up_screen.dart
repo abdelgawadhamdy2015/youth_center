@@ -26,9 +26,9 @@ class _SignUp extends ConsumerState<SignUpScreen> {
   final passwordController = TextEditingController();
   final mobileController = TextEditingController();
   final nameController = TextEditingController();
-
+    bool isLoadingCenters = true;
   List<String> youthCentersNames = ["شنواي"];
-  String dropdownValue = "شنواي";
+  String? dropdownValue ;
 
   late List<YouthCenterModel> youthCenters;
 
@@ -47,19 +47,35 @@ class _SignUp extends ConsumerState<SignUpScreen> {
     super.dispose();
   }
 
-  Future getAllCenters() async {
+  Future<void> getAllCenters() async {
+  try {
     final snapshot = await FirebaseFirestore.instance
         .collection(MyConstants.youthCentersCollection)
         .get();
 
-    youthCenters = snapshot.docs.map((e) => YouthCenterModel.fromSnapshot(e)).toList();
-    for (var center in youthCenters) {
-      if (!youthCentersNames.contains(center.name)) {
-        youthCentersNames.add(center.name);
-      }
+    youthCenters = snapshot.docs
+        .map((doc) => YouthCenterModel.fromSnapshot(doc))
+        .toList();
+
+    youthCentersNames = youthCenters.map((e) => e.name).toSet().toList();
+
+    // Set initial dropdown value
+    if (youthCentersNames.isNotEmpty) {
+      dropdownValue ??= youthCentersNames.first;
     }
-    setState(() {});
+
+    setState(() {
+      isLoadingCenters = false;
+    });
+  } catch (e) {
+    print('Error loading youth centers: $e');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Failed to load youth centers'),
+      backgroundColor: Colors.red,
+    ));
   }
+}
+
 
   void handleSignUp() {
     final controller = ref.read(signUpControllerProvider.notifier);
@@ -68,7 +84,7 @@ class _SignUp extends ConsumerState<SignUpScreen> {
       email: usernameController.text.trim(),
       password: passwordController.text.trim(), // ensure this field exists
       mobile: mobileController.text.trim(),
-      youthCenterName: dropdownValue,
+      youthCenterName: dropdownValue?? youthCentersNames.first,
       admin: false,
     );
     controller.signUp(user);
