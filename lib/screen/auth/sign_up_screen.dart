@@ -1,272 +1,138 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/screen/auth/auth.dart';
-import 'package:youth_center/core/themes/colors.dart';
-import '../../models/user_model.dart';
-import '../../models/youth_center_model.dart';
+import 'package:youth_center/screen/auth/signub_controller.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return SignUp();
-  }
+  ConsumerState<SignUpScreen> createState() => _SignUp();
 }
 
-class SignUp extends State<SignUpScreen> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  var youthCentersNames = ["شنواي"];
-  var dropdownValue = "شنواي";
-  late CenterUser centerUser;
+class _SignUp extends ConsumerState<SignUpScreen> {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final mobileController = TextEditingController();
+  final nameController = TextEditingController();
 
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
-  bool value = false;
+  List<String> youthCentersNames = ["شنواي"];
+  String dropdownValue = "شنواي";
 
   late List<YouthCenterModel> youthCenters;
 
-  late QuerySnapshot<Map<String, dynamic>> snapshot1;
   @override
   void initState() {
-    //
     super.initState();
     getAllCenters();
   }
 
   @override
   void dispose() {
-    //
-    super.dispose();
     usernameController.dispose();
     passwordController.dispose();
+    mobileController.dispose();
+    nameController.dispose();
+    super.dispose();
   }
 
-  Future signUp(CenterUser centerUser) async {
-    await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-          email: usernameController.text.trim(),
-          password: passwordController.text.trim(),
-        )
-        .then(
-          (value) => db
-              .collection(MyConstants.userCollection)
-              .doc(value.user!.uid)
-              .set(centerUser.toJson())
-              .whenComplete(() {
-                this.centerUser = centerUser;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(S.of(context).userRegistered),
-                    backgroundColor: Colors.green,
-                    elevation: 10, //shadow
-                  ),
-                );
+  Future getAllCenters() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection(MyConstants.youthCentersCollection)
+        .get();
 
-                FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: usernameController.text.trim(),
-                  password: passwordController.text.trim(),
-                );
-              })
-              .whenComplete(
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Auth()),
-                ),
-              )
-              .catchError((error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(error.toString()),
-                    backgroundColor: Colors.redAccent,
-                    elevation: 10, //shadow
-                  ),
-                );
-              }),
-        )
-        .catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error.toString()),
-              backgroundColor: Colors.redAccent,
-              elevation: 10, //shadow
-            ),
-          );
-        });
-  }
-
-  getAllCenters() async {
-    snapshot1 = await db.collection(MyConstants.youthCentersCollection).get();
-    youthCenters =
-        snapshot1.docs.map((e) => YouthCenterModel.fromSnapshot(e)).toList();
-    for (int i = 0; i < youthCenters.length; i++) {
-      if (!youthCentersNames.contains(youthCenters.elementAt(i).name)) {
-        youthCentersNames.add(youthCenters.elementAt(i).name);
+    youthCenters = snapshot.docs.map((e) => YouthCenterModel.fromSnapshot(e)).toList();
+    for (var center in youthCenters) {
+      if (!youthCentersNames.contains(center.name)) {
+        youthCentersNames.add(center.name);
       }
     }
     setState(() {});
   }
 
+  void handleSignUp() {
+    final controller = ref.read(signUpControllerProvider.notifier);
+    final user = CenterUser(
+      name: nameController.text.trim(),
+      email: usernameController.text.trim(),
+      password: passwordController.text.trim(), // ensure this field exists
+      mobile: mobileController.text.trim(),
+      youthCenterName: dropdownValue,
+      admin: false,
+    );
+    controller.signUp(user);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final signUpState = ref.watch(signUpControllerProvider);
+    final lang = S.of(context);
+
+    ref.listen(signUpControllerProvider, (prev, next) {
+      next.whenOrNull(
+        data: (_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(lang.userRegistered),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Auth()));
+        },
+        error: (error, _) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.toString()), backgroundColor: Colors.red),
+          );
+        },
+      );
+    });
+
     return Scaffold(
-      
       body: GradientContainer(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: SizeConfig().getScreenPadding(vertical: .2,horizintal: .1),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment:CrossAxisAlignment.center ,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  HelperMethods.buildTextField(
-                                    Icons.email,
-                                    S.of(context).username,
-                                    usernameController,
-                                    validator:
-                                        (value) =>
-                                            value?.isEmpty ?? true
-                                                ? S.of(context).enterUsername
-                                                : null,
-                                  ),
-                      
-                                  HelperMethods.verticalSpace(.02),
-                                  HelperMethods.buildTextField(
-                                    Icons.person,
-                                    S.of(context).name,
-                                    nameController,
-                                    validator:
-                                        (value) =>
-                                            value?.isEmpty ?? true
-                                                ? S.of(context).entername
-                                                : null,
-                                  ),
-                      
-                                  HelperMethods.verticalSpace(.02),
-                      
-                                  HelperMethods.buildTextField(
-                                    Icons.phone_in_talk_rounded,
-                                    S.of(context).name,
-                                    mobileController,
-                                    validator:
-                                        (value) =>
-                                            value?.isEmpty ?? true
-                                                ? S.of(context).enterMobile
-                                                : null,
-                                  ),
-                                  HelperMethods.verticalSpace(.02),
-                                
-                      
-                                  HelperMethods.buildTextField(
-                                    Icons.lock,
-                                    S.of(context).password,
-                                    passwordController,
-                                    validator:
-                                        (value) =>
-                                            value?.isEmpty ?? true
-                                                ? S.of(context).enterPassword
-                                                : null,
-                                    obsecur: true,
-                                  ),
-                                  HelperMethods.verticalSpace(.02),
-                                  DayDropdown(days:youthCentersNames , selectedDay: dropdownValue, onChanged: (String? newValue) {
-                                      setState(() {
-                                        dropdownValue = newValue!;
-                                      });
-                                    },)
-                                 
-                                ],
-                              ),
-                                  HelperMethods.verticalSpace(.02),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        signUp(
-                                          CenterUser(
-                                            name: nameController.text.toString().trim(),
-                                            email: usernameController.text.toString().trim(),
-                                            mobile: mobileController.text.toString().trim(),
-                                            admin: false,
-                                            youthCenterName: dropdownValue,
-                                          ),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: ColorManger.mainBlue,
-                                        //foregroundColor: Colors.black,
-                                      ),
-                                      child: Text(
-                                        S.of(context).register,
-                                        style: TextStyle(fontSize: 15, color: Colors.blue),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          S.of(context).alreadyHaveAccount,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 19,
-                                            decoration: TextDecoration.underline,
-                                          ),
-                                        ),
-                                  HelperMethods.verticalSpace(.02),
-                                        MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pushReplacementNamed('/');
-                                          },
-                                          child: Text(
-                                            S.of(context).signIn,
-                                            style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: SizeConfig().getScreenPadding(horizintal: .1, vertical: .2),
+            child: Column(
+              children: [
+                HelperMethods.buildTextField(Icons.email, lang.username, usernameController),
+                HelperMethods.verticalSpace(.02),
+                HelperMethods.buildTextField(Icons.person, lang.name, nameController),
+                HelperMethods.verticalSpace(.02),
+                HelperMethods.buildTextField(Icons.phone, lang.mobile, mobileController),
+                HelperMethods.verticalSpace(.02),
+                HelperMethods.buildTextField(Icons.lock, lang.password, passwordController, obsecur: true),
+                HelperMethods.verticalSpace(.02),
+                DayDropdown(
+                  days: youthCentersNames,
+                  selectedDay: dropdownValue,
+                  onChanged: (newVal) => setState(() => dropdownValue = newVal!),
                 ),
-              ),
-            ],
+                HelperMethods.verticalSpace(.02),
+                ElevatedButton(
+                  onPressed: signUpState is AsyncLoading ? null : handleSignUp,
+                  style: ElevatedButton.styleFrom(backgroundColor: ColorManger.mainBlue),
+                  child: Text(lang.register, style: TextStyle(fontSize: 15, color: Colors.blue)),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushReplacementNamed('/'),
+                  child: Text(lang.signIn, style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!)),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
     );
   }
 }

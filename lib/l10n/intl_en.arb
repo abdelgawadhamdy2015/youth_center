@@ -74,5 +74,6 @@
   "saturday": "Saturday",
   "sunday": "Sunday",
   "selectDay":"Select a day",
-  "selectCenter":"Select a center"
+  "selectCenter":"Select a center",
+  "mobile":"Mobile"
 }
