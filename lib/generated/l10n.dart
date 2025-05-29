@@ -469,11 +469,6 @@ class S {
     );
   }
 
-  /// `Register`
-  String get register {
-    return Intl.message('Register', name: 'register', desc: '', args: []);
-  }
-
   /// `already have account? `
   String get alreadyHaveAccount {
     return Intl.message(

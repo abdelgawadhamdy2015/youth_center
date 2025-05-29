@@ -81,7 +81,7 @@ class _UpdateBookingState extends State<UpdateBooking> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return HomeScreen(centerUser: MyConstants.centerUser);
+          return HomeScreen();
         },
       ),
     );

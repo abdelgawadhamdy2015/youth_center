@@ -1,12 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/screen/home/home_body.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.centerUser});
-  final CenterUser centerUser;
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return HomeScreenBody(
-      centerUser: widget.centerUser,
       tabController: _tabController,
     );
   }

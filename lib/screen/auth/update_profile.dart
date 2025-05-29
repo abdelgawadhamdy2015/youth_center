@@ -92,7 +92,7 @@ class Update extends State<UpdateProfile> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return HomeScreen(centerUser: centerUser);
+                return HomeScreen();
               },
             ),
           );

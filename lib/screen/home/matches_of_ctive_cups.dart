@@ -1,148 +1,93 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
-import 'package:youth_center/FetchData.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
-import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/models/cup_model.dart';
-import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/screen/home/booking_service.dart';
+import 'package:youth_center/screen/home/home_booking_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
 
-class MatchesOfActiveCups extends StatefulWidget {
-  const MatchesOfActiveCups({super.key, required this.center});
-
-  final CenterUser center;
+class MatchesOfActiveCups extends ConsumerStatefulWidget {
+  const MatchesOfActiveCups({super.key});
 
   @override
-  State<MatchesOfActiveCups> createState() => _MatchesState();
+  ConsumerState<MatchesOfActiveCups> createState() => _MatchesState();
 }
 
-class _MatchesState extends State<MatchesOfActiveCups> {
+class _MatchesState extends ConsumerState<MatchesOfActiveCups> {
   final BookingService bookingService = BookingService();
-
-  late CenterUser center;
-  late Stream<QuerySnapshot<Map<String, dynamic>>> collection;
-  final List<MatchModel> matchesModels = [];
-  final FetchData fetchData = FetchData();
-
-  String dropdownValue = '';
-
-  List<String> youthCenterNames = [];
-
-  List<YouthCenterModel> youthCenters = [];
-  bool get isAdmin => center.admin;
 
   @override
   void initState() {
     super.initState();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+    // ✅ هذا الكود آمن الآن
+    ref.read(selectedCenterNameProvider.notifier).state = "New Value";
+  });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    center = widget.center;
-    dropdownValue = center.youthCenterName;
-    _fetchData();
-    collection = getCollection();
-  }
-
-  Future<void> _fetchData() async {
-    youthCenterNames = await SharedPrefHelper.getListString(
-      MyConstants.prefCenterNames,
-    );
-    if (youthCenterNames.isEmpty) {
-      youthCenters = await bookingService.getAllCenters();
-      youthCenterNames = youthCenters.map((e) => e.name).toSet().toList();
-      SharedPrefHelper.setData(MyConstants.prefCenterNames, youthCenterNames);
-    }
-        setState(() {});
-
-  }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> getCollection() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> collections =
-        FirebaseFirestore.instance
-            .collection(MyConstants.cupCollection)
-            .where(
-              MyConstants.youthCenterIdCollection,
-              isEqualTo: isAdmin ? center.youthCenterName : dropdownValue,
-            )
-            .where(MyConstants.finished, isEqualTo: false)
-            .snapshots();
-
-    return collections;
-  }
-
-  List<MatchModel> extractMatches(QuerySnapshot snapshot) {
-    matchesModels.clear();
-    final cups =
-        snapshot.docs
-            .map(
-              (doc) => CupModel.fromSnapshot(
-                doc as DocumentSnapshot<Map<String, dynamic>>,
-              ),
-            )
-            .toList();
-    for (final cup in cups) {
-      for (final match in cup.matches) {
-        matchesModels.add(MatchModel.fromMap(match));
-      }
-    }
-
-    return matchesModels;
   }
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin = ref.watch(isAdminProvider);
+    final youthCentersAsync = ref.watch(youthCentersProvider);
+    final selectedyouthCenterName = ref.watch(selectedCenterNameProvider)??
+        MyConstants.centerUser.youthCenterName;
+    final matches = ref.watch(matchesProvider);
     var lang = S.of(context);
-    return Column(
-      children: [
-        if (!isAdmin)
-          DayDropdown(
-            lableText: S.of(context).selectCenter,
-            days: youthCenterNames,
-            selectedDay: dropdownValue,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  dropdownValue = value;
-                  collection = getCollection();
-                });
-              }
-            },
-          ),
-
-
-       
-        HelperMethods.verticalSpace(.02),
-
-        Expanded(
-          child: StreamBuilder<QuerySnapshot>(
-            stream: collection,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text(lang.wrong));
-              }
-              if (!snapshot.hasData) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (!isAdmin)
+            youthCentersAsync.when(
+              data: (centers) {
+                final centerNames = centers.map((e) => e.name).toList();
+                return DayDropdown(
+                  lableText: S.of(context).selectCenter,
+                  days: centerNames,
+                  selectedDay: selectedyouthCenterName,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        ref.read(selectedCenterNameProvider.notifier).state =
+                            value;
+                      });
+                    }
+                  },
+                );
+              },
+              error: (error, stackTrace) {
+                return Center(child: Text(error.toString()));
+              },
+              loading: () {
                 return const Center(child: CircularProgressIndicator());
+              },
+            ),
+
+          HelperMethods.verticalSpace(.02),
+
+          matches.when(
+            data: (data) {
+              if (data.isEmpty) {
+                return Center(
+                  child: Text(
+                    lang.NoMatches,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                );
               }
-
-              final matches = extractMatches(snapshot.data!);
-              if (matches.isEmpty) {
-                return Center(child: Text(lang.NoMatches));
-              }
-
-              return ListView.separated(
-                itemCount: matches.length,
-                separatorBuilder: (_, __) => HelperMethods.verticalSpace(.02),
-
+              return ListView.builder(
+                itemCount: data.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final match = matches[index];
+                  final match = data[index];
                   return InteractiveMatchCard(
                     canUpdate: false,
                     match: match,
@@ -151,9 +96,15 @@ class _MatchesState extends State<MatchesOfActiveCups> {
                 },
               );
             },
+            error: (error, stackTrace) {
+              return Center(child: Text(error.toString()));
+            },
+            loading: () {
+              return const Center(child: CircularProgressIndicator());
+            },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

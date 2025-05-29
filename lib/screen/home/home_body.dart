@@ -1,106 +1,59 @@
-// Redesigned HomeScreenBody to match modern login theme
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
-import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/models/booking_model.dart';
-import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/screen/booking/add_booking.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/booking_card.dart';
-import 'package:youth_center/screen/home/booking_service.dart';
+import 'package:youth_center/screen/home/home_booking_controller.dart';
 import 'package:youth_center/screen/home/matches_of_ctive_cups.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
 
-class HomeScreenBody extends StatefulWidget {
-  final CenterUser centerUser;
+class HomeScreenBody extends ConsumerStatefulWidget {
   final TabController tabController;
 
   const HomeScreenBody({
     super.key,
-    required this.centerUser,
     required this.tabController,
   });
 
   @override
-  State<HomeScreenBody> createState() => _HomeScreenBodyState();
+  ConsumerState<HomeScreenBody> createState() => _HomeScreenBodyState();
 }
 
-class _HomeScreenBodyState extends State<HomeScreenBody> {
-  final BookingService bookingService = BookingService();
-  List<BookingModel> _bookings = [];
-  List<BookingModel> _filteredBookings = [];
+class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
 
-  List<YouthCenterModel> youthCenters = [];
-  List<String> youthCenterNames = [];
-  late String dropdownValue;
-  late bool isAdmin;
-  late String _selectedDay;
   List<String> _weekdays = [];
-
+  late bool isAdmin;
   @override
   void initState() {
     super.initState();
-    isAdmin = widget.centerUser.admin;
-    dropdownValue = widget.centerUser.youthCenterName;
-    _fetchData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Initialize the selected center name after the first frame is built
+      isAdmin = ref.read(isAdminProvider);
+      if (isAdmin) {
+        ref.read(selectedCenterNameProvider.notifier).state = MyConstants.centerUser.youthCenterName;
+      }
+    });
+    
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _weekdays = HelperMethods.getWeekDays(context);
-    String weekday = DateFormat(
-      'EEEE',
-      Intl.defaultLocale,
-    ).format(DateTime.now());
-    _selectedDay = weekday;
   }
 
-  Future<void> _fetchData() async {
-    youthCenterNames = await SharedPrefHelper.getListString(
-      MyConstants.prefCenterNames,
-    );
-    if (youthCenterNames.isEmpty) {
-      youthCenters = await bookingService.getAllCenters();
-      youthCenterNames = youthCenters.map((e) => e.name).toSet().toList();
-      SharedPrefHelper.setData(MyConstants.prefCenterNames, youthCenterNames);
-    MyConstants.centerNames = youthCenterNames;
-    } else {
-      youthCenters = await bookingService.getAllCenters();
-    }
-    await _loadBookings();
-  }
-
-  Future<void> _loadBookings() async {
-    if (isAdmin) {
-      _bookings = await bookingService.getBookingsByCenter(
-        widget.centerUser.youthCenterName,
-      );
-    } else {
-      _bookings = await bookingService.getBookingsByCenter(dropdownValue);
-      _filterBookings();
-    }
-    setState(() {});
-  }
-
-  void _onDropdownChanged(String? newValue) async {
-    if (newValue != null) {
-      dropdownValue = newValue;
-      await _loadBookings();
-    }
-  }
+  
 
   void _onMenuSelected(int value) {
     switch (value) {
@@ -111,20 +64,20 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         );
         break;
       case 1:
-        if (isAdmin) {
+       
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddBooking(center: widget.centerUser),
+              builder: (context) => AddBooking(center: MyConstants.centerUser),
             ),
           );
-        }
+        
         break;
       case 2:
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CupScreen(center: widget.centerUser),
+            builder: (context) => CupScreen(center: MyConstants.centerUser),
           ),
         );
         break;
@@ -138,6 +91,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   @override
   Widget build(BuildContext context) {
     var lang = S.of(context);
+
     return Scaffold(
       body: DefaultTabController(
         length: 2,
@@ -150,63 +104,78 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     );
   }
 
-  _filterBookings() {
-    _filteredBookings =
-        _bookings.where((booking) {
-          return booking.day == _selectedDay;
-        }).toList();
-  }
 
   _buildBody() {
     return BodyContainer(
-      padding: SizeConfig().getScreenPadding(
-        vertical: .05,
-      ), //EdgeInsets.only(bottom: SizeConfig.screenHeight! * .05),
+      padding: SizeConfig().getScreenPadding(vertical: .05),
       height: SizeConfig.screenHeight! * .85,
       child: SwipeDetector(
-        onSwipeDown: (offset) => _loadBookings(),
         child: TabBarView(
           controller: widget.tabController,
-          children: [
-            _buildBookingsTab(),
-            MatchesOfActiveCups(center: widget.centerUser),
-          ],
+          children: [_buildBookingsTab(), MatchesOfActiveCups()],
         ),
       ),
     );
   }
 
   Widget _buildBookingsTab() {
+    final youthCentersAsync = ref.watch(youthCentersProvider);
+    
+    final youthCenterNames =
+        youthCentersAsync.asData?.value.map((center) => center.name).toList() ??
+        [];
+    final selectedCenter = ref.watch(selectedCenterNameProvider);
+
+    final selectedDay = ref.watch(selectedDayProvider);
+    final filteredBookings = ref.watch(filteredBookingsProvider);
     return Column(
       children: [
         if (!isAdmin)
           DayDropdown(
             lableText: S.of(context).selectCenter,
+
+            selectedDay: selectedCenter,
             days: youthCenterNames,
-            selectedDay: dropdownValue,
-            onChanged: _onDropdownChanged,
+            onChanged: (newValue) {
+              setState(() {
+                ref.read(selectedCenterNameProvider.notifier).state = newValue;
+              });
+            },
           ),
+
         HelperMethods.verticalSpace(.02),
         DayDropdown(
           lableText: S.of(context).selectDay,
           days: _weekdays,
-          selectedDay: _selectedDay,
+          selectedDay: selectedDay,
           onChanged: (newDay) {
             setState(() {
-              _selectedDay = newDay!;
-              _filterBookings();
+              ref.read(selectedDayProvider.notifier).state = newDay!;
             });
           },
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: _filteredBookings.length,
-            itemBuilder: (context, index) {
-              var booking = _filteredBookings[index];
-              return BookingCard(booking: booking);
-            },
-          ),
+        HelperMethods.verticalSpace(.02),
+
+        filteredBookings.when(
+          data: (bookings) {
+            if (bookings.isEmpty) {
+              return Center(child: Text(S.of(context).noData));
+            }
+            return Expanded(
+              child: ListView.builder(
+                itemCount: bookings.length,
+                itemBuilder: (context, index) {
+                  var booking = bookings[index];
+                  return BookingCard(booking: booking);
+                },
+              ),
+            );
+          },
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text("حدث خطأ: $e")),
         ),
+
+   
       ],
     );
   }
@@ -228,26 +197,21 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // Logo and App Name
-             
-                  SvgPicture.asset(
-                    MyConstants.logoSvg,
-                    height: SizeConfig.screenHeight! * .05,
-                    //width: SizeConfig.screenWidth! * .05,
-                  ),
-                                      HelperMethods.horizintalSpace(.02),
+              SvgPicture.asset(
+                MyConstants.logoSvg,
+                height: SizeConfig.screenHeight! * .05,
+              ),
+              HelperMethods.horizintalSpace(.02),
 
-                  Text(
-                    lang.appName,
-                    style: GoogleFonts.tajawal(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-              
-      
-              // Popup Menu Icon
+              Text(
+                lang.appName,
+                style: GoogleFonts.tajawal(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+
               PopupMenuButton<int>(
                 itemBuilder:
                     (context) => [
@@ -258,7 +222,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                           Icons.account_circle_outlined,
                         ),
                       ),
-                      PopupMenuItem(
+                    if (isAdmin) PopupMenuItem(
                         value: 1,
                         child: _buildMenuItem(lang.addBooking, Icons.add),
                       ),
@@ -279,16 +243,16 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               ),
             ],
           ),
-      
-          // TabBar 
+
+          // TabBar
           Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(SizeConfig.screenWidth! * .2), 
+              borderRadius: BorderRadius.circular(SizeConfig.screenWidth! * .2),
             ),
             child: TabBar(
               controller: widget.tabController,
-      
+
               unselectedLabelColor: Colors.white60,
               labelColor: Colors.white,
               tabs: [

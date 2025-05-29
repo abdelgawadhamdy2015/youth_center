@@ -83,6 +83,6 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
       ));
     }
 
-    return HomeScreen(centerUser: centerUser);
+    return HomeScreen();
   }
 }

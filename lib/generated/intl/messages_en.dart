@@ -97,7 +97,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile updated successfully",
     ),
     "random": MessageLookupByLibrary.simpleMessage("Random"),
-    "register": MessageLookupByLibrary.simpleMessage("Register"),
     "required": MessageLookupByLibrary.simpleMessage("Required"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "saturday": MessageLookupByLibrary.simpleMessage("Saturday"),

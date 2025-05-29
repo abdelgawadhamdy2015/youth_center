@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
@@ -15,21 +16,23 @@ import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/screen/booking/booking_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 
-class AddBooking extends StatefulWidget {
+class AddBooking extends ConsumerStatefulWidget {
   const AddBooking({super.key, required this.center});
 
   final CenterUser center;
 
   @override
-  State<StatefulWidget> createState() {
+  @override
+  ConsumerState<AddBooking> createState() {
     return Add();
   }
 }
 
-class Add extends State<AddBooking> {
+class Add extends ConsumerState<AddBooking> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   late BookingModel booking;
   TextEditingController nameController = TextEditingController();
@@ -86,10 +89,35 @@ class Add extends State<AddBooking> {
   }
 
   Future addBooking(BookingModel booking) async {
-    db
-        .collection(MyConstants.bookingCollection)
-        .add(booking.toJson())
-        .whenComplete(() {
+   await ref.watch(addBookingProvider.notifier).addBooking(booking);
+    
+    // db
+    //     .collection(MyConstants.bookingCollection)
+    //     .add(booking.toJson())
+    //     .whenComplete(() {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text(S.of(context).successSave),
+    //           backgroundColor: ColorManger.buttonGreen,
+    //           elevation: 10,
+    //         ),
+    //       );
+    //       Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(
+    //           builder: (context) {
+    //             return HomeScreen();
+    //           },
+    //         ),
+    //       );
+    //     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var lang = S.of(context);
+    ref.listen(addBookingProvider, (_, state) {
+      state.whenOrNull(
+        data: (_) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(S.of(context).successSave),
@@ -100,16 +128,22 @@ class Add extends State<AddBooking> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) {
-                return HomeScreen(centerUser: widget.center);
+                return HomeScreen();
               },
             ),
           );
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var lang = S.of(context);
+        },
+        error: (error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error.toString()),
+              backgroundColor: ColorManger.darkRed,
+              elevation: 10,
+            ),
+          );
+        },
+      );
+    });
     return Scaffold(
       body: GradientContainer(
         child: SingleChildScrollView(

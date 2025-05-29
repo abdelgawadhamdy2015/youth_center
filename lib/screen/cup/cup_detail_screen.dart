@@ -112,7 +112,7 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
-            return HomeScreen(centerUser: widget.center);
+            return HomeScreen();
           },
         ),
       );
