@@ -39,7 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "appName": MessageLookupByLibrary.simpleMessage("Youth Center"),
     "bookings": MessageLookupByLibrary.simpleMessage("Bookings"),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
-    "createCup": MessageLookupByLibrary.simpleMessage("Creat Tournament"),
+    "createCup": MessageLookupByLibrary.simpleMessage("Create Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("Distribute Teams"),
@@ -49,18 +49,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterCupName": MessageLookupByLibrary.simpleMessage(
       "Please enter a tournament name",
     ),
-    "enterEndTime": MessageLookupByLibrary.simpleMessage(
-      "enter end time ex : 22:30",
-    ),
-    "enterMobile": MessageLookupByLibrary.simpleMessage("enter your mobile"),
+    "enterEndTime": MessageLookupByLibrary.simpleMessage("End Time"),
+    "enterMobile": MessageLookupByLibrary.simpleMessage("Mobile"),
     "enterNames": MessageLookupByLibrary.simpleMessage(
       "Please enter all team names",
     ),
-    "enterPassword": MessageLookupByLibrary.simpleMessage("enter Password"),
-    "enterStartTime": MessageLookupByLibrary.simpleMessage(
-      "enter start time ex : 22:30",
-    ),
-    "enterUsername": MessageLookupByLibrary.simpleMessage(" enter User Name"),
+    "enterPassword": MessageLookupByLibrary.simpleMessage("Enter Password"),
+    "enterStartTime": MessageLookupByLibrary.simpleMessage("Start Time"),
+    "enterUsername": MessageLookupByLibrary.simpleMessage("Enter User Name"),
     "enterValidEmail": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid email",
     ),
@@ -70,7 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterValidPassword": MessageLookupByLibrary.simpleMessage(
       "Please enter a valid password",
     ),
-    "entername": MessageLookupByLibrary.simpleMessage("enter your Name"),
+    "entername": MessageLookupByLibrary.simpleMessage("Name"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
     "friday": MessageLookupByLibrary.simpleMessage("Friday"),
     "from": MessageLookupByLibrary.simpleMessage("From"),
@@ -102,7 +98,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
     "numberOfTeams": MessageLookupByLibrary.simpleMessage("Number of Teams: "),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
-    "pleaseFill": MessageLookupByLibrary.simpleMessage("Please Fill"),
+    "pleaseFill": MessageLookupByLibrary.simpleMessage(
+      "Please Fill all fields",
+    ),
     "profileUpdated": MessageLookupByLibrary.simpleMessage(
       "Profile updated successfully",
     ),

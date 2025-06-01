@@ -45,17 +45,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterCupName": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال اسم البطولة",
     ),
-    "enterEndTime": MessageLookupByLibrary.simpleMessage(
-      "أدخل وقت الانتهاء مثال: 22:30",
-    ),
-    "enterMobile": MessageLookupByLibrary.simpleMessage("أدخل رقم هاتفك"),
+    "enterEndTime": MessageLookupByLibrary.simpleMessage(" وقت الانتهاء"),
+    "enterMobile": MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف"),
     "enterNames": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال أسماء جميع الفرق",
     ),
     "enterPassword": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
-    "enterStartTime": MessageLookupByLibrary.simpleMessage(
-      "أدخل وقت البدء مثال: 22:30",
-    ),
+    "enterStartTime": MessageLookupByLibrary.simpleMessage(" وقت البدء"),
     "enterUsername": MessageLookupByLibrary.simpleMessage("أدخل اسم المستخدم"),
     "enterValidEmail": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال بريد إلكتروني صالح",

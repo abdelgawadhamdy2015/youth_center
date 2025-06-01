@@ -144,10 +144,10 @@ class S {
     return Intl.message('Password', name: 'password', desc: '', args: []);
   }
 
-  /// `enter Password`
+  /// `Enter Password`
   String get enterPassword {
     return Intl.message(
-      'enter Password',
+      'Enter Password',
       name: 'enterPassword',
       desc: '',
       args: [],
@@ -159,10 +159,10 @@ class S {
     return Intl.message('User Name', name: 'username', desc: '', args: []);
   }
 
-  /// ` enter User Name`
+  /// `Enter User Name`
   String get enterUsername {
     return Intl.message(
-      ' enter User Name',
+      'Enter User Name',
       name: 'enterUsername',
       desc: '',
       args: [],
@@ -204,54 +204,39 @@ class S {
     );
   }
 
-  /// `Creat Tournament`
+  /// `Create Tournament`
   String get createCup {
     return Intl.message(
-      'Creat Tournament',
+      'Create Tournament',
       name: 'createCup',
       desc: '',
       args: [],
     );
   }
 
-  /// `enter your Name`
+  /// `Name`
   String get entername {
-    return Intl.message(
-      'enter your Name',
-      name: 'entername',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Name', name: 'entername', desc: '', args: []);
   }
 
-  /// `enter your mobile`
+  /// `Mobile`
   String get enterMobile {
-    return Intl.message(
-      'enter your mobile',
-      name: 'enterMobile',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mobile', name: 'enterMobile', desc: '', args: []);
   }
 
-  /// `enter start time ex : 22:30`
+  /// `Start Time`
   String get enterStartTime {
     return Intl.message(
-      'enter start time ex : 22:30',
+      'Start Time',
       name: 'enterStartTime',
       desc: '',
       args: [],
     );
   }
 
-  /// `enter end time ex : 22:30`
+  /// `End Time`
   String get enterEndTime {
-    return Intl.message(
-      'enter end time ex : 22:30',
-      name: 'enterEndTime',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('End Time', name: 'enterEndTime', desc: '', args: []);
   }
 
   /// `Update`
@@ -504,9 +489,14 @@ class S {
     return Intl.message('Name', name: 'name', desc: '', args: []);
   }
 
-  /// `Please Fill`
+  /// `Please Fill all fields`
   String get pleaseFill {
-    return Intl.message('Please Fill', name: 'pleaseFill', desc: '', args: []);
+    return Intl.message(
+      'Please Fill all fields',
+      name: 'pleaseFill',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Monday`
