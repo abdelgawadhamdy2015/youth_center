@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
-import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
@@ -11,7 +10,7 @@ import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/screen/auth/signub_controller.dart';
-import 'package:youth_center/screen/home/home_booking_controller.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -25,7 +24,7 @@ class _SignUp extends ConsumerState<SignUpScreen> {
   final passwordController = TextEditingController();
   final mobileController = TextEditingController();
   final nameController = TextEditingController();
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -49,8 +48,7 @@ class _SignUp extends ConsumerState<SignUpScreen> {
       password: passwordController.text.trim(),
       mobile: mobileController.text.trim(),
       youthCenterName:
-          ref.read(selectedCenterNameProvider) ??
-          MyConstants.centerUser.youthCenterName,
+          ref.read(selectedCenterNameProvider)!,
       admin: false,
     );
     controller.signUp(user);
@@ -96,84 +94,103 @@ class _SignUp extends ConsumerState<SignUpScreen> {
               horizintal: .1,
               vertical: .2,
             ),
-            child: Column(
-              children: [
-                HelperMethods.buildTextField(
-                  Icons.email,
-                  lang.username,
-                  usernameController,
-                ),
-                HelperMethods.verticalSpace(.02),
-                HelperMethods.buildTextField(
-                  Icons.person,
-                  lang.name,
-                  nameController,
-                ),
-                HelperMethods.verticalSpace(.02),
-                HelperMethods.buildTextField(
-                  Icons.phone,
-                  lang.mobile,
-                  mobileController,
-                ),
-                HelperMethods.verticalSpace(.02),
-                HelperMethods.buildTextField(
-                  Icons.lock,
-                  lang.password,
-                  passwordController,
-                  obsecur: true,
-                ),
-                HelperMethods.verticalSpace(.02),
-                youthCentersNames.when(
-                  data: (centers) {
-                    return DayDropdown(
-                      lableText: S.of(context).selectCenter,
-                      days: centers,
-                      selectedDay: selectedyouthCenterName,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() {
-                            ref
-                                .read(selectedCenterNameProvider.notifier)
-                                .state = value;
-                          });
-                        }
-                      },
-                    );
-                  },
-                  error: (error, stackTrace) {
-                    return Center(child: Text(error.toString()));
-                  },
-                  loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                ),
-                HelperMethods.verticalSpace(.02),
-                AppButtonText(
-                  onPressed: signUpState is AsyncLoading ? () {} :() => handleSignUp(),
-                  textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
-                  butonText: lang.signup,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      lang.alreadyHaveAccount,
-                      style: TextStyles.whiteRegulerStyle(
-                        SizeConfig.fontSize3!,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed:
-                          () => Navigator.of(context).pushReplacementNamed('/'),
-                      child: Text(
-                        lang.signIn,
-                        style: TextStyles.darkBlueBoldStyle(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  HelperMethods.buildTextField(
+                    Icons.email,
+                    lang.username,
+                    usernameController,
+                    validator: (value) => value == null || value.isEmpty
+                        ? S.of(context).enterUsername
+                        : null,
+                  ),
+                  HelperMethods.verticalSpace(.02),
+                  HelperMethods.buildTextField(
+                    Icons.person,
+                    lang.name,
+                    nameController,
+                    validator: (value) => value == null || value.isEmpty
+                        ? S.of(context).entername
+                        : null,
+                  ),
+                  HelperMethods.verticalSpace(.02),
+                  HelperMethods.buildTextField(
+                    Icons.phone,
+                    lang.mobile,
+                    mobileController,
+                    validator: (value) => value == null || value.isEmpty
+                        ? S.of(context).enterMobile
+                        : null,
+                  ),
+                  HelperMethods.verticalSpace(.02),
+                  HelperMethods.buildTextField(
+
+                    Icons.lock,
+                    lang.password,
+                    passwordController,
+                    obsecur: true,
+                    validator: (value) => value == null || value.isEmpty
+                        ? S.of(context).enterPassword
+                        : null,
+                  ),
+                  HelperMethods.verticalSpace(.02),
+                  youthCentersNames.when(
+                    data: (centers) {
+                      return DayDropdown(
+                        validator: (value) => value == null
+                            ? S.of(context).selectCenter
+                            : null,
+                        lableText: S.of(context).selectCenter,
+                        days: centers,
+                        selectedDay: selectedyouthCenterName,
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() {
+                              ref
+                                  .read(selectedCenterNameProvider.notifier)
+                                  .state = value;
+                            });
+                          }
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      return Center(child: Text(error.toString()));
+                    },
+                    loading: () {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ),
+                  HelperMethods.verticalSpace(.02),
+                  AppButtonText(
+                    onPressed: signUpState is AsyncLoading ? () {} :() => handleSignUp(),
+                    textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
+                    butonText: lang.signup,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        lang.alreadyHaveAccount,
+                        style: TextStyles.whiteRegulerStyle(
                           SizeConfig.fontSize3!,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      TextButton(
+                        onPressed:
+                            () => Navigator.of(context).pushReplacementNamed('/'),
+                        child: Text(
+                          lang.signIn,
+                          style: TextStyles.darkBlueBoldStyle(
+                            SizeConfig.fontSize3!,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

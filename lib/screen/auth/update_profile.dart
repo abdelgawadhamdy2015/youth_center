@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
@@ -15,27 +16,27 @@ import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../../models/user_model.dart';
 
-class UpdateProfile extends StatefulWidget {
+class UpdateProfile extends ConsumerStatefulWidget {
   const UpdateProfile({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<UpdateProfile> createState() {
     return Update();
   }
 }
 
-class Update extends State<UpdateProfile> {
+class Update extends ConsumerState<UpdateProfile> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   var dropdownValue = "شنواي";
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  // late List<String> minuItems;
 
   FetchData fetchData = FetchData();
   bool adminValue = false;
@@ -55,11 +56,11 @@ class Update extends State<UpdateProfile> {
 
   setData() async {
     setState(() {
-      usernameController.text = MyConstants.centerUser.email.toString().trim();
-      nameController.text = MyConstants.centerUser.name.toString().trim();
-      mobileController.text = MyConstants.centerUser.mobile.toString().trim();
-      dropdownValue = MyConstants.centerUser.youthCenterName.toString().trim();
-      adminValue = MyConstants.centerUser.admin;
+      usernameController.text = MyConstants.centerUser?.email.toString().trim() ?? '';
+      nameController.text = MyConstants.centerUser?.name.toString().trim() ?? '';
+      mobileController.text = MyConstants.centerUser?.mobile.toString().trim() ?? '';
+      dropdownValue = MyConstants.centerUser?.youthCenterName.toString().trim() ?? '';
+      adminValue = MyConstants.centerUser?.admin ?? false;
     });
   }
 
@@ -68,11 +69,6 @@ class Update extends State<UpdateProfile> {
     super.didChangeDependencies();
     setData();
 
-    // minuItems = [
-    //   S.of(context).homePage,
-    //   S.of(context).addBooking,
-    //   S.of(context).logOut,
-    // ];
   }
 
   Future updateMyProfile(CenterUser centerUser) async {
@@ -124,6 +120,7 @@ class Update extends State<UpdateProfile> {
 
   @override
   Widget build(BuildContext context) {
+    adminValue=ref.watch(isAdminProvider);
     return Scaffold(
       body: GradientContainer(
         child: SingleChildScrollView(
@@ -165,7 +162,7 @@ class Update extends State<UpdateProfile> {
                         days: MyConstants.centerNames,
                         selectedDay: dropdownValue,
                         onChanged:
-                            MyConstants.centerUser.admin
+                            MyConstants.centerUser?.admin ?? false
                                 ? null
                                 : (value) {
                                   if (value != null) {
@@ -187,11 +184,12 @@ class Update extends State<UpdateProfile> {
                         onPressed: () {
                           updateMyProfile(
                             CenterUser(
+                              id: FirebaseAuth.instance.currentUser!.uid,
                               name: nameController.text,
                               mobile: mobileController.text,
                               email: usernameController.text,
                               youthCenterName: dropdownValue,
-                              admin: MyConstants.centerUser.admin,
+                              admin: MyConstants.centerUser?.admin ?? false,
                             ),
                           );
                         },

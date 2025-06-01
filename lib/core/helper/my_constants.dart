@@ -16,12 +16,14 @@ class MyConstants {
 
   static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
 
-  static CenterUser centerUser=CenterUser(name: "", mobile: "", email: "", youthCenterName: "", admin: false);
+  static CenterUser? centerUser;
 
   //collections
   static const String userCollection = 'Users';
   static const String cupCollection = 'Cups';
   static const String bookingCollection = 'Bookings';
+  static const String requestCollection = 'BookingRequests';
+
   static const String youthCenterIdCollection = 'youthCenterId';
   static const String youthCentersCollection = 'youthCenters';
 

@@ -74,6 +74,7 @@
   "sunday": "الأحد",
   "selectDay": "اختر يوماً",
   "selectCenter": "اختر مركزاً",
-    "mobile":"رقم الهاتف"
-
+  "mobile": "رقم الهاتف",
+  "delete": "حذف",
+  "requestBooking": "طلب حجز"
 }

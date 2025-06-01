@@ -74,5 +74,7 @@
   "sunday": "Sunday",
   "selectDay": "Select a day",
   "selectCenter": "Select a center",
-  "mobile": "Mobile"
+  "mobile": "Mobile",
+  "delete": "Delete",
+  "requestBooking": "Request Booking"
 }

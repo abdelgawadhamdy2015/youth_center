@@ -563,6 +563,21 @@ class S {
   String get mobile {
     return Intl.message('Mobile', name: 'mobile', desc: '', args: []);
   }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message('Delete', name: 'delete', desc: '', args: []);
+  }
+
+  /// `Request Booking`
+  String get requestBooking {
+    return Intl.message(
+      'Request Booking',
+      name: 'requestBooking',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

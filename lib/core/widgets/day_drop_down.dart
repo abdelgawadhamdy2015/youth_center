@@ -9,23 +9,26 @@ class DayDropdown extends StatelessWidget {
   final String? selectedDay;
   final Function(String?)? onChanged;
   final String? lableText;
-
+  final FormFieldValidator<String>? validator;
   const DayDropdown({
     super.key,
     required this.days,
     required this.selectedDay,
-    required this.onChanged, this.lableText,
-   
+    required this.onChanged,
+    this.lableText,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(lableText??'',
-            style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),textAlign: TextAlign.start,),
+        Text(lableText ?? '',
+            style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
+            textAlign: TextAlign.start),
         DropdownButtonFormField<String>(
-          
+
+          validator: validator,
           alignment: AlignmentDirectional.bottomCenter,
           isExpanded: false,
           decoration: InputDecoration(
@@ -39,19 +42,30 @@ class DayDropdown extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
           ),
+          
           value: selectedDay,
           onChanged: onChanged,
-          items: days.map<DropdownMenuItem<String>>((String day) {
-        return DropdownMenuItem<String>(
-          value: day,
-          child: Text(
-            day,
-            textAlign: TextAlign.center,
-            style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
-            
-          ),
-        );
-          }).toList(),
+          items: {
+            DropdownMenuItem<String>(
+              value: null,
+              child: Text(
+                lableText?? S.of(context).selectDay,
+                textAlign: TextAlign.center,
+                style: TextStyles.lighterGrayRegulerStyle(SizeConfig.fontSize3!),
+              ),
+            ),
+            ...days.map<DropdownMenuItem<String>>((String day) {
+              return DropdownMenuItem<String>(
+                value: day,
+                child: Text(
+                  day,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
+                ),
+              );
+            }),
+           }.toList()
+          
         ),
       ],
     );

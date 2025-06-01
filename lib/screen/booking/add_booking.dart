@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
@@ -15,15 +13,13 @@ import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
-import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/screen/booking/booking_controller.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
-
 class AddBooking extends ConsumerStatefulWidget {
-  const AddBooking({super.key, required this.center});
+  const AddBooking({super.key,});
 
-  final CenterUser center;
 
   @override
   @override
@@ -33,29 +29,22 @@ class AddBooking extends ConsumerStatefulWidget {
 }
 
 class Add extends ConsumerState<AddBooking> {
-  FirebaseFirestore db = FirebaseFirestore.instance;
   late BookingModel booking;
   TextEditingController nameController = TextEditingController();
-  TextEditingController dayController = TextEditingController();
 
-  TextEditingController timeStartController = TextEditingController();
-  TextEditingController timeEndController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
-  DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now();
-  FetchData fetchDate = FetchData();
   bool adminValue = true;
-  var dropdownValue = "شنواي";
   late String _selectedDay;
   List<String> _weekdays = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<String> _times = [];
+  String? selectedStartTime;
+  String? selectedEndTime;
+
   @override
   void initState() {
     super.initState();
-
-    if (kDebugMode) {
-      print(widget.center);
-    }
+    
   }
 
   @override
@@ -65,51 +54,34 @@ class Add extends ConsumerState<AddBooking> {
     _selectedDay = _weekdays.first;
   }
 
-  void _handlePickTime(bool isStart) async {
-    DateTime? selected = await HelperMethods.pickTime(context);
-    if (selected == null) return;
+  // void _handlePickTime(bool isStart) async {
+  //   DateTime? selected = await HelperMethods.pickTime(context);
+  //   if (selected == null) return;
 
-    setState(() {
-      if (isStart) {
-        startTime = selected;
-        timeStartController.text = MyConstants.hourFormat.format(startTime);
-      } else {
-        endTime = selected;
-        timeEndController.text = MyConstants.hourFormat.format(endTime);
-      }
-    });
-  }
+  //   setState(() {
+  //     if (isStart) {
+  //       startTime = selected;
+  //       timeStartController.text = MyConstants.hourFormat.format(startTime);
+  //     } else {
+  //       endTime = selected;
+  //       timeEndController.text = MyConstants.hourFormat.format(endTime);
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
-    timeStartController.dispose();
     mobileController.dispose();
   }
 
   Future addBooking(BookingModel booking) async {
-   await ref.watch(addBookingProvider.notifier).addBooking(booking);
-    
-    // db
-    //     .collection(MyConstants.bookingCollection)
-    //     .add(booking.toJson())
-    //     .whenComplete(() {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(
-    //           content: Text(S.of(context).successSave),
-    //           backgroundColor: ColorManger.buttonGreen,
-    //           elevation: 10,
-    //         ),
-    //       );
-    //       Navigator.of(context).pushReplacement(
-    //         MaterialPageRoute(
-    //           builder: (context) {
-    //             return HomeScreen();
-    //           },
-    //         ),
-    //       );
-    //     });
+    if (adminValue) {
+      await ref.watch(addBookingProvider.notifier).addBooking(booking);
+    } else {
+      await ref.watch(addBookingProvider.notifier).requestBooking(booking);
+    }
   }
 
   @override
@@ -158,7 +130,13 @@ class Add extends ConsumerState<AddBooking> {
     );
   }
 
-  _buildBody(var lang) {
+  _buildBody(S lang) {
+    final centerName = ref.watch(selectedCenterNameProvider);
+    final day = ref.watch(selectedDayProvider);
+    adminValue = ref.watch(isAdminProvider);
+    final timesAsync = ref.watch(
+      availableTimesProvider((centerName ?? '', day)),
+    );
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
       padding: SizeConfig().getScreenPadding(vertical: .1, horizintal: .08),
@@ -180,6 +158,7 @@ class Add extends ConsumerState<AddBooking> {
 
             HelperMethods.verticalSpace(.03),
             HelperMethods.buildTextField(
+
               Icons.phone,
               lang.enterMobile,
               mobileController,
@@ -189,49 +168,69 @@ class Add extends ConsumerState<AddBooking> {
             ),
 
             HelperMethods.verticalSpace(.03),
-            HelperMethods.buildTextField(
-              onTab: () => _handlePickTime(true),
-              Icons.timer_rounded,
-              lang.enterStartTime,
-              timeStartController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? S.of(context).enterStartTime
-                          : null,
+            timesAsync.when(
+              data: (times) {
+                _times = times;
+                return DayDropdown(
+                  validator: (value) => value?.isEmpty ?? true
+                      ? S.of(context).enterStartTime
+                      : null,
+                  lableText: lang.enterStartTime,
+                  days: _times,
+                  selectedDay: selectedStartTime,
+                  onChanged: (newTime) {
+                    setState(() {
+                      selectedStartTime = newTime;
+                    });
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => Text(error.toString()),
             ),
 
+           
             HelperMethods.verticalSpace(.03),
-            HelperMethods.buildTextField(
-              onTab: () => _handlePickTime(false),
-              Icons.timer,
-              lang.enterEndTime,
-              timeEndController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true
-                          ? S.of(context).enterEndTime
-                          : null,
+            timesAsync.when(
+              data: (times) {
+                _times = times;
+                return DayDropdown(
+                  validator: (value) => value?.isEmpty ?? true
+                      ? S.of(context).enterEndTime
+                      : null,
+                  lableText: lang.enterEndTime,
+                  days: _times,
+                  selectedDay: selectedEndTime,
+                  onChanged: (newTime) {
+                    setState(() {
+                      selectedEndTime = newTime;
+                    });
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => Text(error.toString()),
             ),
+            
             HelperMethods.verticalSpace(.03),
 
             AppButtonText(
               backGroundColor: ColorManger.buttonGreen,
-              // buttonWidth: SizeConfig.screenWidth! * .5,
               textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
-              butonText: lang.addBooking,
+              butonText: adminValue ? lang.addBooking : lang.requestBooking,
               onPressed: () {
+               
+                final newBooking = BookingModel(
+                  date: DateTime.now().toIso8601String(),
+                  day: _selectedDay,
+                  name: nameController.text.toString().trim(),
+                  mobile: mobileController.text.toString().trim(),
+                  timeEnd: selectedEndTime!,
+                  timeStart: selectedStartTime!,
+                  youthCenterId: MyConstants.centerUser?.youthCenterName ?? '',
+                );
                 if (_formKey.currentState!.validate()) {
-                  addBooking(
-                    BookingModel(
-                      day: _selectedDay,
-                      name: nameController.text.toString().trim(),
-                      mobile: mobileController.text.toString().trim(),
-                      timeEnd: timeEndController.text.toString().trim(),
-                      timeStart: timeStartController.text.toString().trim(),
-                      youthCenterId: widget.center.youthCenterName,
-                    ),
-                  );
+                  addBooking(newBooking);
                 }
               },
             ),

@@ -8,6 +8,7 @@ class BookingModel {
   final String timeStart;
   final String youthCenterId;
   final String day;
+  final String date;
 
   const BookingModel({
     this.id,
@@ -17,10 +18,12 @@ class BookingModel {
     required this.timeStart,
     required this.youthCenterId,
     required this.day,
+    required this.date,
   });
 
   toJson() {
     return {
+      "date": date,
       "day": day,
       "name": name,
       "mobile": mobile,
@@ -35,8 +38,9 @@ class BookingModel {
   ) {
     final data = document.data();
     return BookingModel(
-      day: data!["day"],
+      date: data!["date"],
       id: document.id,
+      day: data["day"],
       name: data["name"],
       mobile: data["mobile"],
       timeStart: data["timeStart"],
@@ -47,6 +51,7 @@ class BookingModel {
 
   Map<String, dynamic> toFirestore() {
     return {
+      "date": date,
       "day": day,
       "name": name,
       "mobile": mobile,

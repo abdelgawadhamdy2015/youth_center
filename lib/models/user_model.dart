@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 class CenterUser {
+  final String? id;
   final String name;
   final String email;
   final String mobile;
@@ -12,6 +13,7 @@ class CenterUser {
   final String? password;
 
   CenterUser({
+     this.id,
     required this.name,
     required this.email,
     required this.mobile,
@@ -22,6 +24,7 @@ class CenterUser {
 
   factory CenterUser.fromJson(Map<String, dynamic> json) {
     return CenterUser(
+      id: json['id'],
       name: json['name'],
       email: json['email'],
       mobile: json['mobile'],
@@ -32,6 +35,7 @@ class CenterUser {
 
   Map<String, dynamic> toJson() {
     return {
+    
       'name': name,
       'email': email,
       'mobile': mobile,

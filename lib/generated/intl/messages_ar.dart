@@ -39,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear": MessageLookupByLibrary.simpleMessage("مسح"),
     "createCup": MessageLookupByLibrary.simpleMessage("إنشاء بطولة"),
     "cupName": MessageLookupByLibrary.simpleMessage("اسم البطولة"),
+    "delete": MessageLookupByLibrary.simpleMessage("حذف"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("توزيع الفرق"),
     "distributionMode": MessageLookupByLibrary.simpleMessage("طريقة التوزيع: "),
     "enterCupName": MessageLookupByLibrary.simpleMessage(
@@ -92,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تحديث الملف الشخصي بنجاح",
     ),
     "random": MessageLookupByLibrary.simpleMessage("عشوائي"),
+    "requestBooking": MessageLookupByLibrary.simpleMessage("طلب حجز"),
     "required": MessageLookupByLibrary.simpleMessage("مطلوب"),
     "reset": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
     "saturday": MessageLookupByLibrary.simpleMessage("السبت"),

@@ -25,6 +25,12 @@ class _Login extends ConsumerState<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+@override
+  void initState() {
+    super.initState();
+
+  }
+
   @override
   void dispose() {
     usernameController.dispose();
@@ -35,6 +41,12 @@ class _Login extends ConsumerState<LoginScreen> {
   void _handleLogin() {
     final loginController = ref.read(loginControllerProvider.notifier);
     loginController.signIn(usernameController.text, passwordController.text);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+     HelperMethods.invalidateAllProviders(context, ref);
   }
 
   @override

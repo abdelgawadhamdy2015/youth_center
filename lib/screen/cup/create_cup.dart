@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
@@ -13,19 +13,19 @@ import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/models/user_model.dart';
+import 'package:youth_center/screen/cup/cups_controller.dart';
 import 'package:youth_center/screen/cup/group_card.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
 
-class AddCupScreen extends StatefulWidget {
-  final CenterUser center;
-  const AddCupScreen({super.key, required this.center});
+class AddCupScreen extends ConsumerStatefulWidget {
+  const AddCupScreen({super.key});
 
   @override
-  State<AddCupScreen> createState() => _AddCupScreenState();
+  ConsumerState<AddCupScreen> createState() => _AddCupScreenState();
 }
 
-class _AddCupScreenState extends State<AddCupScreen> {
+class _AddCupScreenState extends ConsumerState<AddCupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -180,16 +180,14 @@ class _AddCupScreenState extends State<AddCupScreen> {
       name: _nameController.text,
       teems: _teams,
       timeStart: Timestamp.fromDate(_selectedDate),
-      youthCenterId: widget.center.youthCenterName,
+      youthCenterId: ref.read(selectedCenterNameProvider) ?? '',
       matches: _jsonMatches,
       finished: false,
     );
-    log('Saving cup: ${cup.toJson()}');
 
-    await db
-        .collection(MyConstants.cupCollection)
-        .doc(cup.id)
-        .set(cup.toJson())
+    ref
+        .read(cupsControllerProvider)
+        .createCup(cup)
         .then((_) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -227,8 +225,6 @@ class _AddCupScreenState extends State<AddCupScreen> {
         _initializeTeamControllers();
         _nameController.clear();
       }
-
-      
     });
   }
 
@@ -444,16 +440,18 @@ class _AddCupScreenState extends State<AddCupScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: _matches.length,
-                itemBuilder: (_, index) => _buildMatchCard(_matches[index]),
+                itemBuilder: (_, index) => _buildMatchCard(_matches[index],
+                    ref.watch(isAdminProvider),
+                )
               ),
         ],
       ),
     ),
   );
 
-  Widget _buildMatchCard(MatchModel match) => InteractiveMatchCard(
+  Widget _buildMatchCard(MatchModel match, bool isAdmin) => InteractiveMatchCard(
     match: match,
-    isAdmin: widget.center.admin,
+    isAdmin: isAdmin,
     canUpdate: true,
   );
 

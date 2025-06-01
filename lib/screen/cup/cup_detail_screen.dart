@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
@@ -15,43 +16,36 @@ import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/screen/home/home_screen.dart';
+import 'package:youth_center/screen/cup/cups_controller.dart';
+import 'package:youth_center/screen/cup/cups_screen.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
 
-class CupDetailScreen extends StatefulWidget {
-  final CenterUser center;
+class CupDetailScreen extends ConsumerStatefulWidget {
   final CupModel cupModel;
 
-  const CupDetailScreen({
-    super.key,
-    required this.center,
-    required this.cupModel,
-  });
+  const CupDetailScreen({super.key, required this.cupModel});
 
   @override
-  State<CupDetailScreen> createState() => _CupDetailScreenState();
+  ConsumerState<CupDetailScreen> createState() => _CupDetailScreenState();
 }
 
-class _CupDetailScreenState extends State<CupDetailScreen> {
+class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final FetchData fetchData = FetchData();
   final TextEditingController nameController = TextEditingController();
 
   late CupModel cupModel;
-  late CenterUser center;
   late Timestamp dateTime;
   late DateTime iniDate;
 
   List<List<String>> groupedTeams = List.generate(8, (_) => []);
   List<MatchModel> matchesModels = [];
-    List<dynamic> _jsonMatches = [];
-
+  final List<dynamic> _jsonMatches = [];
 
   @override
   void initState() {
     super.initState();
-    center = widget.center;
     cupModel = widget.cupModel;
     nameController.text = cupModel.name;
     iniDate = DateTime.now();
@@ -86,8 +80,8 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
   Future<void> _saveCup(S lang) async {
     for (var match in matchesModels) {
       _jsonMatches.add(match.toJson());
-      }
-    
+    }
+
     CupModel updatedCup = CupModel(
       id: cupModel.id,
       name: nameController.text,
@@ -98,32 +92,46 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
       finished: cupModel.finished,
     );
 
-    try {
-      await db
-          .collection(MyConstants.cupCollection)
-          .doc(cupModel.id)
-          .set(updatedCup.toJson());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(lang.successSave),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) {
-            return HomeScreen();
-          },
-        ),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.toString()),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-    }
+    ref
+        .read(cupsControllerProvider)
+        .updateCup(updatedCup)
+        .then((_) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(lang.successSave)));
+          ref.invalidate(cupsProvider);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CupScreen()),
+          );
+        })
+        .catchError((error) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        });
+  }
+
+  Future<void> _deleteCup(S lang) async {
+    ref
+        .read(cupsControllerProvider)
+        .deleteCup(cupModel.id)
+        .then((_) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(lang.successSave)));
+          ref.invalidate(cupsProvider);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => CupScreen()),
+          );
+        })
+        .catchError((error) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        });
   }
 
   String _getStatusText(bool status, S lang) =>
@@ -170,28 +178,28 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = S.of(context);
-
+    final isAdmin = ref.watch(isAdminProvider);
     return Scaffold(
       body: GradientContainer(
         child: Column(
-          children: [Header(title: lang.tournament), _buildBody(lang)],
+          children: [Header(title: lang.tournament), _buildBody(lang, isAdmin)],
         ),
       ),
     );
   }
 
-  _buildBody(var lang) {
+  _buildBody(S lang, bool isAdmin) {
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            if (center.admin)
+            if (isAdmin)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("${lang.finished}", style: _headerStyle()),
+                  Text(lang.finished, style: _headerStyle()),
                   Checkbox(
                     value: cupModel.getStatus(),
                     onChanged:
@@ -242,22 +250,38 @@ class _CupDetailScreenState extends State<CupDetailScreen> {
               itemBuilder: (context, index) {
                 final match = matchesModels[index];
                 return InteractiveMatchCard(
-                  canUpdate: (center.admin && !cupModel.finished),
+                  canUpdate: (isAdmin && !cupModel.finished),
                   match: match,
-                  isAdmin: widget.center.admin,
+                  isAdmin: isAdmin,
                 );
               },
             ),
 
-            if (widget.center.admin)
-              AppButtonText(
-                backGroundColor: ColorManger.buttonGreen,
-                textStyle: GoogleFonts.tajawal(
-                  color: Colors.white,
-                  fontSize: SizeConfig.fontSize3!,
-                ),
-                butonText: lang.save,
-                onPressed: () => _saveCup(lang),
+            if (isAdmin)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppButtonText(
+                    buttonWidth: SizeConfig.screenWidth! * .4,
+                    backGroundColor: ColorManger.buttonGreen,
+                    textStyle: GoogleFonts.tajawal(
+                      color: Colors.white,
+                      fontSize: SizeConfig.fontSize3!,
+                    ),
+                    butonText: lang.save,
+                    onPressed: () => _saveCup(lang),
+                  ),
+                  AppButtonText(
+                    buttonWidth: SizeConfig.screenWidth! * .4,
+                    backGroundColor: ColorManger.redButtonColor,
+                    textStyle: GoogleFonts.tajawal(
+                      color: Colors.white,
+                      fontSize: SizeConfig.fontSize3!,
+                    ),
+                    butonText: lang.delete,
+                    onPressed: () => _deleteCup(lang),
+                  ),
+                ],
               ),
           ],
         ),

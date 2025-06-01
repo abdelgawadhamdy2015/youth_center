@@ -2,11 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
-import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/home/booking_service.dart';
-import 'package:youth_center/screen/home/home_booking_controller.dart';
+import 'package:youth_center/core/service/data_base_service.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
 
 class MatchesOfActiveCups extends ConsumerStatefulWidget {
@@ -17,15 +16,12 @@ class MatchesOfActiveCups extends ConsumerStatefulWidget {
 }
 
 class _MatchesState extends ConsumerState<MatchesOfActiveCups> {
-  final BookingService bookingService = BookingService();
+  final DataBaseService bookingService = DataBaseService();
 
   @override
   void initState() {
     super.initState();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-    // ✅ هذا الكود آمن الآن
-    ref.read(selectedCenterNameProvider.notifier).state = "New Value";
-  });
+    
   }
 
   @override
@@ -37,8 +33,7 @@ class _MatchesState extends ConsumerState<MatchesOfActiveCups> {
   Widget build(BuildContext context) {
     final isAdmin = ref.watch(isAdminProvider);
     final youthCentersAsync = ref.watch(youthCentersProvider);
-    final selectedyouthCenterName = ref.watch(selectedCenterNameProvider)??
-        MyConstants.centerUser.youthCenterName;
+    final selectedyouthCenterName = ref.watch(selectedCenterNameProvider);
     final matches = ref.watch(matchesProvider);
     var lang = S.of(context);
     return SingleChildScrollView(
@@ -47,7 +42,7 @@ class _MatchesState extends ConsumerState<MatchesOfActiveCups> {
           if (!isAdmin)
             youthCentersAsync.when(
               data: (centers) {
-                final centerNames = centers.map((e) => e.name).toList();
+                final centerNames = centers.map((e) => e.name).toSet().toList();
                 return DayDropdown(
                   lableText: S.of(context).selectCenter,
                   days: centerNames,

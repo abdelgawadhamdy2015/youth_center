@@ -9,20 +9,20 @@ import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
-import 'package:youth_center/screen/home/booking_service.dart';
+import 'package:youth_center/core/service/data_base_service.dart';
 
-final centerUserProvider = Provider<CenterUser>((ref) {
+final centerUserProvider = Provider<CenterUser?>((ref) {
   return MyConstants.centerUser; // تأتي من تسجيل الدخول
 });
 
 final isAdminProvider = Provider<bool>((ref) {
-  return ref.watch(centerUserProvider).admin;
+  return ref.watch(centerUserProvider)?.admin ?? false;
 });
 
 final youthCentersProvider = FutureProvider<List<YouthCenterModel>>((
   ref,
 ) async {
-  final service = BookingService();
+  final service = DataBaseService();
 
   final centers = await service.getAllCenters();
   return centers;
@@ -33,7 +33,7 @@ final youthCenterNamesProvider = FutureProvider<List<String>>((ref) async {
     MyConstants.prefCenterNames,
   );
   if (centerNames.isEmpty) {
-    final centers = await BookingService().getAllCenters();
+    final centers = await DataBaseService().getAllCenters();
     centerNames = centers.map((e) => e.name).toList();
     await SharedPrefHelper.setData(MyConstants.prefCenterNames, centerNames);
   }
@@ -41,31 +41,28 @@ final youthCenterNamesProvider = FutureProvider<List<String>>((ref) async {
 });
 
 final selectedCenterNameProvider = StateProvider<String?>((ref) {
-  return null;
+  return  MyConstants.centerUser?.youthCenterName;
 });
 
 final selectedDayProvider = StateProvider<String>((ref) {
   return DateFormat("EEE").format(DateTime.now()); // الأحد، الإثنين، إلخ
 });
 
-final bookingsProvider = FutureProvider.autoDispose<List<BookingModel>>((ref) async {
-  final bookingService = BookingService();
+final bookingsProvider = FutureProvider<List<BookingModel>>((ref) async {
+  final bookingService = DataBaseService();
 
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
   final user = ref.watch(centerUserProvider);
 
-  // إذا كان المستخدم Admin، استخدم اسم مركزه
   if (isAdmin) {
-    return bookingService.getBookingsByCenter(user.youthCenterName);
+    return bookingService.getBookingsByCenter(user?.youthCenterName?? '');
   }
 
-  // إذا تم تحديد مركز، اجلب الحجوزات له
   if (selectedCenter != null && selectedCenter.isNotEmpty) {
     return bookingService.getBookingsByCenter(selectedCenter);
   }
 
-  // في حال لم يتم تحديد أي مركز
   return [];
 });
 final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
@@ -91,13 +88,13 @@ final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
 });
 
 final activeCupsProvider = FutureProvider<List<CupModel>>((ref) async {
-  final bookingService = BookingService();
+  final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
   if (isAdmin) {
     final user = ref.watch(centerUserProvider);
-    return await bookingService.getCups(user.youthCenterName, finished: false);
+    return await bookingService.getCups(user?.youthCenterName ?? '', finished: false);
   } else if (selectedCenter != null) {
     return await bookingService.getCups(selectedCenter, finished: false);
   } else {
@@ -107,13 +104,13 @@ final activeCupsProvider = FutureProvider<List<CupModel>>((ref) async {
 });
 
 final cupsProvider = FutureProvider<List<CupModel>>((ref) async {
-  final bookingService = BookingService();
+  final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
   if (isAdmin) {
     final user = ref.watch(centerUserProvider);
-    return await bookingService.getCups(user.youthCenterName);
+    return await bookingService.getCups(user?.youthCenterName ?? '');
   }
 
   if (selectedCenter != null) {

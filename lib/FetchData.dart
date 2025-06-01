@@ -52,7 +52,7 @@ class FetchData {
             context,
             MaterialPageRoute(
               builder:
-                  (context) => AddBooking(center: centerUser),
+                  (context) => AddBooking(),
             ),
           );
         }
@@ -62,7 +62,7 @@ class FetchData {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CupScreen(center: centerUser),
+              builder: (context) => CupScreen(),
             ),
           );
         }

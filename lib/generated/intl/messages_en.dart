@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "createCup": MessageLookupByLibrary.simpleMessage("Creat Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
+    "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("Distribute Teams"),
     "distributionMode": MessageLookupByLibrary.simpleMessage(
       "Distribution Mode: ",
@@ -97,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile updated successfully",
     ),
     "random": MessageLookupByLibrary.simpleMessage("Random"),
+    "requestBooking": MessageLookupByLibrary.simpleMessage("Request Booking"),
     "required": MessageLookupByLibrary.simpleMessage("Required"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "saturday": MessageLookupByLibrary.simpleMessage("Saturday"),

@@ -14,37 +14,24 @@ import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/booking/add_booking.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/booking_card.dart';
-import 'package:youth_center/screen/home/home_booking_controller.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/matches_of_ctive_cups.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
 
 class HomeScreenBody extends ConsumerStatefulWidget {
   final TabController tabController;
 
-  const HomeScreenBody({
-    super.key,
-    required this.tabController,
-  });
+  const HomeScreenBody({super.key, required this.tabController});
 
   @override
   ConsumerState<HomeScreenBody> createState() => _HomeScreenBodyState();
 }
 
 class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
-
   List<String> _weekdays = [];
-  late bool isAdmin;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Initialize the selected center name after the first frame is built
-      isAdmin = ref.read(isAdminProvider);
-      if (isAdmin) {
-        ref.read(selectedCenterNameProvider.notifier).state = MyConstants.centerUser.youthCenterName;
-      }
-    });
-    
   }
 
   @override
@@ -52,8 +39,6 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     super.didChangeDependencies();
     _weekdays = HelperMethods.getWeekDays(context);
   }
-
-  
 
   void _onMenuSelected(int value) {
     switch (value) {
@@ -64,26 +49,24 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
         );
         break;
       case 1:
-       
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddBooking(center: MyConstants.centerUser),
-            ),
-          );
-        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddBooking(),
+          ),
+        );
+
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => CupScreen(center: MyConstants.centerUser),
-          ),
+          MaterialPageRoute(builder: (context) => CupScreen()),
         );
         break;
       case 3:
         FirebaseAuth.instance.signOut();
         Navigator.of(context).pushReplacementNamed('/');
+
         break;
     }
   }
@@ -91,39 +74,41 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
   @override
   Widget build(BuildContext context) {
     var lang = S.of(context);
+    final isAdmin = ref.read(isAdminProvider);
 
     return Scaffold(
       body: DefaultTabController(
         length: 2,
         child: GradientContainer(
           child: SingleChildScrollView(
-            child: Column(children: [_buildHeader(lang), _buildBody()]),
+            child: Column(
+              children: [_buildHeader(lang, isAdmin), _buildBody(isAdmin)],
+            ),
           ),
         ),
       ),
     );
   }
 
-
-  _buildBody() {
+  _buildBody(bool isAdmin) {
     return BodyContainer(
-      padding: SizeConfig().getScreenPadding(vertical: .05),
+      padding: SizeConfig().getScreenPadding(vertical: .01),
       height: SizeConfig.screenHeight! * .85,
       child: SwipeDetector(
         child: TabBarView(
           controller: widget.tabController,
-          children: [_buildBookingsTab(), MatchesOfActiveCups()],
+          children: [_buildBookingsTab(isAdmin), MatchesOfActiveCups()],
         ),
       ),
     );
   }
 
-  Widget _buildBookingsTab() {
+  Widget _buildBookingsTab(bool isAdmin) {
     final youthCentersAsync = ref.watch(youthCentersProvider);
-    
-    final youthCenterNames =
-        youthCentersAsync.asData?.value.map((center) => center.name).toList() ??
-        [];
+
+    // final youthCenterNames =
+    //     youthCentersAsync.asData?.value.map((center) => center.name).toList() ??
+    //     [];
     final selectedCenter = ref.watch(selectedCenterNameProvider);
 
     final selectedDay = ref.watch(selectedDayProvider);
@@ -131,16 +116,28 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     return Column(
       children: [
         if (!isAdmin)
-          DayDropdown(
-            lableText: S.of(context).selectCenter,
-
-            selectedDay: selectedCenter,
-            days: youthCenterNames,
-            onChanged: (newValue) {
-              setState(() {
-                ref.read(selectedCenterNameProvider.notifier).state = newValue;
-              });
+          youthCentersAsync.when(
+            data: (data) {
+              final youthCenterNames = data
+                  .map((center) => center.name)
+                  .toList();
+              if (data.isEmpty) {
+                return Center(child: Text(S.of(context).noData));
+              }
+            return  DayDropdown(
+                lableText: S.of(context).selectCenter,
+                selectedDay: selectedCenter,
+                days: youthCenterNames,
+                onChanged: (newValue) {
+                  setState(() {
+                    ref.read(selectedCenterNameProvider.notifier).state =
+                        newValue;
+                  });
+                },
+              );
             },
+            loading: () => Center(child: CircularProgressIndicator()),
+            error: (error, _) => Center(child: Text("حدث خطأ: $error")),
           ),
 
         HelperMethods.verticalSpace(.02),
@@ -174,8 +171,6 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
           loading: () => Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text("حدث خطأ: $e")),
         ),
-
-   
       ],
     );
   }
@@ -190,7 +185,7 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     );
   }
 
-  _buildHeader(var lang) {
+  _buildHeader(var lang, bool isAdmin) {
     return SafeArea(
       child: Column(
         children: [
@@ -222,9 +217,12 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
                           Icons.account_circle_outlined,
                         ),
                       ),
-                    if (isAdmin) PopupMenuItem(
+                      PopupMenuItem(
                         value: 1,
-                        child: _buildMenuItem(lang.addBooking, Icons.add),
+                        child: _buildMenuItem(
+                          (isAdmin) ? lang.addBooking : lang.requestBooking,
+                          Icons.add,
+                        ),
                       ),
                       PopupMenuItem(
                         value: 2,
