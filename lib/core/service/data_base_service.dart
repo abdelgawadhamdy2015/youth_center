@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
@@ -9,6 +10,19 @@ import 'package:youth_center/models/youth_center_model.dart';
 class DataBaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  Future<CenterUser?> getCurrentUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+
+    final snapshot = await _db
+        .collection(MyConstants.userCollection)
+        .doc(user.uid)
+        .get();
+
+    if (!snapshot.exists) return null;
+
+    return CenterUser.fromSnapshot(snapshot);
+  }
   Future<List<BookingModel>> getAllBookings() async {
     final snapshot = await _db.collection(MyConstants.bookingCollection).get();
     return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();

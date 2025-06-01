@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:svg_flutter/svg.dart';
@@ -25,10 +26,9 @@ class _Login extends ConsumerState<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-@override
+  @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -46,7 +46,7 @@ class _Login extends ConsumerState<LoginScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-     HelperMethods.invalidateAllProviders(context, ref);
+    HelperMethods.invalidateAllProviders(context, ref);
   }
 
   @override
@@ -58,7 +58,10 @@ class _Login extends ConsumerState<LoginScreen> {
       next.whenOrNull(
         error: (error, _) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.toString()), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text(error.toString()),
+              backgroundColor: Colors.red,
+            ),
           );
         },
       );
@@ -81,11 +84,18 @@ class _Login extends ConsumerState<LoginScreen> {
                 HelperMethods.verticalSpace(.02),
 
                 HelperMethods.buildTextField(
+                  inputType: TextInputType.emailAddress,
                   Icons.person,
                   lang.username,
                   usernameController,
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? S.of(context).enterUsername : null,
+                  validator: (value) {
+                    value?.isEmpty ?? true ? S.of(context).enterUsername : null;
+
+                    if (!MyConstants.emailCharRegExp.hasMatch(value)) {
+                      return lang.enterValidEmail;
+                    }
+                    return null;
+                  },
                 ),
                 HelperMethods.verticalSpace(.02),
 
@@ -100,9 +110,12 @@ class _Login extends ConsumerState<LoginScreen> {
                 AppButtonText(
                   backGroundColor: ColorManger.darkBlue,
                   borderRadius: SizeConfig.screenWidth! * .05,
-                  textStyle: GoogleFonts.tajawal(fontSize: 20, color: Colors.white),
+                  textStyle: GoogleFonts.tajawal(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
                   butonText: lang.login,
-                  onPressed: loginState is AsyncLoading ? (){} : _handleLogin,
+                  onPressed: loginState is AsyncLoading ? () {} : _handleLogin,
                 ),
 
                 HelperMethods.verticalSpace(.02),

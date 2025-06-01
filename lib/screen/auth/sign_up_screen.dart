@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
@@ -36,7 +37,7 @@ class _SignUp extends ConsumerState<SignUpScreen> {
     passwordController.dispose();
     mobileController.dispose();
     nameController.dispose();
-    
+
     super.dispose();
   }
 
@@ -47,8 +48,7 @@ class _SignUp extends ConsumerState<SignUpScreen> {
       email: usernameController.text.trim(),
       password: passwordController.text.trim(),
       mobile: mobileController.text.trim(),
-      youthCenterName:
-          ref.read(selectedCenterNameProvider)!,
+      youthCenterName: ref.read(selectedCenterNameProvider)!,
       admin: false,
     );
     controller.signUp(user);
@@ -99,49 +99,65 @@ class _SignUp extends ConsumerState<SignUpScreen> {
               child: Column(
                 children: [
                   HelperMethods.buildTextField(
+                    inputType: TextInputType.emailAddress,
                     Icons.email,
                     lang.username,
                     usernameController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? S.of(context).enterUsername
-                        : null,
+                    validator: (value) {
+                      value?.isEmpty ?? true
+                          ? S.of(context).enterUsername
+                          : null;
+
+                      if (!MyConstants.emailCharRegExp.hasMatch(value)) {
+                        return lang.enterValidEmail;
+                      }
+                      return null;
+                    },
                   ),
                   HelperMethods.verticalSpace(.02),
                   HelperMethods.buildTextField(
                     Icons.person,
                     lang.name,
                     nameController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? S.of(context).entername
-                        : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? S.of(context).entername
+                                : null,
                   ),
                   HelperMethods.verticalSpace(.02),
                   HelperMethods.buildTextField(
+                    inputType: TextInputType.phone,
                     Icons.phone,
                     lang.mobile,
                     mobileController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? S.of(context).enterMobile
-                        : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? S.of(context).enterMobile
+                                : null,
                   ),
                   HelperMethods.verticalSpace(.02),
                   HelperMethods.buildTextField(
-
                     Icons.lock,
                     lang.password,
                     passwordController,
                     obsecur: true,
-                    validator: (value) => value == null || value.isEmpty
-                        ? S.of(context).enterPassword
-                        : null,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? S.of(context).enterPassword
+                                : null,
                   ),
                   HelperMethods.verticalSpace(.02),
                   youthCentersNames.when(
                     data: (centers) {
                       return DayDropdown(
-                        validator: (value) => value == null
-                            ? S.of(context).selectCenter
-                            : null,
+                        validator:
+                            (value) =>
+                                value == null
+                                    ? S.of(context).selectCenter
+                                    : null,
                         lableText: S.of(context).selectCenter,
                         days: centers,
                         selectedDay: selectedyouthCenterName,
@@ -165,7 +181,10 @@ class _SignUp extends ConsumerState<SignUpScreen> {
                   ),
                   HelperMethods.verticalSpace(.02),
                   AppButtonText(
-                    onPressed: signUpState is AsyncLoading ? () {} :() => handleSignUp(),
+                    onPressed:
+                        signUpState is AsyncLoading
+                            ? () {}
+                            : () => handleSignUp(),
                     textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
                     butonText: lang.signup,
                   ),
@@ -179,7 +198,8 @@ class _SignUp extends ConsumerState<SignUpScreen> {
                       ),
                       TextButton(
                         onPressed:
-                            () => Navigator.of(context).pushReplacementNamed('/'),
+                            () =>
+                                Navigator.of(context).pushReplacementNamed('/'),
                         child: Text(
                           lang.signIn,
                           style: TextStyles.darkBlueBoldStyle(

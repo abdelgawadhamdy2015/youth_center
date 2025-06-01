@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
@@ -11,20 +12,21 @@ import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/screen/auth/login_screen.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 import '../models/user_model.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return Welcome();
   }
 }
 
-class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+class Welcome extends ConsumerState<WelcomeScreen> with SingleTickerProviderStateMixin {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   FetchData fetchDate = FetchData();
@@ -38,7 +40,6 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getUser();
   }
 
   getUser() async {
@@ -61,11 +62,19 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
             String json = jsonEncode(documentSnapshot.data());
             Map<String, dynamic>? c = jsonDecode(json);
             centerUser = CenterUser.fromJson(c!);
+
             MyConstants.centerUser = centerUser;
+            ref.read(centerUserProvider) ;
             userDone = true;
            
           }
         });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUser();
   }
 
   @override
@@ -74,25 +83,37 @@ class Welcome extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   }
 
   Widget getWidget() {
-    if (!userDone) {
-      Future.delayed(Duration(seconds: 3), () {
-        setState(() {});
-      });
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(MyConstants.logoSvg),
-            HelperMethods.verticalSpace(.02),
-            Text(
-              "YOUTH CENTER",
-              style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!),
-            ),
-          ],
-        ),
-      );
-    }
+   final userAsync = ref.watch(centerUserProvider);
+   return userAsync.when(
+      data: (user) {
+        if (user == null) {
+          return LoginScreen();
+        }
+        MyConstants.centerUser = user;
+        return HomeScreen();
+      },
+      loading: () => Center(
+        child: _buildWelcomeScreen(),
+      ),
+      error: (error, stackTrace) => Center(
+        child: Text("حدث خطأ: $error"),
+      ),
+    );
+  }
 
-    return HomeScreen();
+  Widget _buildWelcomeScreen() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(MyConstants.logoSvg),
+          HelperMethods.verticalSpace(.02),
+          Text(
+            "YOUTH CENTER",
+            style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize3!),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -76,5 +76,8 @@
   "selectCenter": "Select a center",
   "mobile": "Mobile",
   "delete": "Delete",
-  "requestBooking": "Request Booking"
+  "requestBooking": "Request Booking",
+  "enterValidEmail": "Please enter a valid email",
+  "enterValidMobile": "Please enter a valid mobile number",
+  "enterValidPassword": "Please enter a valid password"
 }

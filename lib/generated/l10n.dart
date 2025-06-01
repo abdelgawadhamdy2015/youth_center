@@ -578,6 +578,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Please enter a valid email`
+  String get enterValidEmail {
+    return Intl.message(
+      'Please enter a valid email',
+      name: 'enterValidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid mobile number`
+  String get enterValidMobile {
+    return Intl.message(
+      'Please enter a valid mobile number',
+      name: 'enterValidMobile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid password`
+  String get enterValidPassword {
+    return Intl.message(
+      'Please enter a valid password',
+      name: 'enterValidPassword',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
@@ -14,6 +15,7 @@ class HelperMethods {
     IconData icon,
     String hint,
     TextEditingController controller, {
+     TextInputType? inputType,
     var validator,
     VoidCallback? onTab,
     bool obsecur = false,
@@ -28,6 +30,7 @@ class HelperMethods {
       icon: Icon(icon),
       controller: controller,
       validator: validator,
+      inputType: inputType,
     );
   }
 

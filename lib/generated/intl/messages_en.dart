@@ -61,6 +61,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "enter start time ex : 22:30",
     ),
     "enterUsername": MessageLookupByLibrary.simpleMessage(" enter User Name"),
+    "enterValidEmail": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid email",
+    ),
+    "enterValidMobile": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid mobile number",
+    ),
+    "enterValidPassword": MessageLookupByLibrary.simpleMessage(
+      "Please enter a valid password",
+    ),
     "entername": MessageLookupByLibrary.simpleMessage("enter your Name"),
     "finished": MessageLookupByLibrary.simpleMessage("Finished"),
     "friday": MessageLookupByLibrary.simpleMessage("Friday"),

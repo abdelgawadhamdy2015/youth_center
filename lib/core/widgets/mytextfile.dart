@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
@@ -29,7 +30,7 @@ class MyTextForm extends StatefulWidget {
   final int? maxLines;
   final Widget? icon;
   final double? hight;
-
+  final TextInputType? inputType;
   final Function()? onEditingComplete;
 
   const MyTextForm(
@@ -56,7 +57,7 @@ class MyTextForm extends StatefulWidget {
       this.onEditingComplete,
       this.enabled,
       this.maxLines,
-      this.icon, this.hight});
+      this.icon, this.hight, this.inputType});
 
   @override
   State<MyTextForm> createState() => _MyTextFormState();
@@ -76,6 +77,7 @@ class _MyTextFormState extends State<MyTextForm> {
       height:widget.hight?? hight,
       child: Center(
         child: TextFormField(
+            keyboardType: widget.inputType ?? TextInputType.text,
             style: widget.inputTextStyle,
             maxLines: widget.maxLines ?? 1,
             enabled: widget.enabled ?? true,
@@ -135,7 +137,7 @@ class _MyTextFormState extends State<MyTextForm> {
               if (widget.validator == null) {
                 if (val!.isEmpty) {
                   setState(() {
-                    hight = SizeConfig.screenHeight! * .07;
+                    hight = SizeConfig.screenHeight! * .08;
                   });
                   return "\u26A0 ${S.of(context).pleaseFill} ${widget.excep}";
                 } else {
@@ -146,7 +148,7 @@ class _MyTextFormState extends State<MyTextForm> {
                 }
               } else {
                 setState(() {
-                  hight = SizeConfig.screenHeight! * .07;
+                  hight = SizeConfig.screenHeight! * .08;
                 });
                 return widget.validator!(val);
               }

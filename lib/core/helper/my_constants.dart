@@ -2,6 +2,11 @@ import 'package:intl/intl.dart';
 import 'package:youth_center/models/user_model.dart';
 
 class MyConstants {
+ static final RegExp emailCharRegExp = RegExp(r'[a-zA-Z0-9@._\-+]');
+  static final RegExp arabicCharRegExp = RegExp(r'[\u0600-\u06FF]');
+  static final RegExp englishCharRegExp = RegExp(r'[a-zA-Z]');
+  static final RegExp numberCharRegExp = RegExp(r'[0-9]');
+
   //shared pref constants
   static const String prefCenterUser = 'centerUser';
   static const String prefCenterNames = 'CenterNames';

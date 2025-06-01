@@ -140,101 +140,104 @@ class Add extends ConsumerState<AddBooking> {
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
       padding: SizeConfig().getScreenPadding(vertical: .1, horizintal: .08),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            _buildDayDropDown(),
-            HelperMethods.verticalSpace(.03),
-
-            HelperMethods.buildTextField(
-              Icons.person,
-              lang.entername,
-              nameController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true ? S.of(context).entername : null,
-            ),
-
-            HelperMethods.verticalSpace(.03),
-            HelperMethods.buildTextField(
-
-              Icons.phone,
-              lang.enterMobile,
-              mobileController,
-              validator:
-                  (value) =>
-                      value?.isEmpty ?? true ? S.of(context).enterMobile : null,
-            ),
-
-            HelperMethods.verticalSpace(.03),
-            timesAsync.when(
-              data: (times) {
-                _times = times;
-                return DayDropdown(
-                  validator: (value) => value?.isEmpty ?? true
-                      ? S.of(context).enterStartTime
-                      : null,
-                  lableText: lang.enterStartTime,
-                  days: _times,
-                  selectedDay: selectedStartTime,
-                  onChanged: (newTime) {
-                    setState(() {
-                      selectedStartTime = newTime;
-                    });
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Text(error.toString()),
-            ),
-
-           
-            HelperMethods.verticalSpace(.03),
-            timesAsync.when(
-              data: (times) {
-                _times = times;
-                return DayDropdown(
-                  validator: (value) => value?.isEmpty ?? true
-                      ? S.of(context).enterEndTime
-                      : null,
-                  lableText: lang.enterEndTime,
-                  days: _times,
-                  selectedDay: selectedEndTime,
-                  onChanged: (newTime) {
-                    setState(() {
-                      selectedEndTime = newTime;
-                    });
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Text(error.toString()),
-            ),
-            
-            HelperMethods.verticalSpace(.03),
-
-            AppButtonText(
-              backGroundColor: ColorManger.buttonGreen,
-              textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
-              butonText: adminValue ? lang.addBooking : lang.requestBooking,
-              onPressed: () {
-               
-                final newBooking = BookingModel(
-                  date: DateTime.now().toIso8601String(),
-                  day: _selectedDay,
-                  name: nameController.text.toString().trim(),
-                  mobile: mobileController.text.toString().trim(),
-                  timeEnd: selectedEndTime!,
-                  timeStart: selectedStartTime!,
-                  youthCenterId: MyConstants.centerUser?.youthCenterName ?? '',
-                );
-                if (_formKey.currentState!.validate()) {
-                  addBooking(newBooking);
-                }
-              },
-            ),
-          ],
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _buildDayDropDown(),
+              HelperMethods.verticalSpace(.03),
+        
+              HelperMethods.buildTextField(
+                Icons.person,
+                lang.entername,
+                nameController,
+                validator:
+                    (value) =>
+                        value?.isEmpty ?? true ? S.of(context).entername : null,
+              ),
+        
+              HelperMethods.verticalSpace(.03),
+              HelperMethods.buildTextField(
+        
+                Icons.phone,
+                lang.enterMobile,
+                mobileController,
+                validator:
+                    (value) =>
+                        value?.isEmpty ?? true ? S.of(context).enterMobile : null,
+              ),
+        
+              HelperMethods.verticalSpace(.03),
+              timesAsync.when(
+                data: (times) {
+                  _times = times;
+                  return DayDropdown(
+                    validator: (value) => value?.isEmpty ?? true
+                        ? S.of(context).enterStartTime
+                        : null,
+                    lableText: lang.enterStartTime,
+                    days: _times,
+                    selectedDay: selectedStartTime,
+                    onChanged: (newTime) {
+                      setState(() {
+                        selectedStartTime = newTime;
+                      });
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Text(error.toString()),
+              ),
+        
+             
+              HelperMethods.verticalSpace(.03),
+              timesAsync.when(
+                data: (times) {
+                  _times = times;
+                  return DayDropdown(
+                    validator: (value) => value?.isEmpty ?? true
+                        ? S.of(context).enterEndTime
+                        : null,
+                    lableText: lang.enterEndTime,
+                    days: _times,
+                    selectedDay: selectedEndTime,
+                    onChanged: (newTime) {
+                      setState(() {
+                        selectedEndTime = newTime;
+                      });
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Text(error.toString()),
+              ),
+              
+              HelperMethods.verticalSpace(.03),
+        
+              AppButtonText(
+                backGroundColor: ColorManger.buttonGreen,
+                textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
+                butonText: adminValue ? lang.addBooking : lang.requestBooking,
+                onPressed: () {
+                 
+                  
+                  if (_formKey.currentState!.validate()) {
+                    final newBooking = BookingModel(
+                    date: DateTime.now().toIso8601String(),
+                    day: _selectedDay,
+                    name: nameController.text.toString().trim(),
+                    mobile: mobileController.text.toString().trim(),
+                    timeEnd: selectedEndTime!,
+                    timeStart: selectedStartTime!,
+                    youthCenterId: MyConstants.centerUser?.youthCenterName ?? '',
+                  );
+                    addBooking(newBooking);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

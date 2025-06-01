@@ -11,12 +11,19 @@ import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
 
-final centerUserProvider = Provider<CenterUser?>((ref) {
-  return MyConstants.centerUser; // تأتي من تسجيل الدخول
+final centerUserProvider = FutureProvider<CenterUser?>((ref) async {
+  return await DataBaseService().getCurrentUser();
 });
 
 final isAdminProvider = Provider<bool>((ref) {
-  return ref.watch(centerUserProvider)?.admin ?? false;
+  final userAsync = ref.watch(centerUserProvider);
+  return userAsync.maybeWhen(
+    data: (user) {
+      MyConstants.centerUser = user;
+      return user?.admin ?? false;
+    },
+    orElse: () => false,
+  );
 });
 
 final youthCentersProvider = FutureProvider<List<YouthCenterModel>>((
@@ -53,10 +60,10 @@ final bookingsProvider = FutureProvider<List<BookingModel>>((ref) async {
 
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
-  final user = ref.watch(centerUserProvider);
+  final user = MyConstants.centerUser ?? ref.watch(centerUserProvider).asData?.value;
 
   if (isAdmin) {
-    return bookingService.getBookingsByCenter(user?.youthCenterName?? '');
+    return bookingService.getBookingsByCenter(user?.youthCenterName ?? '');
   }
 
   if (selectedCenter != null && selectedCenter.isNotEmpty) {
@@ -90,10 +97,10 @@ final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
 final activeCupsProvider = FutureProvider<List<CupModel>>((ref) async {
   final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
-  final selectedCenter = ref.watch(selectedCenterNameProvider);
+  final selectedCenter =  ref.watch(selectedCenterNameProvider);
 
   if (isAdmin) {
-    final user = ref.watch(centerUserProvider);
+    final user =  ref.watch(centerUserProvider).asData?.value;
     return await bookingService.getCups(user?.youthCenterName ?? '', finished: false);
   } else if (selectedCenter != null) {
     return await bookingService.getCups(selectedCenter, finished: false);
@@ -109,7 +116,7 @@ final cupsProvider = FutureProvider<List<CupModel>>((ref) async {
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
   if (isAdmin) {
-    final user = ref.watch(centerUserProvider);
+    final user = ref.watch(centerUserProvider).asData?.value;
     return await bookingService.getCups(user?.youthCenterName ?? '');
   }
 

@@ -76,5 +76,8 @@
   "selectCenter": "اختر مركزاً",
   "mobile": "رقم الهاتف",
   "delete": "حذف",
-  "requestBooking": "طلب حجز"
+  "requestBooking": "طلب حجز",
+   "enterValidEmail": "يرجى إدخال بريد إلكتروني صالح",
+  "enterValidMobile": "يرجى إدخال رقم هاتف محمول صالح",
+  "enterValidPassword": "يرجى إدخال كلمة مرور صالحة"
 }

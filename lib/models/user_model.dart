@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 class CenterUser {
@@ -21,6 +22,19 @@ class CenterUser {
     required this.admin,
     this.password,
   });
+
+  factory CenterUser.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return CenterUser(
+      id: snapshot.id,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      mobile: data['mobile'] ?? '',
+      youthCenterName: data['youthCenterName'] ?? '',
+      admin: data['admin'] ?? false,
+      password: null, // Password is not included in the snapshot
+    );
+  }
 
   factory CenterUser.fromJson(Map<String, dynamic> json) {
     return CenterUser(

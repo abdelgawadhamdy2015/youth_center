@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
@@ -18,22 +18,16 @@ class MatchesOfActiveCups extends ConsumerStatefulWidget {
 class _MatchesState extends ConsumerState<MatchesOfActiveCups> {
   final DataBaseService bookingService = DataBaseService();
 
-  @override
-  void initState() {
-    super.initState();
-    
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
     final isAdmin = ref.watch(isAdminProvider);
     final youthCentersAsync = ref.watch(youthCentersProvider);
-    final selectedyouthCenterName = ref.watch(selectedCenterNameProvider);
+    final selectedyouthCenterName =
+        ref.watch(selectedCenterNameProvider) ??
+        MyConstants.centerUser?.youthCenterName;
+
     final matches = ref.watch(matchesProvider);
     var lang = S.of(context);
     return SingleChildScrollView(

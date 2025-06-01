@@ -109,7 +109,7 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     // final youthCenterNames =
     //     youthCentersAsync.asData?.value.map((center) => center.name).toList() ??
     //     [];
-    final selectedCenter = ref.watch(selectedCenterNameProvider);
+    final selectedCenter = ref.watch(selectedCenterNameProvider)?? MyConstants.centerUser?.youthCenterName;
 
     final selectedDay = ref.watch(selectedDayProvider);
     final filteredBookings = ref.watch(filteredBookingsProvider);
