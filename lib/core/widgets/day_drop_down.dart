@@ -23,9 +23,9 @@ class DayDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(lableText ?? '',
-            style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
-            textAlign: TextAlign.start),
+        // Text(lableText ?? '',
+        //     style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
+        //     textAlign: TextAlign.start),
         DropdownButtonFormField<String>(
 
           validator: validator,

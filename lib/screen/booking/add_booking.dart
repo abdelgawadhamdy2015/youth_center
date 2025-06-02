@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
@@ -18,8 +17,7 @@ import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
 class AddBooking extends ConsumerStatefulWidget {
-  const AddBooking({super.key,});
-
+  const AddBooking({super.key});
 
   @override
   @override
@@ -44,7 +42,6 @@ class Add extends ConsumerState<AddBooking> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
@@ -131,6 +128,7 @@ class Add extends ConsumerState<AddBooking> {
   }
 
   _buildBody(S lang) {
+    final centerNamesAsync = ref.watch(youthCenterNamesProvider);
     final centerName = ref.watch(selectedCenterNameProvider);
     final day = ref.watch(selectedDayProvider);
     adminValue = ref.watch(isAdminProvider);
@@ -145,9 +143,33 @@ class Add extends ConsumerState<AddBooking> {
           key: _formKey,
           child: Column(
             children: [
-              _buildDayDropDown(),
+              centerNamesAsync.when(
+                data: (centerNames) {
+                  return DayDropdown(
+                    validator:
+                        (value) =>
+                            value?.isEmpty ?? true
+                                ? S.of(context).selectCenter
+                                : null,
+                    lableText: lang.selectCenter,
+                    days: centerNames,
+                    selectedDay: centerName,
+                    onChanged: (newCenter) {
+                      ref
+                          .read(selectedCenterNameProvider.notifier)
+                          .update((state) => newCenter!);
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stackTrace) => Text(error.toString()),
+              ),
+
               HelperMethods.verticalSpace(.03),
-        
+              _buildDayDropDown(),
+
+              HelperMethods.verticalSpace(.03),
+
               HelperMethods.buildTextField(
                 Icons.person,
                 lang.entername,
@@ -156,26 +178,29 @@ class Add extends ConsumerState<AddBooking> {
                     (value) =>
                         value?.isEmpty ?? true ? S.of(context).entername : null,
               ),
-        
+
               HelperMethods.verticalSpace(.03),
               HelperMethods.buildTextField(
-        
                 Icons.phone,
                 lang.enterMobile,
                 mobileController,
                 validator:
                     (value) =>
-                        value?.isEmpty ?? true ? S.of(context).enterMobile : null,
+                        value?.isEmpty ?? true
+                            ? S.of(context).enterMobile
+                            : null,
               ),
-        
+
               HelperMethods.verticalSpace(.03),
               timesAsync.when(
                 data: (times) {
                   _times = times;
                   return DayDropdown(
-                    validator: (value) => value?.isEmpty ?? true
-                        ? S.of(context).enterStartTime
-                        : null,
+                    validator:
+                        (value) =>
+                            value?.isEmpty ?? true
+                                ? S.of(context).enterStartTime
+                                : null,
                     lableText: lang.enterStartTime,
                     days: _times,
                     selectedDay: selectedStartTime,
@@ -189,16 +214,17 @@ class Add extends ConsumerState<AddBooking> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => Text(error.toString()),
               ),
-        
-             
+
               HelperMethods.verticalSpace(.03),
               timesAsync.when(
                 data: (times) {
                   _times = times;
                   return DayDropdown(
-                    validator: (value) => value?.isEmpty ?? true
-                        ? S.of(context).enterEndTime
-                        : null,
+                    validator:
+                        (value) =>
+                            value?.isEmpty ?? true
+                                ? S.of(context).enterEndTime
+                                : null,
                     lableText: lang.enterEndTime,
                     days: _times,
                     selectedDay: selectedEndTime,
@@ -212,26 +238,28 @@ class Add extends ConsumerState<AddBooking> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => Text(error.toString()),
               ),
-              
+
               HelperMethods.verticalSpace(.03),
-        
+
               AppButtonText(
                 backGroundColor: ColorManger.buttonGreen,
                 textStyle: TextStyles.whiteBoldStyle(SizeConfig.fontSize3!),
                 butonText: adminValue ? lang.addBooking : lang.requestBooking,
                 onPressed: () {
-                 
-                  
                   if (_formKey.currentState!.validate()) {
                     final newBooking = BookingModel(
-                    date: DateTime.now().toIso8601String(),
-                    day: _selectedDay,
-                    name: nameController.text.toString().trim(),
-                    mobile: mobileController.text.toString().trim(),
-                    timeEnd: selectedEndTime!,
-                    timeStart: selectedStartTime!,
-                    youthCenterId: MyConstants.centerUser?.youthCenterName ?? '',
-                  );
+                      userId: !adminValue ? MyConstants.centerUser?.id : null,
+                      date: DateTime.now().toIso8601String(),
+                      day: _selectedDay,
+                      name: nameController.text.toString().trim(),
+                      mobile: mobileController.text.toString().trim(),
+                      timeEnd: selectedEndTime!,
+                      timeStart: selectedStartTime!,
+                      youthCenterId:
+                          ref.watch(selectedCenterNameProvider) ??
+                          MyConstants.centerUser?.youthCenterName ??
+                          "",
+                    );
                     addBooking(newBooking);
                   }
                 },

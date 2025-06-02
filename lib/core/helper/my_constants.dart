@@ -20,7 +20,7 @@ class MyConstants {
   static const String english = 'en';
 
   static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
-
+  static final DateFormat dateFormat = DateFormat('yyyy-MM-dd', MyConstants.english);
   static CenterUser? centerUser;
 
   //collections

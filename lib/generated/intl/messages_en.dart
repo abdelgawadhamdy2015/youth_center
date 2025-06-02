@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "NoMatches": MessageLookupByLibrary.simpleMessage(
       "No matches generated yet",
     ),
+    "accept": MessageLookupByLibrary.simpleMessage("Accept"),
     "active": MessageLookupByLibrary.simpleMessage("active"),
     "activeCupMatches": MessageLookupByLibrary.simpleMessage(
       "Active Cup Matches",
@@ -37,11 +38,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "already have account? ",
     ),
     "appName": MessageLookupByLibrary.simpleMessage("Youth Center"),
+    "bookingDay": MessageLookupByLibrary.simpleMessage("Booking Day"),
+    "bookingTime": MessageLookupByLibrary.simpleMessage("Booking Time"),
     "bookings": MessageLookupByLibrary.simpleMessage("Bookings"),
     "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "createCup": MessageLookupByLibrary.simpleMessage("Create Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteRequest": MessageLookupByLibrary.simpleMessage("Delete Request"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("Distribute Teams"),
     "distributionMode": MessageLookupByLibrary.simpleMessage(
       "Distribution Mode: ",
@@ -105,7 +109,34 @@ class MessageLookup extends MessageLookupByLibrary {
       "Profile updated successfully",
     ),
     "random": MessageLookupByLibrary.simpleMessage("Random"),
+    "reject": MessageLookupByLibrary.simpleMessage("Reject"),
+    "requestAccepted": MessageLookupByLibrary.simpleMessage(
+      "Request accepted successfully",
+    ),
+    "requestAcceptedByAdmin": MessageLookupByLibrary.simpleMessage(
+      "Request accepted by admin",
+    ),
+    "requestAlreadyExists": MessageLookupByLibrary.simpleMessage(
+      "Request already exists",
+    ),
     "requestBooking": MessageLookupByLibrary.simpleMessage("Request Booking"),
+    "requestDate": MessageLookupByLibrary.simpleMessage("Request Date"),
+    "requestDeleted": MessageLookupByLibrary.simpleMessage(
+      "Request deleted successfully",
+    ),
+    "requestNotFound": MessageLookupByLibrary.simpleMessage(
+      "Request not found",
+    ),
+    "requestPending": MessageLookupByLibrary.simpleMessage(
+      "Request is pending",
+    ),
+    "requestRejected": MessageLookupByLibrary.simpleMessage(
+      "Request rejected successfully",
+    ),
+    "requestRejectedByAdmin": MessageLookupByLibrary.simpleMessage(
+      "Request rejected by admin",
+    ),
+    "requests": MessageLookupByLibrary.simpleMessage("Requests"),
     "required": MessageLookupByLibrary.simpleMessage("Required"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "saturday": MessageLookupByLibrary.simpleMessage("Saturday"),

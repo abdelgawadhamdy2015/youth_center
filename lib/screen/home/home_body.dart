@@ -12,6 +12,7 @@ import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/booking/requests_booking.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/booking_card.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
@@ -48,7 +49,16 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
           MaterialPageRoute(builder: (context) => const UpdateProfile()),
         );
         break;
-      case 1:
+          case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingRequestsScreen(),
+          ),
+        );
+
+        break;
+      case 2:
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -57,13 +67,14 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
         );
 
         break;
-      case 2:
+
+      case 3:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CupScreen()),
         );
         break;
-      case 3:
+      case 4:
         FirebaseAuth.instance.signOut();
         Navigator.of(context).pushReplacementNamed('/');
 
@@ -217,22 +228,29 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
                           Icons.account_circle_outlined,
                         ),
                       ),
-                      PopupMenuItem(
+                    if(isAdmin)  PopupMenuItem(
                         value: 1,
+                        child: _buildMenuItem(
+                          lang.requests,
+                          Icons.request_page,
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 2,
                         child: _buildMenuItem(
                           (isAdmin) ? lang.addBooking : lang.requestBooking,
                           Icons.add,
                         ),
                       ),
                       PopupMenuItem(
-                        value: 2,
+                        value: 3,
                         child: _buildMenuItem(
                           lang.tournaments,
                           Icons.sports_baseball,
                         ),
                       ),
                       PopupMenuItem(
-                        value: 3,
+                        value: 4,
                         child: _buildMenuItem(lang.logOut, Icons.logout),
                       ),
                     ],

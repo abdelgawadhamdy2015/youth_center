@@ -598,6 +598,136 @@ class S {
       args: [],
     );
   }
+
+  /// `Requests`
+  String get requests {
+    return Intl.message('Requests', name: 'requests', desc: '', args: []);
+  }
+
+  /// `Request accepted successfully`
+  String get requestAccepted {
+    return Intl.message(
+      'Request accepted successfully',
+      name: 'requestAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request rejected successfully`
+  String get requestRejected {
+    return Intl.message(
+      'Request rejected successfully',
+      name: 'requestRejected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request deleted successfully`
+  String get requestDeleted {
+    return Intl.message(
+      'Request deleted successfully',
+      name: 'requestDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request is pending`
+  String get requestPending {
+    return Intl.message(
+      'Request is pending',
+      name: 'requestPending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request rejected by admin`
+  String get requestRejectedByAdmin {
+    return Intl.message(
+      'Request rejected by admin',
+      name: 'requestRejectedByAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request accepted by admin`
+  String get requestAcceptedByAdmin {
+    return Intl.message(
+      'Request accepted by admin',
+      name: 'requestAcceptedByAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request not found`
+  String get requestNotFound {
+    return Intl.message(
+      'Request not found',
+      name: 'requestNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request already exists`
+  String get requestAlreadyExists {
+    return Intl.message(
+      'Request already exists',
+      name: 'requestAlreadyExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accept`
+  String get accept {
+    return Intl.message('Accept', name: 'accept', desc: '', args: []);
+  }
+
+  /// `Reject`
+  String get reject {
+    return Intl.message('Reject', name: 'reject', desc: '', args: []);
+  }
+
+  /// `Delete Request`
+  String get deleteRequest {
+    return Intl.message(
+      'Delete Request',
+      name: 'deleteRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking Day`
+  String get bookingDay {
+    return Intl.message('Booking Day', name: 'bookingDay', desc: '', args: []);
+  }
+
+  /// `Request Date`
+  String get requestDate {
+    return Intl.message(
+      'Request Date',
+      name: 'requestDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Booking Time`
+  String get bookingTime {
+    return Intl.message(
+      'Booking Time',
+      name: 'bookingTime',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

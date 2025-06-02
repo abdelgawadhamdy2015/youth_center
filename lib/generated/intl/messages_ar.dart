@@ -26,6 +26,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "ليس لديك حساب؟ سجل الآن",
     ),
     "NoMatches": MessageLookupByLibrary.simpleMessage(" لا توجد مباريات نشطة"),
+    "accept": MessageLookupByLibrary.simpleMessage("قبول"),
     "active": MessageLookupByLibrary.simpleMessage("نشطة"),
     "activeCupMatches": MessageLookupByLibrary.simpleMessage(
       "مباريات البطولة النشطة",
@@ -35,11 +36,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "هل لديك حساب بالفعل؟",
     ),
     "appName": MessageLookupByLibrary.simpleMessage("مركز الشباب"),
+    "bookingDay": MessageLookupByLibrary.simpleMessage("يوم الحجز"),
+    "bookingTime": MessageLookupByLibrary.simpleMessage("وقت الحجز"),
     "bookings": MessageLookupByLibrary.simpleMessage("الحجوزات"),
     "clear": MessageLookupByLibrary.simpleMessage("مسح"),
     "createCup": MessageLookupByLibrary.simpleMessage("إنشاء بطولة"),
     "cupName": MessageLookupByLibrary.simpleMessage("اسم البطولة"),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
+    "deleteRequest": MessageLookupByLibrary.simpleMessage("حذف الطلب"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("توزيع الفرق"),
     "distributionMode": MessageLookupByLibrary.simpleMessage("طريقة التوزيع: "),
     "enterCupName": MessageLookupByLibrary.simpleMessage(
@@ -98,7 +102,34 @@ class MessageLookup extends MessageLookupByLibrary {
       "تم تحديث الملف الشخصي بنجاح",
     ),
     "random": MessageLookupByLibrary.simpleMessage("عشوائي"),
+    "reject": MessageLookupByLibrary.simpleMessage("رفض"),
+    "requestAccepted": MessageLookupByLibrary.simpleMessage(
+      "تم قبول الطلب بنجاح",
+    ),
+    "requestAcceptedByAdmin": MessageLookupByLibrary.simpleMessage(
+      "تم قبول الطلب من قبل المسؤول",
+    ),
+    "requestAlreadyExists": MessageLookupByLibrary.simpleMessage(
+      "الطلب موجود بالفعل",
+    ),
     "requestBooking": MessageLookupByLibrary.simpleMessage("طلب حجز"),
+    "requestDate": MessageLookupByLibrary.simpleMessage("تاريخ الطلب"),
+    "requestDeleted": MessageLookupByLibrary.simpleMessage(
+      "تم حذف الطلب بنجاح",
+    ),
+    "requestNotFound": MessageLookupByLibrary.simpleMessage(
+      "لم يتم العثور على الطلب",
+    ),
+    "requestPending": MessageLookupByLibrary.simpleMessage(
+      "الطلب قيد الانتظار",
+    ),
+    "requestRejected": MessageLookupByLibrary.simpleMessage(
+      "تم رفض الطلب بنجاح",
+    ),
+    "requestRejectedByAdmin": MessageLookupByLibrary.simpleMessage(
+      "تم رفض الطلب من قبل المسؤول",
+    ),
+    "requests": MessageLookupByLibrary.simpleMessage("الطلبات"),
     "required": MessageLookupByLibrary.simpleMessage("مطلوب"),
     "reset": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
     "saturday": MessageLookupByLibrary.simpleMessage("السبت"),

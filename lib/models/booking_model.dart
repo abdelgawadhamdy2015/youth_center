@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookingModel {
   final String? id;
+  final String? userId;
   final String name;
   final String mobile;
   final String timeEnd;
@@ -12,6 +13,7 @@ class BookingModel {
 
   const BookingModel({
     this.id,
+    this.userId,
     required this.name,
     required this.mobile,
     required this.timeEnd,
@@ -30,6 +32,7 @@ class BookingModel {
       "timeStart": timeStart,
       "timeEnd": timeEnd,
       "youthCenterId": youthCenterId,
+      "userId": userId,
     };
   }
 
@@ -38,8 +41,9 @@ class BookingModel {
   ) {
     final data = document.data();
     return BookingModel(
-      date: data!["date"],
       id: document.id,
+      userId: data!["userId"],
+      date: data["date"],
       day: data["day"],
       name: data["name"],
       mobile: data["mobile"],
@@ -58,6 +62,7 @@ class BookingModel {
       "timeEnd": timeEnd,
       "timeStart": timeStart,
       "youthCenterId": youthCenterId,
+      "userId": userId,
     };
   }
 }

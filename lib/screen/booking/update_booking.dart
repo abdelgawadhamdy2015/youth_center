@@ -25,120 +25,72 @@ class UpdateBooking extends ConsumerStatefulWidget {
 }
 
 class _UpdateBookingState extends ConsumerState<UpdateBooking> {
-  late TextEditingController nameController;
-  late TextEditingController mobileController;
-  late TextEditingController timeStartController;
-  late TextEditingController timeEndController;
+  late final TextEditingController nameController;
+  late final TextEditingController mobileController;
+  late final List<String> _weekdays;
 
-  List<String> _weekdays = [];
+  String? selectedStartTime;
+  String? selectedEndTime;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.booking.name);
+    mobileController = TextEditingController(text: widget.booking.mobile);
+    selectedStartTime = widget.booking.timeStart;
+    selectedEndTime = widget.booking.timeEnd;
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _weekdays = HelperMethods.getWeekDays(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Initialize the dropdown value after the first frame is rendered
-      ref.read(selectedCenterNameProvider.notifier).state =
-          widget.booking.youthCenterId;
+      ref.read(selectedCenterNameProvider.notifier).state = widget.booking.youthCenterId;
       ref.read(selectedDayProvider.notifier).state = widget.booking.day;
     });
-    initData();
-  }
-
-  initData() async {
-    nameController = TextEditingController(text: widget.booking.name);
-    mobileController = TextEditingController(text: widget.booking.mobile);
-    timeStartController = TextEditingController(text: widget.booking.timeStart);
-    timeEndController = TextEditingController(text: widget.booking.timeEnd);
-  }
-
-  Future<void> updateBooking() async {
-    BookingModel updatedBooking = BookingModel(
-      date: widget.booking.date,
-      day: ref.read(selectedDayProvider),
-      id: widget.booking.id,
-      name: nameController.text.trim(),
-      mobile: mobileController.text.trim(),
-      timeStart: timeStartController.text.trim(),
-      timeEnd: timeEndController.text.trim(),
-      youthCenterId: ref.read(selectedCenterNameProvider)!,
-    );
-    ref.watch(addBookingProvider.notifier).updateBooking(updatedBooking);
-  }
-  Future<void> deleteBooking() async {
-    BookingModel updatedBooking = BookingModel(
-      date: widget.booking.date,
-      day: ref.read(selectedDayProvider),
-      id: widget.booking.id,
-      name: nameController.text.trim(),
-      mobile: mobileController.text.trim(),
-      timeStart: timeStartController.text.trim(),
-      timeEnd: timeEndController.text.trim(),
-      youthCenterId: ref.read(selectedCenterNameProvider)!,
-    );
-    ref.watch(addBookingProvider.notifier).deleteBooking(updatedBooking.id!);
+    _weekdays = HelperMethods.getWeekDays(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final lang = S.of(context);
     final selectedDay = ref.watch(selectedDayProvider);
+    final timesAsync = ref.watch(
+      availableTimesProvider((
+        ref.watch(selectedCenterNameProvider) ?? "",
+        selectedDay,
+      )),
+    );
+
     ref.listen(addBookingProvider, (_, state) {
       state.whenOrNull(
         data: (_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(S.of(context).successSave),
-              backgroundColor: ColorManger.buttonGreen,
-              elevation: 10,
-            ),
-          );
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) {
-                return HomeScreen();
-              },
-            ),
-          );
+          _showSnackBar(lang.successSave, ColorManger.buttonGreen);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
         },
-        error: (error, stackTrace) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error.toString()),
-              backgroundColor: ColorManger.darkRed,
-              elevation: 10,
-            ),
-          );
+        error: (error, _) {
+          _showSnackBar(error.toString(), ColorManger.darkRed);
         },
       );
     });
-    var lang = S.of(context);
+
     return Scaffold(
       body: GradientContainer(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: S.of(context).bookings),
+              Header(title: lang.bookings),
               BodyContainer(
                 height: SizeConfig.screenHeight! * .85,
-                padding: SizeConfig().getScreenPadding(
-                  vertical: .1,
-                  horizintal: .08,
-                ),
+                padding: SizeConfig().getScreenPadding(vertical: .1, horizintal: .08),
                 child: Column(
                   children: [
                     DayDropdown(
                       days: _weekdays,
                       selectedDay: selectedDay,
-
-                      onChanged:
-                          MyConstants.centerUser?.admin ?? false
-                              ? (newDay) {
-                                setState(() {
-                                  ref.read(selectedDayProvider.notifier).state =
-                                      newDay!;
-                                });
-                              }
-                              : null,
+                      onChanged: MyConstants.centerUser?.admin == true
+                          ? (newDay) => ref.read(selectedDayProvider.notifier).state = newDay!
+                          : null,
                     ),
                     HelperMethods.verticalSpace(.03),
 
@@ -149,55 +101,34 @@ class _UpdateBookingState extends ConsumerState<UpdateBooking> {
                       nameController,
                     ),
                     HelperMethods.verticalSpace(.03),
+
                     HelperMethods.buildTextField(
                       readOnly: !(MyConstants.centerUser?.admin ?? false),
-
                       Icons.phone,
                       lang.enterMobile,
                       mobileController,
                     ),
                     HelperMethods.verticalSpace(.03),
-                    HelperMethods.buildTextField(
-                      readOnly: !(MyConstants.centerUser?.admin ?? false),
-                      Icons.timer_rounded,
-                      lang.enterStartTime,
-                      timeStartController,
-                    ),
-                    HelperMethods.verticalSpace(.03),
-                    HelperMethods.buildTextField(
-                      readOnly: !(MyConstants.centerUser?.admin ?? false),
-                      Icons.timer,
-                      lang.enterEndTime,
-                      timeEndController,
+
+                    _buildTimeDropdown(
+                      context,
+                      timesAsync,
+                      label: lang.enterStartTime,
+                      selectedTime: selectedStartTime,
+                      onChanged: (value) => setState(() => selectedStartTime = value),
                     ),
                     HelperMethods.verticalSpace(.03),
 
-                    if (MyConstants.centerUser?.admin ?? false)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AppButtonText(
-                            buttonWidth: SizeConfig.screenWidth! * .4,
-                            backGroundColor: ColorManger.buttonGreen,
-                            textStyle: GoogleFonts.tajawal(
-                              color: Colors.white,
-                              fontSize: SizeConfig.fontSize3!,
-                            ),
-                            butonText: lang.update,
-                            onPressed: updateBooking,
-                          ),
-                           AppButtonText(
-                            buttonWidth: SizeConfig.screenWidth! * .4,
-                            backGroundColor: ColorManger.redButtonColor,
-                            textStyle: GoogleFonts.tajawal(
-                              color: Colors.white,
-                              fontSize: SizeConfig.fontSize3!,
-                            ),
-                            butonText: lang.delete,
-                            onPressed: deleteBooking,
-                          ),
-                        ],
-                      ),
+                    _buildTimeDropdown(
+                      context,
+                      timesAsync,
+                      label: lang.enterEndTime,
+                      selectedTime: selectedEndTime,
+                      onChanged: (value) => setState(() => selectedEndTime = value),
+                    ),
+                    HelperMethods.verticalSpace(.03),
+
+                    if (MyConstants.centerUser?.admin ?? false) _buildActionButtons(lang),
                   ],
                 ),
               ),
@@ -205,6 +136,84 @@ class _UpdateBookingState extends ConsumerState<UpdateBooking> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTimeDropdown(
+    BuildContext context,
+    AsyncValue<List<String>> timesAsync, {
+    required String label,
+    required String? selectedTime,
+    required void Function(String?) onChanged,
+  }) {
+    return timesAsync.when(
+      data: (times) => DayDropdown(
+        lableText: label,
+        days: times,
+        selectedDay: selectedTime,
+        validator: (value) => (value?.isEmpty ?? true) ? label : null,
+        onChanged: onChanged,
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Text(e.toString(), style: const TextStyle(color: Colors.red)),
+    );
+  }
+
+  Widget _buildActionButtons(S lang) {
+    final double buttonWidth = SizeConfig.screenWidth! * .4;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppButtonText(
+          buttonWidth: buttonWidth,
+          backGroundColor: ColorManger.mainBlue,
+          textStyle: GoogleFonts.tajawal(
+            color: Colors.white,
+            fontSize: SizeConfig.fontSize3!,
+          ),
+          butonText: lang.update,
+          onPressed: _updateBooking,
+        ),
+        AppButtonText(
+          buttonWidth: buttonWidth,
+          backGroundColor: ColorManger.lighterGray,
+          textStyle: GoogleFonts.tajawal(
+            color: Colors.white,
+            fontSize: SizeConfig.fontSize3!,
+          ),
+          butonText: lang.delete,
+          onPressed: _deleteBooking,
+        ),
+      ],
+    );
+  }
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: color, elevation: 10),
+    );
+  }
+
+  void _updateBooking() {
+    final updatedBooking = _buildBookingModel();
+    ref.read(addBookingProvider.notifier).updateBooking(updatedBooking);
+  }
+
+  void _deleteBooking() {
+    ref.read(addBookingProvider.notifier).deleteBooking(widget.booking.id!);
+  }
+
+  BookingModel _buildBookingModel() {
+    return BookingModel(
+      id: widget.booking.id,
+      date: widget.booking.date,
+      name: nameController.text.trim(),
+      mobile: mobileController.text.trim(),
+      timeStart: selectedStartTime!,
+      timeEnd: selectedEndTime!,
+      day: ref.read(selectedDayProvider),
+      youthCenterId: ref.read(selectedCenterNameProvider)!,
     );
   }
 }

@@ -12,7 +12,7 @@ class CenterUser {
   // Temporary password field (NOT included in JSON)
   @JsonKey(includeToJson: false, includeFromJson: false)
   final String? password;
-
+  
   CenterUser({
      this.id,
     required this.name,

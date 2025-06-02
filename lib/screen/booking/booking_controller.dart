@@ -1,3 +1,4 @@
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/booking_model.dart';
@@ -62,6 +63,33 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
+  Future<void> acceptRequestBooking(BookingModel booking) async {
+    state = const AsyncLoading();
+    try {
+      await DataBaseService().addBooking(booking);
+      _ref.invalidate(bookingRequestsProvider);
+
+      state = const AsyncData(null);
+    } catch (e) {
+      state = AsyncError(e.toString(), StackTrace.current);
+    }
+  }
+  Future<void> rejectRequestBooking(BookingModel booking) async {
+    state = const AsyncLoading();
+    try {
+      await DataBaseService().deleteBooking(booking.id!);
+      _ref.invalidate(bookingRequestsProvider);
+
+      state = const AsyncData(null);
+    } catch (e) {
+      state = AsyncError(e.toString(), StackTrace.current);
+    }
+  }
+
+  Future<void> deleteRequestBooking(BookingModel booking) async {
+  await DataBaseService().deleteRequest(booking.id!);
+}
+
 }
 
 final availableTimesProvider = FutureProvider.family<List<String>, (String centerName, String day)>((ref, args) async {
@@ -88,6 +116,16 @@ bool isTimeBooked(String time, List<BookingModel> bookings) {
   }
   return false;
 }
+
+
+
+final bookingRequestsProvider = FutureProvider<List<BookingModel>>((ref) async {
+  final centerName = ref.watch(selectedCenterNameProvider) ?? "";
+  final bookings = await DataBaseService().getRequests(centerName);
+  return bookings;
+});
+
+
 
   
 

@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
@@ -96,5 +98,24 @@ class DataBaseService {
 
   Future<void> requestBooking(BookingModel booking) async {
     await _db.collection(MyConstants.requestCollection).add(booking.toJson());
+  }
+
+  Future<List<BookingModel>> getRequests(String centerId) async {
+    log('Fetching requests for center: $centerId');
+    final snapshot = await _db
+        .collection(MyConstants.requestCollection)
+        .where(MyConstants.youthCenterIdCollection, isEqualTo: centerId)
+        .get();
+    return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
+  }
+
+  Future<void> deleteRequest(String requestId) async {
+    await _db.collection(MyConstants.requestCollection).doc(requestId).delete();
+  }
+  Future<void> updateRequest(BookingModel booking) async {
+    await _db
+        .collection(MyConstants.requestCollection)
+        .doc(booking.id)
+        .update(booking.toJson());
   }
 }

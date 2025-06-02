@@ -79,5 +79,20 @@
   "requestBooking": "Request Booking",
   "enterValidEmail": "Please enter a valid email",
   "enterValidMobile": "Please enter a valid mobile number",
-  "enterValidPassword": "Please enter a valid password"
+  "enterValidPassword": "Please enter a valid password",
+  "requests": "Requests",
+  "requestAccepted": "Request accepted successfully",
+  "requestRejected": "Request rejected successfully",
+  "requestDeleted": "Request deleted successfully",
+  "requestPending": "Request is pending",
+  "requestRejectedByAdmin": "Request rejected by admin",
+  "requestAcceptedByAdmin": "Request accepted by admin",
+  "requestNotFound": "Request not found",
+  "requestAlreadyExists": "Request already exists",
+  "accept": "Accept",
+  "reject": "Reject",
+  "deleteRequest": "Delete Request",
+  "bookingDay": "Booking Day",
+  "requestDate": "Request Date",
+  "bookingTime": "Booking Time"
 }

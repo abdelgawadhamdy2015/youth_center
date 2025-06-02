@@ -91,6 +91,7 @@ class HelperMethods {
     ref.invalidate(youthCenterNamesProvider);
     ref.invalidate(bookingsProvider);
     ref.invalidate(activeCupsProvider);
+    ref.invalidate(bookingRequestsProvider);
   }
 
   static List<String> generateTimes({int stepMinutes = 60}) {
