@@ -87,8 +87,7 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     var lang = S.of(context);
     final isAdmin = ref.read(isAdminProvider);
 
-    return Scaffold(
-      body: DefaultTabController(
+    return DefaultTabController(
         length: 2,
         child: GradientContainer(
           child: SingleChildScrollView(
@@ -97,8 +96,8 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
             ),
           ),
         ),
-      ),
-    );
+      );
+    
   }
 
   _buildBody(bool isAdmin) {
