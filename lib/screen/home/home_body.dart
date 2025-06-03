@@ -8,16 +8,15 @@ import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
-import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/booking/add_booking.dart';
 import 'package:youth_center/screen/booking/requests_booking.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
-import 'package:youth_center/screen/home/booking_card.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/matches_of_ctive_cups.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
+import 'package:youth_center/screen/home/time_slot_card.dart';
 
 class HomeScreenBody extends ConsumerStatefulWidget {
   final TabController tabController;
@@ -30,6 +29,7 @@ class HomeScreenBody extends ConsumerStatefulWidget {
 
 class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
   List<String> _weekdays = [];
+  int selectedCenterIndex=0;
   @override
   void initState() {
     super.initState();
@@ -49,21 +49,17 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
           MaterialPageRoute(builder: (context) => const UpdateProfile()),
         );
         break;
-          case 1:
+      case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => BookingRequestsScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => BookingRequestsScreen()),
         );
 
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => AddBooking(),
-          ),
+          MaterialPageRoute(builder: (context) => AddBooking()),
         );
 
         break;
@@ -88,16 +84,15 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
     final isAdmin = ref.read(isAdminProvider);
 
     return DefaultTabController(
-        length: 2,
-        child: GradientContainer(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [_buildHeader(lang, isAdmin), _buildBody(isAdmin)],
-            ),
+      length: 2,
+      child: GradientContainer(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [_buildHeader(lang, isAdmin), _buildBody(isAdmin)],
           ),
         ),
-      );
-    
+      ),
+    );
   }
 
   _buildBody(bool isAdmin) {
@@ -116,10 +111,13 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
   Widget _buildBookingsTab(bool isAdmin) {
     final youthCentersAsync = ref.watch(youthCentersProvider);
 
-    // final youthCenterNames =
-    //     youthCentersAsync.asData?.value.map((center) => center.name).toList() ??
-    //     [];
-    final selectedCenter = ref.watch(selectedCenterNameProvider)?? MyConstants.centerUser?.youthCenterName;
+   final youthCenterNames = youthCentersAsync.asData?.value.map((center) => center.name).toList();
+    final selectedyouthCenterName =
+        ref.watch(selectedCenterNameProvider) ??
+        MyConstants.centerUser?.youthCenterName;
+    selectedCenterIndex = (selectedyouthCenterName != null && youthCenterNames != null)
+        ? youthCenterNames.indexOf(selectedyouthCenterName)
+        : 0;
 
     final selectedDay = ref.watch(selectedDayProvider);
     final filteredBookings = ref.watch(filteredBookingsProvider);
@@ -128,22 +126,50 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
         if (!isAdmin)
           youthCentersAsync.when(
             data: (data) {
-              final youthCenterNames = data
-                  .map((center) => center.name)
-                  .toList();
+              final youthCenterNames =
+                  data.map((center) => center.name).toList();
               if (data.isEmpty) {
                 return Center(child: Text(S.of(context).noData));
               }
-            return  DayDropdown(
-                lableText: S.of(context).selectCenter,
-                selectedDay: selectedCenter,
-                days: youthCenterNames,
-                onChanged: (newValue) {
-                  setState(() {
-                    ref.read(selectedCenterNameProvider.notifier).state =
-                        newValue;
-                  });
-                },
+              return SizedBox(
+              height: SizeConfig.screenHeight! *.05,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: youthCenterNames.length,
+                  itemBuilder: (context, index) {
+                
+                    return GestureDetector(
+                      onTap: () {
+                          setState(() {
+                      selectedCenterIndex = index;
+                      ref.watch(selectedCenterNameProvider.notifier).state= youthCenterNames[index];
+                    });
+                      },
+                      child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: selectedCenterIndex == index 
+                            ? const Color(0xFF1E40AF)
+                            : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        youthCenterNames[index],
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: selectedCenterIndex == index 
+                              ? Colors.white 
+                              : Colors.black,
+                        ),
+                      ),
+                                        ),
+                    );
+                  },
+                ),
               );
             },
             loading: () => Center(child: CircularProgressIndicator()),
@@ -151,16 +177,43 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
           ),
 
         HelperMethods.verticalSpace(.02),
-        DayDropdown(
-          lableText: S.of(context).selectDay,
-          days: _weekdays,
-          selectedDay: selectedDay,
-          onChanged: (newDay) {
-            setState(() {
-              ref.read(selectedDayProvider.notifier).state = newDay!;
-            });
-          },
-        ),
+         SizedBox(
+      height: 50, // height of each horizontal item
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _weekdays.length,
+        itemBuilder: (context, index) {
+          final day = _weekdays[index];
+          final isSelected = day == selectedDay;
+
+          return GestureDetector(
+            onTap: () {
+              ref.read(selectedDayProvider.notifier).state = day;
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              margin: EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.blue : Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isSelected ? Colors.blue : Colors.grey,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  day,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+         ),
         HelperMethods.verticalSpace(.02),
 
         filteredBookings.when(
@@ -173,7 +226,7 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   var booking = bookings[index];
-                  return BookingCard(booking: booking);
+                  return TimeSlotCard(bookingModel: booking, isAvailable: false,);
                 },
               ),
             );
@@ -227,13 +280,14 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
                           Icons.account_circle_outlined,
                         ),
                       ),
-                    if(isAdmin)  PopupMenuItem(
-                        value: 1,
-                        child: _buildMenuItem(
-                          lang.requests,
-                          Icons.request_page,
+                      if (isAdmin)
+                        PopupMenuItem(
+                          value: 1,
+                          child: _buildMenuItem(
+                            lang.requests,
+                            Icons.request_page,
+                          ),
                         ),
-                      ),
                       PopupMenuItem(
                         value: 2,
                         child: _buildMenuItem(

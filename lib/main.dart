@@ -36,9 +36,11 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: Colors.purple),
-        bannerTheme: const MaterialBannerThemeData(),
-        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFF1E40AF),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: const Color(0xFF10B981),
+        ),
+        fontFamily: 'Inter',
       ),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
