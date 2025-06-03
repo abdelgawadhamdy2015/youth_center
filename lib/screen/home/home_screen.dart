@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/cup/create_tournement.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/home_body.dart';
 
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen>
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (context) =>  AddBooking(),
+              builder: (context) =>  CreateTournamentScreen(),
             );
           },
           backgroundColor: const Color(0xFF1E40AF),

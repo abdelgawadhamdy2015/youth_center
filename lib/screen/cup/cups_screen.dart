@@ -12,6 +12,7 @@ import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/screen/cup/create_cup.dart';
+import 'package:youth_center/screen/cup/cup_card.dart';
 import 'package:youth_center/screen/cup/cup_detail_screen.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 
@@ -38,8 +39,8 @@ class Cup extends ConsumerState<CupScreen> {
   TextEditingController mobileController = TextEditingController();
 
   List<String> teams = [];
-// bool randomTeams = false;
-//   bool matches = false;
+  // bool randomTeams = false;
+  //   bool matches = false;
 
   @override
   void initState() {
@@ -75,7 +76,6 @@ class Cup extends ConsumerState<CupScreen> {
     return 10;
   }
 
-  
   // getVisibility() {
   //   if (randomTeams && matches) {
   //     return true;
@@ -171,59 +171,7 @@ class Cup extends ConsumerState<CupScreen> {
                     child: ListView.builder(
                       itemCount: cups.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
-                          child: Card(
-                            margin: const EdgeInsets.all(10),
-                            color: Colors.white,
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(cups.elementAt(index).name),
-                                  const SizedBox(width: 10),
-                                  const Icon(Icons.sports_baseball),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        dateFormat
-                                            .format(
-                                              cups
-                                                  .elementAt(index)
-                                                  .timeStart
-                                                  .toDate(),
-                                            )
-                                            .toString(),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                  HelperMethods.verticalSpace(.02),
-                                  Text(getStatus(cups.elementAt(index))),
-                                  HelperMethods.verticalSpace(.02),
-                                  const Icon(Icons.sports_baseball),
-                                  HelperMethods.verticalSpace(.02),
-                                  Text(cups.elementAt(index).youthCenterId),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => CupDetailScreen(
-                                      cupModel: cups.elementAt(index),
-                                    ),
-                              ),
-                            );
-                          },
-                        );
+                        return TournamentCard(cupModel: cups[index]);
                       },
                     ),
                   );
@@ -247,7 +195,7 @@ class Cup extends ConsumerState<CupScreen> {
   // }
 
   String getStatus(CupModel cupModel) {
-    if (cupModel.finished) {
+    if (cupModel.status == "") {
       return S.of(context).finished;
     } else {
       return S.of(context).active;

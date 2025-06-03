@@ -89,7 +89,7 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
       timeStart: cupModel.timeStart,
       youthCenterId: cupModel.youthCenterId,
       matches: _jsonMatches,
-      finished: cupModel.finished,
+      status: cupModel.status,
     );
 
     ref
@@ -133,9 +133,6 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
           ).showSnackBar(SnackBar(content: Text(error.toString())));
         });
   }
-
-  String _getStatusText(bool status, S lang) =>
-      status ? lang.finished : lang.active;
 
   TextStyle _headerStyle() =>
       const TextStyle(fontSize: 18, color: Colors.white);
@@ -195,23 +192,7 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            if (isAdmin)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(lang.finished, style: _headerStyle()),
-                  Checkbox(
-                    value: cupModel.getStatus(),
-                    onChanged:
-                        (val) => setState(() => cupModel.finished = val!),
-                  ),
-                ],
-              )
-            else
-              Text(
-                _getStatusText(cupModel.getStatus(), lang),
-                style: _headerStyle(),
-              ),
+           
 
             HelperMethods.verticalSpace(.02),
 
@@ -250,7 +231,7 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
               itemBuilder: (context, index) {
                 final match = matchesModels[index];
                 return InteractiveMatchCard(
-                  canUpdate: (isAdmin && !cupModel.finished),
+                  canUpdate: (isAdmin && !true),
                   match: match,
                   isAdmin: isAdmin,
                 );

@@ -7,8 +7,7 @@ class CupModel {
   Timestamp timeStart;
   String youthCenterId;
   List<dynamic> matches;
-  bool finished = false;
-
+String status;
   CupModel({
     required this.id,
     required this.name,
@@ -16,7 +15,7 @@ class CupModel {
     required this.timeStart,
     required this.youthCenterId,
     required this.matches,
-    this.finished = false,
+    required this.status,
   });
 
   toJson() {
@@ -26,7 +25,7 @@ class CupModel {
       "timeStart": timeStart,
       "youthCenterId": youthCenterId,
       "matches": matches,
-      "finished": finished,
+      "status": status
     };
   }
 
@@ -41,7 +40,7 @@ class CupModel {
       timeStart: data["timeStart"],
       youthCenterId: data["youthCenterId"],
       matches: data['matches'],
-      finished: data['finished'],
+      status: data['status'],
     );
   }
 
@@ -52,16 +51,16 @@ class CupModel {
       "timeStart": timeStart,
       "youthCenterId": youthCenterId,
       "matches": matches,
-      "finished": finished,
+      "status": status,
     };
   }
 
-  bool getStatus() {
-    return finished;
+  String getStatus() {
+    return status;
   }
 
-  void setStatus(bool finished) {
-    this.finished = finished;
+  void setStatus(String status) {
+    this.status = status;
   }
 
   void setTime(Timestamp timeStart) {

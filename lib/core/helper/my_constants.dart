@@ -22,6 +22,10 @@ class MyConstants {
   static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
   static final DateFormat dateFormat = DateFormat('yyyy-MM-dd', MyConstants.english);
   static CenterUser? centerUser;
+  static const String upComming="UpComing";
+  static const String ongoing="OnGoing";
+
+  static const String completed="Completed";
 
   //collections
   static const String userCollection = 'Users';

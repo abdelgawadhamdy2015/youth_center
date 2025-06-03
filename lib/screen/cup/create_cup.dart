@@ -182,7 +182,7 @@ class _AddCupScreenState extends ConsumerState<AddCupScreen> {
       timeStart: Timestamp.fromDate(_selectedDate),
       youthCenterId: ref.read(selectedCenterNameProvider) ?? '',
       matches: _jsonMatches,
-      finished: false,
+      status: "upComming",
     );
 
     ref
