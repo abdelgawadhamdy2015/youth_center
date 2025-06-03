@@ -2,10 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:youth_center/models/match_model.dart';
 import 'package:youth_center/models/user_model.dart';
-import 'package:youth_center/screen/add_booking.dart';
-import 'package:youth_center/screen/cups_screen.dart';
-import 'package:youth_center/screen/update_profile.dart';
-
+import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/cup/cups_screen.dart';
+import 'package:youth_center/screen/auth/update_profile.dart';
 
 class FetchData {
   FetchData();
@@ -13,52 +12,59 @@ class FetchData {
   late bool admin;
   late int values;
 
-
-
   PopupMenuItem buildPopupMenuItem(
-      bool adminValue, int value, String title, IconData iconData) {
+    bool adminValue,
+    int value,
+    String title,
+    IconData iconData,
+  ) {
     admin = adminValue;
     values = value;
     return PopupMenuItem(
-        value: value,
-        child: Row(
-          children: [
-            Icon(iconData),
-            const SizedBox(
-              width: 10,
-            ),
-            Visibility(
-                child: Text(
-              title,
-              style: getTextStyle(),
-            ))
-          ],
-        ));
+      value: value,
+      child: Row(
+        children: [
+          Icon(iconData),
+          const SizedBox(width: 10),
+          Visibility(child: Text(title, style: getTextStyle())),
+        ],
+      ),
+    );
   }
 
   selectMinuItem(
-      int value, BuildContext context, bool adminValue, CenterUser centerUser) {
+    int value,
+    BuildContext context,
+    bool adminValue,
+    CenterUser centerUser,
+  ) {
     switch (value) {
       case 0:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const UpdateProfile()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UpdateProfile()),
+        );
         break;
 
       case 1:
         if (admin) {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddBooking(center: centerUser.youthCenterName)));
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => AddBooking(),
+            ),
+          );
         }
         break;
       case 2:
         if (admin) {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CupScreen(center: centerUser)));
+            context,
+            MaterialPageRoute(
+              builder: (context) => CupScreen(),
+            ),
+          );
         }
         break;
       case 3:
@@ -69,16 +75,16 @@ class FetchData {
 
   String getScore(MatchModel matchModel, int i) {
     if (i == 1) {
-      if (matchModel.time.toDate().isAfter(DateTime.now())) {
+      if (matchModel.cupStartDate.toDate().isAfter(DateTime.now())) {
         return "-";
       } else {
-        return matchModel.firstTeemScore.toString();
+        return matchModel.teem1Score.toString();
       }
     } else {
-      if (matchModel.time.toDate().isAfter(DateTime.now())) {
+      if (matchModel.cupStartDate.toDate().isAfter(DateTime.now())) {
         return "-";
       } else {
-        return matchModel.secondTeemScore.toString();
+        return matchModel.teem2Score.toString();
       }
     }
   }
@@ -89,25 +95,24 @@ class FetchData {
     }
   }
 
-
-
-  List<dynamic> listToJson(List<MatchModel> matches) {
-    List<dynamic> lisoOfJsonMatches = [];
+  static List<dynamic> listToJson(List<MatchModel> matches) {
+    List<dynamic> listOfJsonMatches = [];
 
     for (var e in matches) {
-      lisoOfJsonMatches.add(e.toJson());
+      listOfJsonMatches.add(e.toJson());
     }
 
-    return lisoOfJsonMatches;
+    return listOfJsonMatches;
   }
 
-
   String getDateTime(DateTime dateTime) {
-    String dateTimeStr = ("${dateTime.day} "
-        "/ ${dateTime.month} "
-        "/ ${dateTime.year}"
-        "\n ${dateTime.hour}"
-        ": ${dateTime.minute}");
+    String dateTimeStr =
+        ("${dateTime.day} "
+            "/ ${dateTime.month} "
+            "/ ${dateTime.year}"
+            "\n ${dateTime.minute}"
+            ": ${dateTime.hour
+            }");
     return dateTimeStr;
   }
 }

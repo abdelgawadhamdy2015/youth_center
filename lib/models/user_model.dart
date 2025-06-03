@@ -1,60 +1,60 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class CenterUser {
   final String? id;
   final String name;
-  final String mobile;
   final String email;
+  final String mobile;
   final String youthCenterName;
   final bool admin;
 
-  const CenterUser(
-      {this.id,
-      required this.name,
-      required this.mobile,
-      required this.email,
-      required this.youthCenterName,
-      required this.admin});
+  // Temporary password field (NOT included in JSON)
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final String? password;
+  
+  CenterUser({
+     this.id,
+    required this.name,
+    required this.email,
+    required this.mobile,
+    required this.youthCenterName,
+    required this.admin,
+    this.password,
+  });
 
-  toJson() {
-    return {
-      "name": name,
-      "mobile": mobile,
-      "email": email,
-      "youthCenterName": youthCenterName,
-      "admin" : admin
-    };
-  }
-
-  CenterUser.fromJson(Map<String, dynamic> json)
-      : this(
-           // id: json['id']! as String,
-            name: json['name']! as String,
-            mobile: json['mobile']! as String,
-            email: json['email']! as String,
-            admin: json['admin']! ,
-            youthCenterName: json['youthCenterName']! as String,
-  );
-
-  factory CenterUser.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
-    final data = document.data();
+  factory CenterUser.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
     return CenterUser(
-        id: document.id,
-        name: data!["name"],
-        mobile: data["mobile"],
-        email: data["email"],
-        admin: data['admin'],
-        youthCenterName: data["youthCenterName"]);
+      id: snapshot.id,
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      mobile: data['mobile'] ?? '',
+      youthCenterName: data['youthCenterName'] ?? '',
+      admin: data['admin'] ?? false,
+      password: null, // Password is not included in the snapshot
+    );
   }
 
-  Map<String, dynamic> toFirestore() {
+  factory CenterUser.fromJson(Map<String, dynamic> json) {
+    return CenterUser(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      mobile: json['mobile'],
+      youthCenterName: json['youthCenterName'],
+      admin: json['admin'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
     return {
-      "name": name,
-      "mobile": mobile,
-      "timeEnd": email,
-      'admin' : admin,
-      "youthCenterName": youthCenterName,
+    
+      'name': name,
+      'email': email,
+      'mobile': mobile,
+      'youthCenterName': youthCenterName,
+      'admin': admin,
     };
   }
 }
