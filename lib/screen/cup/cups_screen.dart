@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -10,10 +12,7 @@ import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/models/cup_model.dart';
-import 'package:youth_center/screen/cup/create_cup.dart';
 import 'package:youth_center/screen/cup/cup_card.dart';
-import 'package:youth_center/screen/cup/cup_detail_screen.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 
 class CupScreen extends ConsumerStatefulWidget {
@@ -38,7 +37,6 @@ class Cup extends ConsumerState<CupScreen> {
   TextEditingController timeEndController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
 
-  List<String> teams = [];
   // bool randomTeams = false;
   //   bool matches = false;
 
@@ -55,14 +53,7 @@ class Cup extends ConsumerState<CupScreen> {
     );
   }
 
-  int getGroups() {
-    if (teams.isEmpty) {
-      groups = 4;
-    } else {
-      groups = groups;
-    }
-    return groups.toInt();
-  }
+  
 
   String getElement(List anyList, int index) {
     if (anyList.isNotEmpty) {
@@ -76,11 +67,7 @@ class Cup extends ConsumerState<CupScreen> {
     return 10;
   }
 
-  // getVisibility() {
-  //   if (randomTeams && matches) {
-  //     return true;
-  //   } else if (!randomTeams && matches) {}
-  // }
+  
 
   @override
   void dispose() {
@@ -90,48 +77,22 @@ class Cup extends ConsumerState<CupScreen> {
     mobileController.dispose();
   }
 
-  // Future<List<CupModel>> getCups() async {
-  //   snapshot1 =
-  //       await db
-  //           .collection(MyConstants.cupCollection)
-  //           .where(
-  //             MyConstants.youthCenterIdCollection,
-  //             isEqualTo: adminValue ? center.youthCenterName : dropdownValue,
-  //           )
-  //           .get();
-  //   cups = snapshot1.docs.map((e) => CupModel.fromSnapshot(e)).toList();
-  //   print(cups.length.toString());
-  //   return cups;
-  // }
+ 
 
   @override
   Widget build(BuildContext context) {
     final adminValue = ref.watch(isAdminProvider);
     return Scaffold(
-      floatingActionButton: Visibility(
-        visible: adminValue,
-        child: Container(
-          padding: EdgeInsets.all(50),
-          alignment: AlignmentDirectional.bottomEnd,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddCupScreen()),
-              );
-            },
-            child: Icon(Icons.add),
-          ),
-        ),
-      ),
       body: SwipeDetector(
         onSwipeDown: (offset) => setState(() {}),
         child: GradientContainer(
-          child: Column(
-            children: [
-              Header(title: S.of(context).tournaments),
-              _buildBody(adminValue),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Header(title: S.of(context).tournaments),
+                _buildBody(adminValue),
+              ],
+            ),
           ),
         ),
       ),
@@ -167,11 +128,17 @@ class Cup extends ConsumerState<CupScreen> {
               HelperMethods.verticalSpace(.02),
               cupsProviderAsync.when(
                 data: (cups) {
+                  log(cups.length.toString());
                   return Expanded(
                     child: ListView.builder(
                       itemCount: cups.length,
                       itemBuilder: (context, index) {
-                        return TournamentCard(cupModel: cups[index]);
+                        return Column(
+                          children: [
+                            TournamentCard(cupModel: cups[index]),
+                            HelperMethods.verticalSpace(.02),
+                          ],
+                        );
                       },
                     ),
                   );
@@ -194,13 +161,6 @@ class Cup extends ConsumerState<CupScreen> {
   //   }
   // }
 
-  String getStatus(CupModel cupModel) {
-    if (cupModel.status == "") {
-      return S.of(context).finished;
-    } else {
-      return S.of(context).active;
-    }
-  }
 }
 
 /*

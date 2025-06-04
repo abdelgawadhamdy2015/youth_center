@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,7 @@ import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/screen/cup/cups_controller.dart';
 import 'package:youth_center/screen/cup/group_card.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
@@ -175,39 +172,39 @@ class _AddCupScreenState extends ConsumerState<AddCupScreen> {
       ).showSnackBar(SnackBar(content: Text(S.of(context).enterCupName)));
       return;
     }
-    final cup = CupModel(
-      id: _nameController.text.trim(),
-      name: _nameController.text,
-      teems: _teams,
-      timeStart: Timestamp.fromDate(_selectedDate),
-      youthCenterId: ref.read(selectedCenterNameProvider) ?? '',
-      matches: _jsonMatches,
-      status: "upComming",
-    );
+    // final cup = CupModel(
+    //   id: _nameController.text.trim(),
+    //   name: _nameController.text,
+    //   teems: _teams,
+    //   timeStart: Timestamp.fromDate(_selectedDate),
+    //   youthCenterId: ref.read(selectedCenterNameProvider) ?? '',
+    //   matches: _jsonMatches,
+    //   status: "upComming",
+    // );
 
-    ref
-        .read(cupsControllerProvider)
-        .createCup(cup)
-        .then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(S.of(context).successSave),
-              backgroundColor: Colors.green,
-              elevation: 10,
-            ),
-          );
-          _resetForm();
-        })
-        .catchError((error) {
-          log('Error saving cup: $error');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error.toString()),
-              backgroundColor: Colors.redAccent,
-              elevation: 10,
-            ),
-          );
-        });
+    // ref
+    //     .read(cupsControllerProvider)
+    //     .createCup(cup)
+    //     .then((_) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text(S.of(context).successSave),
+    //           backgroundColor: Colors.green,
+    //           elevation: 10,
+    //         ),
+    //       );
+    //       _resetForm();
+    //     })
+    //     .catchError((error) {
+    //       log('Error saving cup: $error');
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text(error.toString()),
+    //           backgroundColor: Colors.redAccent,
+    //           elevation: 10,
+    //         ),
+    //       );
+    //     });
   }
 
   void _resetForm() {
@@ -440,20 +437,19 @@ class _AddCupScreenState extends ConsumerState<AddCupScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: _matches.length,
-                itemBuilder: (_, index) => _buildMatchCard(_matches[index],
-                    ref.watch(isAdminProvider),
-                )
+                itemBuilder:
+                    (_, index) => _buildMatchCard(
+                      _matches[index],
+                      ref.watch(isAdminProvider),
+                    ),
               ),
         ],
       ),
     ),
   );
 
-  Widget _buildMatchCard(MatchModel match, bool isAdmin) => InteractiveMatchCard(
-    match: match,
-    isAdmin: isAdmin,
-    canUpdate: true,
-  );
+  Widget _buildMatchCard(MatchModel match, bool isAdmin) =>
+      InteractiveMatchCard(match: match, isAdmin: isAdmin, canUpdate: true);
 
   Widget _buildActionButtons() => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,

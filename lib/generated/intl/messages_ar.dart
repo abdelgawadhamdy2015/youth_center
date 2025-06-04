@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "مباريات البطولة النشطة",
     ),
     "addBooking": MessageLookupByLibrary.simpleMessage("إضافة حجز"),
+    "ageGroups": MessageLookupByLibrary.simpleMessage("الفئات العمرية"),
     "alreadyHaveAccount": MessageLookupByLibrary.simpleMessage(
       "هل لديك حساب بالفعل؟",
     ),
@@ -44,8 +45,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "cupName": MessageLookupByLibrary.simpleMessage("اسم البطولة"),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
     "deleteRequest": MessageLookupByLibrary.simpleMessage("حذف الطلب"),
+    "description": MessageLookupByLibrary.simpleMessage("الوصف"),
     "distributeTeams": MessageLookupByLibrary.simpleMessage("توزيع الفرق"),
     "distributionMode": MessageLookupByLibrary.simpleMessage("طريقة التوزيع: "),
+    "draw": MessageLookupByLibrary.simpleMessage("تعادل"),
+    "endDate": MessageLookupByLibrary.simpleMessage("تاريخ الانتهاء"),
     "enterCupName": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال اسم البطولة",
     ),
@@ -53,6 +57,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterMobile": MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف"),
     "enterNames": MessageLookupByLibrary.simpleMessage(
       "يرجى إدخال أسماء جميع الفرق",
+    ),
+    "enterNumberOfTeams": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال عدد الفرق",
     ),
     "enterPassword": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
     "enterStartTime": MessageLookupByLibrary.simpleMessage(" وقت البدء"),
@@ -83,25 +90,40 @@ class MessageLookup extends MessageLookupByLibrary {
     "group6": MessageLookupByLibrary.simpleMessage("المجموعة 6"),
     "group7": MessageLookupByLibrary.simpleMessage("المجموعة 7"),
     "group8": MessageLookupByLibrary.simpleMessage("المجموعة 8"),
+    "groupStageKnockout": MessageLookupByLibrary.simpleMessage(
+      "دور المجموعات + خروج المغلوب",
+    ),
     "groupsDistribution": MessageLookupByLibrary.simpleMessage(
       "توزيع المجموعات",
     ),
+    "halftimeMinutes": MessageLookupByLibrary.simpleMessage(
+      "استراحة بين الشوطين (دقائق)",
+    ),
     "homePage": MessageLookupByLibrary.simpleMessage("الصفحة الرئيسية"),
+    "knockoutOnly": MessageLookupByLibrary.simpleMessage("خروج المغلوب فقط"),
+    "leagueFormat": MessageLookupByLibrary.simpleMessage("نظام الدوري"),
     "logOut": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "loss": MessageLookupByLibrary.simpleMessage("خسارة"),
     "manual": MessageLookupByLibrary.simpleMessage("يدوي"),
+    "matchDuration": MessageLookupByLibrary.simpleMessage("مدة المباراة"),
+    "minutesPerHalf": MessageLookupByLibrary.simpleMessage("الدقائق لكل شوط"),
     "mobile": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
     "monday": MessageLookupByLibrary.simpleMessage("الاثنين"),
     "myAccount": MessageLookupByLibrary.simpleMessage("حسابي"),
     "name": MessageLookupByLibrary.simpleMessage("الاسم"),
     "noData": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
     "noElemnts": MessageLookupByLibrary.simpleMessage("لا توجد عناصر"),
-    "numberOfTeams": MessageLookupByLibrary.simpleMessage("عدد الفرق: "),
+    "numberOfTeams": MessageLookupByLibrary.simpleMessage("عدد الفرق"),
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+    "pointsSystem": MessageLookupByLibrary.simpleMessage("نظام النقاط"),
     "profileUpdated": MessageLookupByLibrary.simpleMessage(
       "تم تحديث الملف الشخصي بنجاح",
     ),
     "random": MessageLookupByLibrary.simpleMessage("عشوائي"),
+    "registrationDeadline": MessageLookupByLibrary.simpleMessage(
+      "آخر موعد للتسجيل",
+    ),
     "reject": MessageLookupByLibrary.simpleMessage("رفض"),
     "requestAccepted": MessageLookupByLibrary.simpleMessage(
       "تم قبول الطلب بنجاح",
@@ -132,11 +154,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "requests": MessageLookupByLibrary.simpleMessage("الطلبات"),
     "required": MessageLookupByLibrary.simpleMessage("مطلوب"),
     "reset": MessageLookupByLibrary.simpleMessage("إعادة تعيين"),
+    "roundRobin": MessageLookupByLibrary.simpleMessage("دوري الكل مع الكل"),
     "saturday": MessageLookupByLibrary.simpleMessage("السبت"),
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),
     "saveTournament": MessageLookupByLibrary.simpleMessage("حفظ البطولة"),
     "selectCenter": MessageLookupByLibrary.simpleMessage("اختر مركزاً"),
     "selectDay": MessageLookupByLibrary.simpleMessage("اختر يوماً"),
+    "selectFormat": MessageLookupByLibrary.simpleMessage("يرجى اختيار النظام"),
     "signIn": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "signup": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "startDate": MessageLookupByLibrary.simpleMessage("تاريخ البدء"),
@@ -156,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "username": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),
     "wednesday": MessageLookupByLibrary.simpleMessage("الأربعاء"),
+    "win": MessageLookupByLibrary.simpleMessage("فوز"),
     "wrong": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
   };
 }

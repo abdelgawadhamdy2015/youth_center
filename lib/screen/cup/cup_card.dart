@@ -1,28 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
-import 'package:youth_center/models/cup_model.dart';
-import 'package:youth_center/screen/cup/cup_detail_screen.dart';
+import 'package:youth_center/models/tournament.dart';
 
 class TournamentCard extends StatelessWidget {
-  final CupModel cupModel;
+  final Tournament cupModel;
   const TournamentCard({super.key, required this.cupModel});
 
   @override
   Widget build(BuildContext context) {
-    Color statusColor;
-    switch (cupModel.status) {
-      case MyConstants.upComming:
-        statusColor = const Color(0xFF1E40AF);
-        break;
-      case MyConstants.ongoing:
-        statusColor = const Color(0xFF10B981);
-        break;
-      case MyConstants.completed:
-        statusColor = const Color(0xFF6B7280);
-        break;
-      default:
-        statusColor = const Color(0xFF1E40AF);
-    }
+    final statusData = _getStatus();
+    final Color statusColor = statusData['color'] as Color;
+    final String status = statusData['status'] as String;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -47,14 +35,14 @@ class TournamentCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    cupModel.name,
+                    cupModel.name!,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    MyConstants.dateFormat.format(cupModel.timeStart.toDate()),
+                    MyConstants.dateFormat.format(cupModel.startDate!),
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
@@ -66,7 +54,7 @@ class TournamentCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  cupModel.status,
+                  status,
                   style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ),
@@ -100,11 +88,11 @@ class TournamentCard extends StatelessWidget {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CupDetailScreen(cupModel: cupModel),
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => CupDetailScreen(cupModel: cupModel),
+                  //   ),
+                  // );
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFF1E40AF)),
@@ -126,5 +114,27 @@ class TournamentCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Map<String, Object> _getStatus() {
+    if (cupModel.startDate != null &&
+        DateTime.now().isBefore(cupModel.startDate!)) {
+      return {
+        'color': const Color(0xFF1E40AF),
+        'status': MyConstants.upComming,
+      };
+    } else if (cupModel.startDate != null &&
+        DateTime.now().isAfter(cupModel.startDate!) &&
+        DateTime.now().isBefore(cupModel.endDate!)) {
+      return {'color': const Color(0xFF10B981), 'status': MyConstants.ongoing};
+    } else if (cupModel.endDate != null &&
+        DateTime.now().isAfter(cupModel.endDate!)) {
+      return {
+        'color': const Color(0xFF6B7280),
+        'status': MyConstants.completed,
+      };
+    } else {
+      return {'color': const Color(0xFF1E40AF), 'status': MyConstants.ongoing};
+    }
   }
 }

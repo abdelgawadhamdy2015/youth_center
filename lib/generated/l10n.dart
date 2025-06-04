@@ -264,10 +264,10 @@ class S {
     );
   }
 
-  /// `Number of Teams: `
+  /// `Number of Teams`
   String get numberOfTeams {
     return Intl.message(
-      'Number of Teams: ',
+      'Number of Teams',
       name: 'numberOfTeams',
       desc: '',
       args: [],
@@ -724,6 +724,621 @@ class S {
     return Intl.message(
       'Booking Time',
       name: 'bookingTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End Date`
+  String get endDate {
+    return Intl.message('End Date', name: 'endDate', desc: '', args: []);
+  }
+
+  /// `Registration Deadline`
+  String get registrationDeadline {
+    return Intl.message(
+      'Registration Deadline',
+      name: 'registrationDeadline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get description {
+    return Intl.message('Description', name: 'description', desc: '', args: []);
+  }
+
+  /// `Tournament Format`
+  String get tournamentFormat {
+    return Intl.message(
+      'Tournament Format',
+      name: 'tournamentFormat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter number of teams`
+  String get enterNumberOfTeams {
+    return Intl.message(
+      'Please enter number of teams',
+      name: 'enterNumberOfTeams',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Age Groups`
+  String get ageGroups {
+    return Intl.message('Age Groups', name: 'ageGroups', desc: '', args: []);
+  }
+
+  /// `Group Stage + Knockout`
+  String get groupStageKnockout {
+    return Intl.message(
+      'Group Stage + Knockout',
+      name: 'groupStageKnockout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Knockout Only`
+  String get knockoutOnly {
+    return Intl.message(
+      'Knockout Only',
+      name: 'knockoutOnly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `League Format`
+  String get leagueFormat {
+    return Intl.message(
+      'League Format',
+      name: 'leagueFormat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Round Robin`
+  String get roundRobin {
+    return Intl.message('Round Robin', name: 'roundRobin', desc: '', args: []);
+  }
+
+  /// `please select format`
+  String get selectFormat {
+    return Intl.message(
+      'please select format',
+      name: 'selectFormat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match Duration`
+  String get matchDuration {
+    return Intl.message(
+      'Match Duration',
+      name: 'matchDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minutes per Half`
+  String get minutesPerHalf {
+    return Intl.message(
+      'Minutes per Half',
+      name: 'minutesPerHalf',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Halftime (minutes)`
+  String get halftimeMinutes {
+    return Intl.message(
+      'Halftime (minutes)',
+      name: 'halftimeMinutes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Points System`
+  String get pointsSystem {
+    return Intl.message(
+      'Points System',
+      name: 'pointsSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win`
+  String get win {
+    return Intl.message('Win', name: 'win', desc: '', args: []);
+  }
+
+  /// `Draw`
+  String get draw {
+    return Intl.message('Draw', name: 'draw', desc: '', args: []);
+  }
+
+  /// `Loss`
+  String get loss {
+    return Intl.message('Loss', name: 'loss', desc: '', args: []);
+  }
+
+  /// `Rules & Settings`
+  String get rulesSettings {
+    return Intl.message(
+      'Rules & Settings',
+      name: 'rulesSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Team Size Limits`
+  String get teamSizeLimits {
+    return Intl.message(
+      'Team Size Limits',
+      name: 'teamSizeLimits',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min Players`
+  String get minPlayers {
+    return Intl.message('Min Players', name: 'minPlayers', desc: '', args: []);
+  }
+
+  /// `Max Players`
+  String get maxPlayers {
+    return Intl.message('Max Players', name: 'maxPlayers', desc: '', args: []);
+  }
+
+  /// `Substitution Rules`
+  String get substitutionRules {
+    return Intl.message(
+      'Substitution Rules',
+      name: 'substitutionRules',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 Substitutions`
+  String get threeSubstitutions {
+    return Intl.message(
+      '3 Substitutions',
+      name: 'threeSubstitutions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `5 Substitutions`
+  String get fiveSubstitutions {
+    return Intl.message(
+      '5 Substitutions',
+      name: 'fiveSubstitutions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rolling Substitutions`
+  String get rollingSubstitutions {
+    return Intl.message(
+      'Rolling Substitutions',
+      name: 'rollingSubstitutions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlimited Substitutions`
+  String get unlimitedSubstitutions {
+    return Intl.message(
+      'Unlimited Substitutions',
+      name: 'unlimitedSubstitutions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Basic Information`
+  String get basicInformation {
+    return Intl.message(
+      'Basic Information',
+      name: 'basicInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Logo`
+  String get uploadLogo {
+    return Intl.message('Upload Logo', name: 'uploadLogo', desc: '', args: []);
+  }
+
+  /// `Recommended size: 200x200px, Max: 2MB`
+  String get recommendedSize {
+    return Intl.message(
+      'Recommended size: 200x200px, Max: 2MB',
+      name: 'recommendedSize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get location {
+    return Intl.message('Location', name: 'location', desc: '', args: []);
+  }
+
+  /// `Please select a location`
+  String get pleaseSelectLocation {
+    return Intl.message(
+      'Please select a location',
+      name: 'pleaseSelectLocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tournament Preview`
+  String get tournamentPreview {
+    return Intl.message(
+      'Tournament Preview',
+      name: 'tournamentPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Format`
+  String get format {
+    return Intl.message('Format', name: 'format', desc: '', args: []);
+  }
+
+  /// `Teams`
+  String get teams {
+    return Intl.message('Teams', name: 'teams', desc: '', args: []);
+  }
+
+  /// `Age Groups`
+  String get ageGroupsLabel {
+    return Intl.message(
+      'Age Groups',
+      name: 'ageGroupsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{minutes} min halves`
+  String minHalves(Object minutes) {
+    return Intl.message(
+      '$minutes min halves',
+      name: 'minHalves',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `{points} pts win`
+  String ptsWin(Object points) {
+    return Intl.message(
+      '$points pts win',
+      name: 'ptsWin',
+      desc: '',
+      args: [points],
+    );
+  }
+
+  /// `{players} players`
+  String players(Object players) {
+    return Intl.message(
+      '$players players',
+      name: 'players',
+      desc: '',
+      args: [players],
+    );
+  }
+
+  /// `Description`
+  String get descriptionLabel {
+    return Intl.message(
+      'Description',
+      name: 'descriptionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save as Draft`
+  String get saveAsDraft {
+    return Intl.message(
+      'Save as Draft',
+      name: 'saveAsDraft',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Publish Tournament`
+  String get publishTournament {
+    return Intl.message(
+      'Publish Tournament',
+      name: 'publishTournament',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tournament Created!`
+  String get tournamentCreated {
+    return Intl.message(
+      'Tournament Created!',
+      name: 'tournamentCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your tournament has been successfully created and published.`
+  String get tournamentCreatedMsg {
+    return Intl.message(
+      'Your tournament has been successfully created and published.',
+      name: 'tournamentCreatedMsg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to Tournaments`
+  String get goToTournaments {
+    return Intl.message(
+      'Go to Tournaments',
+      name: 'goToTournaments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match Rules`
+  String get matchRules {
+    return Intl.message('Match Rules', name: 'matchRules', desc: '', args: []);
+  }
+
+  /// `Offside rule applies`
+  String get offsideRule {
+    return Intl.message(
+      'Offside rule applies',
+      name: 'offsideRule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yellow/red card system`
+  String get cardSystem {
+    return Intl.message(
+      'Yellow/red card system',
+      name: 'cardSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extra time for knockout matches`
+  String get extraTime {
+    return Intl.message(
+      'Extra time for knockout matches',
+      name: 'extraTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Penalty shootout if tied after extra time`
+  String get penaltyShootout {
+    return Intl.message(
+      'Penalty shootout if tied after extra time',
+      name: 'penaltyShootout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom Rules`
+  String get customRules {
+    return Intl.message(
+      'Custom Rules',
+      name: 'customRules',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule Configuration`
+  String get scheduleConfiguration {
+    return Intl.message(
+      'Schedule Configuration',
+      name: 'scheduleConfiguration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Match Scheduling`
+  String get matchScheduling {
+    return Intl.message(
+      'Match Scheduling',
+      name: 'matchScheduling',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-generate schedule`
+  String get autoGenerateSchedule {
+    return Intl.message(
+      'Auto-generate schedule',
+      name: 'autoGenerateSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manual scheduling`
+  String get manualScheduling {
+    return Intl.message(
+      'Manual scheduling',
+      name: 'manualScheduling',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available Time Slots`
+  String get availableTimeSlots {
+    return Intl.message(
+      'Available Time Slots',
+      name: 'availableTimeSlots',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekday Evenings (17:00 - 21:00)`
+  String get weekdayEvenings {
+    return Intl.message(
+      'Weekday Evenings (17:00 - 21:00)',
+      name: 'weekdayEvenings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saturday Morning (09:00 - 13:00)`
+  String get saturdayMorning {
+    return Intl.message(
+      'Saturday Morning (09:00 - 13:00)',
+      name: 'saturdayMorning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saturday Afternoon (14:00 - 18:00)`
+  String get saturdayAfternoon {
+    return Intl.message(
+      'Saturday Afternoon (14:00 - 18:00)',
+      name: 'saturdayAfternoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Venue Allocation`
+  String get venueAllocation {
+    return Intl.message(
+      'Venue Allocation',
+      name: 'venueAllocation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Main Field`
+  String get mainField {
+    return Intl.message('Main Field', name: 'mainField', desc: '', args: []);
+  }
+
+  /// `Indoor Court`
+  String get indoorCourt {
+    return Intl.message(
+      'Indoor Court',
+      name: 'indoorCourt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Training Ground`
+  String get trainingGround {
+    return Intl.message(
+      'Training Ground',
+      name: 'trainingGround',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Break Between Matches`
+  String get breakBetweenMatches {
+    return Intl.message(
+      'Break Between Matches',
+      name: 'breakBetweenMatches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `15 minutes`
+  String get minutes15 {
+    return Intl.message('15 minutes', name: 'minutes15', desc: '', args: []);
+  }
+
+  /// `30 minutes`
+  String get minutes30 {
+    return Intl.message('30 minutes', name: 'minutes30', desc: '', args: []);
+  }
+
+  /// `45 minutes`
+  String get minutes45 {
+    return Intl.message('45 minutes', name: 'minutes45', desc: '', args: []);
+  }
+
+  /// `60 minutes`
+  String get minutes60 {
+    return Intl.message('60 minutes', name: 'minutes60', desc: '', args: []);
+  }
+
+  /// `Under 12`
+  String get under12 {
+    return Intl.message('Under 12', name: 'under12', desc: '', args: []);
+  }
+
+  /// `Under 14`
+  String get under14 {
+    return Intl.message('Under 14', name: 'under14', desc: '', args: []);
+  }
+
+  /// `Under 16`
+  String get under16 {
+    return Intl.message('Under 16', name: 'under16', desc: '', args: []);
+  }
+
+  /// `Under 18`
+  String get under18 {
+    return Intl.message('Under 18', name: 'under18', desc: '', args: []);
+  }
+
+  /// `Tournament saved as draft`
+  String get tournamentSaved {
+    return Intl.message(
+      'Tournament saved as draft',
+      name: 'tournamentSaved',
       desc: '',
       args: [],
     );

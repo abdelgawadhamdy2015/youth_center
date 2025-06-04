@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/widgets/body_container.dart';
+import 'package:youth_center/core/widgets/grediant_container.dart';
+import 'package:youth_center/core/widgets/header.dart';
+import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/models/tournament.dart';
+import 'package:youth_center/screen/cup/cups_controller.dart';
 
-
-
-class CreateTournamentScreen extends StatefulWidget {
+class CreateTournamentScreen extends ConsumerStatefulWidget {
   const CreateTournamentScreen({super.key});
 
   @override
-  State<CreateTournamentScreen> createState() => _CreateTournamentScreenState();
+  ConsumerState<CreateTournamentScreen> createState() =>
+      _CreateTournamentScreenState();
 }
 
-class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
+class _CreateTournamentScreenState
+    extends ConsumerState<CreateTournamentScreen> {
   int _currentStep = 0;
   bool _showPreview = false;
-
+  S lang = S();
   // Form controllers
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController(text: 'Summer Youth Cup');
   final _descriptionController = TextEditingController(
-    text: 'The Summer Youth Cup is an annual tournament designed to bring together young athletes from across the region...',
+    text:
+        'The Summer Youth Cup is an annual tournament designed to bring together young athletes from across the region...',
   );
   final _startDateController = TextEditingController(text: '2025-06-15');
   final _endDateController = TextEditingController(text: '2025-07-15');
@@ -32,12 +42,12 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
   final _minPlayersController = TextEditingController(text: '7');
   final _maxPlayersController = TextEditingController(text: '11');
   final _customRulesController = TextEditingController(
-    text: '1. All players must wear shin guards.\n2. Teams must arrive 30 minutes before kickoff.\n3. Coaches must remain in designated technical area.',
+    text:
+        '1. All players must wear shin guards.\n2. Teams must arrive 30 minutes before kickoff.\n3. Coaches must remain in designated technical area.',
   );
 
   // Dropdown values
-  String _location = 'Main Field';
-  String _format = 'Group Stage + Knockout';
+  late String _format;
   String _substitutionRules = '3 Substitutions';
   String _scheduling = 'Auto-generate schedule';
   String _breakBetweenMatches = '15 minutes';
@@ -48,8 +58,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
   bool _extraTime = true;
   bool _penaltyShootout = true;
   final List<bool> _ageGroups = [true, true, true, false];
-  final List<bool> _timeSlots = [true, true, true, true];
-  final List<bool> _venues = [true, true, true];
+  //final List<bool> _venues = [true, true, true];
 
   @override
   void dispose() {
@@ -72,45 +81,47 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
+    lang = S.of(context);
+
+    _format = lang.groupStageKnockout;
+    return GradientContainer(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Header(title: lang.createCup),
+            BodyContainer(
+              height: SizeConfig.screenHeight! * .7,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: SizeConfig.screenHeight! * .1),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // Progress indicator
+                      _buildProgressIndicator(),
+                      const SizedBox(height: 24),
+
+                      // Form sections
+                      _buildBasicInfoSection(),
+                      const SizedBox(height: 16),
+                      _buildFormatSection(),
+                      const SizedBox(height: 16),
+                      _buildRulesSection(),
+                      const SizedBox(height: 16),
+                      _buildScheduleSection(),
+                      const SizedBox(height: 16),
+                      _buildPreviewSection(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            _buildBottomBar(),
+          ],
         ),
-        title: const Text('Create Tournament'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {},
-          ),
-        ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Progress indicator
-              _buildProgressIndicator(),
-              const SizedBox(height: 24),
-              
-              // Form sections
-              _buildBasicInfoSection(),
-              const SizedBox(height: 16),
-              _buildFormatSection(),
-              const SizedBox(height: 16),
-              _buildRulesSection(),
-              const SizedBox(height: 16),
-              _buildScheduleSection(),
-              const SizedBox(height: 16),
-              _buildPreviewSection(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: _buildBottomBar(),
+
+      // bottomNavigationBar: _buildBottomBar(),
     );
   }
 
@@ -166,12 +177,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
         ExpansionPanel(
           headerBuilder: (context, isExpanded) {
             return ListTile(
-              title: const Text(
-                'Basic Information',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
+              title: Text(
+                lang.basicInformation,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               trailing: Icon(
                 isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -185,14 +193,14 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tournament Name*',
+                  decoration: InputDecoration(
+                    labelText: ' ${lang.cupName}*',
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a tournament name';
+                      return lang.enterCupName;
                     }
                     return null;
                   },
@@ -232,8 +240,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _startDateController,
-                        decoration: const InputDecoration(
-                          labelText: 'Start Date*',
+                        decoration: InputDecoration(
+                          labelText: ' ${lang.startDate}*',
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                           suffixIcon: Icon(Icons.calendar_today),
@@ -242,7 +250,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                         onTap: () => _selectDate(context, _startDateController),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a date';
+                            return lang.enterStartTime;
                           }
                           return null;
                         },
@@ -252,8 +260,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _endDateController,
-                        decoration: const InputDecoration(
-                          labelText: 'End Date*',
+                        decoration: InputDecoration(
+                          labelText: '${lang.endDate}*',
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                           suffixIcon: Icon(Icons.calendar_today),
@@ -262,7 +270,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                         onTap: () => _selectDate(context, _endDateController),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a date';
+                            return lang.enterEndTime;
                           }
                           return null;
                         },
@@ -271,36 +279,36 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: _location,
-                  decoration: const InputDecoration(
-                    labelText: 'Location*',
-                    filled: true,
-                    fillColor: Color(0xFFF3F4F6),
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: 'Main Field', child: Text('Main Field')),
-                    DropdownMenuItem(value: 'Indoor Court', child: Text('Indoor Court')),
-                    DropdownMenuItem(value: 'Training Ground', child: Text('Training Ground')),
-                    DropdownMenuItem(value: 'Multiple Venues', child: Text('Multiple Venues')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _location = value!;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a location';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                // DropdownButtonFormField<String>(
+                //   value: _location,
+                //   decoration: const InputDecoration(
+                //     labelText: 'Location*',
+                //     filled: true,
+                //     fillColor: Color(0xFFF3F4F6),
+                //   ),
+                //   items: const [
+                //     DropdownMenuItem(value: 'Main Field', child: Text('Main Field')),
+                //     DropdownMenuItem(value: 'Indoor Court', child: Text('Indoor Court')),
+                //     DropdownMenuItem(value: 'Training Ground', child: Text('Training Ground')),
+                //     DropdownMenuItem(value: 'Multiple Venues', child: Text('Multiple Venues')),
+                //   ],
+                //   onChanged: (value) {
+                //     setState(() {
+                //       _location = value!;
+                //     });
+                //   },
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please select a location';
+                //     }
+                //     return null;
+                //   },
+                // ),
+                // const SizedBox(height: 16),
                 TextFormField(
                   controller: _regDeadlineController,
-                  decoration: const InputDecoration(
-                    labelText: 'Registration Deadline*',
+                  decoration: InputDecoration(
+                    labelText: '${lang.registrationDeadline}*',
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                     suffixIcon: Icon(Icons.calendar_today),
@@ -309,7 +317,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                   onTap: () => _selectDate(context, _regDeadlineController),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select a date';
+                      return lang.registrationDeadline;
                     }
                     return null;
                   },
@@ -317,8 +325,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
+                  decoration: InputDecoration(
+                    labelText: lang.description,
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                     alignLabelWithHint: true,
@@ -342,12 +350,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
         ExpansionPanel(
           headerBuilder: (context, isExpanded) {
             return ListTile(
-              title: const Text(
-                'Tournament Format',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
+              title: Text(
+                lang.tournamentFormat,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               trailing: Icon(
                 isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -361,22 +366,22 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
               children: [
                 TextFormField(
                   controller: _teamsController,
-                  decoration: const InputDecoration(
-                    labelText: 'Number of Teams*',
+                  decoration: InputDecoration(
+                    labelText: '${lang.numberOfTeams}*',
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter number of teams';
+                      return lang.enterNumberOfTeams;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Age Groups*',
+                Text(
+                  '${lang.ageGroups}*',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -417,16 +422,28 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: _format,
-                  decoration: const InputDecoration(
-                    labelText: 'Tournament Format*',
+                  decoration: InputDecoration(
+                    labelText: '${lang.tournamentFormat}*',
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'Group Stage + Knockout', child: Text('Group Stage + Knockout')),
-                    DropdownMenuItem(value: 'Knockout Only', child: Text('Knockout Only')),
-                    DropdownMenuItem(value: 'League Format', child: Text('League Format')),
-                    DropdownMenuItem(value: 'Round Robin', child: Text('Round Robin')),
+                  items: [
+                    DropdownMenuItem(
+                      value: lang.groupStageKnockout,
+                      child: Text(lang.groupStageKnockout),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.knockoutOnly,
+                      child: Text(lang.knockoutOnly),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.leagueFormat,
+                      child: Text(lang.leagueFormat),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.roundRobin,
+                      child: Text(lang.roundRobin),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -435,14 +452,14 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select a format';
+                      return lang.selectFormat;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Match Duration',
+                Text(
+                  lang.matchDuration,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -455,8 +472,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _halfDurationController,
-                        decoration: const InputDecoration(
-                          labelText: 'Minutes per Half',
+                        decoration: InputDecoration(
+                          labelText: lang.minutesPerHalf,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -467,8 +484,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _halftimeController,
-                        decoration: const InputDecoration(
-                          labelText: 'Halftime (minutes)',
+                        decoration: InputDecoration(
+                          labelText: lang.halftimeMinutes,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -478,8 +495,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Points System',
+                Text(
+                  lang.pointsSystem,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -492,8 +509,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _winPointsController,
-                        decoration: const InputDecoration(
-                          labelText: 'Win',
+                        decoration: InputDecoration(
+                          labelText: lang.win,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -504,8 +521,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _drawPointsController,
-                        decoration: const InputDecoration(
-                          labelText: 'Draw',
+                        decoration: InputDecoration(
+                          labelText: lang.draw,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -516,8 +533,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _lossPointsController,
-                        decoration: const InputDecoration(
-                          labelText: 'Loss',
+                        decoration: InputDecoration(
+                          labelText: lang.loss,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -543,12 +560,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
         ExpansionPanel(
           headerBuilder: (context, isExpanded) {
             return ListTile(
-              title: const Text(
-                'Rules & Settings',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
+              title: Text(
+                lang.rulesSettings,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               trailing: Icon(
                 isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -560,8 +574,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                const Text(
-                  'Team Size Limits',
+                Text(
+                  lang.teamSizeLimits,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -574,8 +588,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _minPlayersController,
-                        decoration: const InputDecoration(
-                          labelText: 'Min Players',
+                        decoration: InputDecoration(
+                          labelText: lang.minPlayers,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -586,8 +600,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _maxPlayersController,
-                        decoration: const InputDecoration(
-                          labelText: 'Max Players',
+                        decoration: InputDecoration(
+                          labelText: lang.maxPlayers,
                           filled: true,
                           fillColor: Color(0xFFF3F4F6),
                         ),
@@ -599,16 +613,28 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: _substitutionRules,
-                  decoration: const InputDecoration(
-                    labelText: 'Substitution Rules',
+                  decoration: InputDecoration(
+                    labelText: lang.substitutionRules,
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: '3 Substitutions', child: Text('3 Substitutions')),
-                    DropdownMenuItem(value: '5 Substitutions', child: Text('5 Substitutions')),
-                    DropdownMenuItem(value: 'Rolling Substitutions', child: Text('Rolling Substitutions')),
-                    DropdownMenuItem(value: 'Unlimited Substitutions', child: Text('Unlimited Substitutions')),
+                  items: [
+                    DropdownMenuItem(
+                      value: lang.threeSubstitutions,
+                      child: Text(lang.threeSubstitutions),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.fiveSubstitutions,
+                      child: Text(lang.fiveSubstitutions),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.rollingSubstitutions,
+                      child: Text(lang.rollingSubstitutions),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.unlimitedSubstitutions,
+                      child: Text(lang.unlimitedSubstitutions),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -617,8 +643,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Match Rules',
+                Text(
+                  lang.matchRules,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -628,22 +654,24 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 const SizedBox(height: 8),
                 Column(
                   children: [
-                    _buildCheckboxTile('Offside rule applies', _offsideRule, (value) {
+                    _buildCheckboxTile(lang.offsideRule, _offsideRule, (value) {
                       setState(() {
                         _offsideRule = value!;
                       });
                     }),
-                    _buildCheckboxTile('Yellow/red card system', _cardSystem, (value) {
+                    _buildCheckboxTile(lang.cardSystem, _cardSystem, (value) {
                       setState(() {
                         _cardSystem = value!;
                       });
                     }),
-                    _buildCheckboxTile('Extra time for knockout matches', _extraTime, (value) {
+                    _buildCheckboxTile(lang.extraTime, _extraTime, (value) {
                       setState(() {
                         _extraTime = value!;
                       });
                     }),
-                    _buildCheckboxTile('Penalty shootout if tied after extra time', _penaltyShootout, (value) {
+                    _buildCheckboxTile(lang.penaltyShootout, _penaltyShootout, (
+                      value,
+                    ) {
                       setState(() {
                         _penaltyShootout = value!;
                       });
@@ -653,8 +681,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _customRulesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Custom Rules',
+                  decoration: InputDecoration(
+                    labelText: lang.customRules,
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                     alignLabelWithHint: true,
@@ -678,12 +706,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
         ExpansionPanel(
           headerBuilder: (context, isExpanded) {
             return ListTile(
-              title: const Text(
-                'Schedule Configuration',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
+              title: Text(
+                lang.scheduleConfiguration,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               trailing: Icon(
                 isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -697,14 +722,20 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
               children: [
                 DropdownButtonFormField<String>(
                   value: _scheduling,
-                  decoration: const InputDecoration(
-                    labelText: 'Match Scheduling',
+                  decoration: InputDecoration(
+                    labelText: lang.manualScheduling,
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'Auto-generate schedule', child: Text('Auto-generate schedule')),
-                    DropdownMenuItem(value: 'Manual scheduling', child: Text('Manual scheduling')),
+                  items: [
+                    DropdownMenuItem(
+                      value: lang.autoGenerateSchedule,
+                      child: Text(lang.autoGenerateSchedule),
+                    ),
+                    DropdownMenuItem(
+                      value: lang.manualScheduling,
+                      child: Text(lang.manualScheduling),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -712,82 +743,61 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     });
                   },
                 ),
+
                 const SizedBox(height: 16),
-                const Text(
-                  'Available Time Slots',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Column(
-                  children: [
-                    _buildCheckboxTile('Weekday Evenings (17:00 - 21:00)', _timeSlots[0], (value) {
-                      setState(() {
-                        _timeSlots[0] = value!;
-                      });
-                    }),
-                    _buildCheckboxTile('Saturday Morning (09:00 - 13:00)', _timeSlots[1], (value) {
-                      setState(() {
-                        _timeSlots[1] = value!;
-                      });
-                    }),
-                    _buildCheckboxTile('Saturday Afternoon (14:00 - 18:00)', _timeSlots[2], (value) {
-                      setState(() {
-                        _timeSlots[2] = value!;
-                      });
-                    }),
-                    _buildCheckboxTile('Sunday (09:00 - 18:00)', _timeSlots[3], (value) {
-                      setState(() {
-                        _timeSlots[3] = value!;
-                      });
-                    }),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Venue Allocation',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Column(
-                  children: [
-                    _buildCheckboxTile('Main Field', _venues[0], (value) {
-                      setState(() {
-                        _venues[0] = value!;
-                      });
-                    }),
-                    _buildCheckboxTile('Indoor Court', _venues[1], (value) {
-                      setState(() {
-                        _venues[1] = value!;
-                      });
-                    }),
-                    _buildCheckboxTile('Training Ground', _venues[2], (value) {
-                      setState(() {
-                        _venues[2] = value!;
-                      });
-                    }),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                // Text(
+                //   lang.venueAllocation,
+                //   style: TextStyle(
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.w500,
+                //     color: Colors.grey,
+                //   ),
+                // ),
+                // const SizedBox(height: 8),
+                // Column(
+                //   children: [
+                //     _buildCheckboxTile('Main Field', _venues[0], (value) {
+                //       setState(() {
+                //         _venues[0] = value!;
+                //       });
+                //     }),
+                //     _buildCheckboxTile('Indoor Court', _venues[1], (value) {
+                //       setState(() {
+                //         _venues[1] = value!;
+                //       });
+                //     }),
+                //     _buildCheckboxTile('Training Ground', _venues[2], (value) {
+                //       setState(() {
+                //         _venues[2] = value!;
+                //       });
+                //     }),
+                //   ],
+                // ),
+                //const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: _breakBetweenMatches,
-                  decoration: const InputDecoration(
-                    labelText: 'Break Between Matches',
+                  decoration: InputDecoration(
+                    labelText: lang.breakBetweenMatches,
                     filled: true,
                     fillColor: Color(0xFFF3F4F6),
                   ),
                   items: const [
-                    DropdownMenuItem(value: '15 minutes', child: Text('15 minutes')),
-                    DropdownMenuItem(value: '30 minutes', child: Text('30 minutes')),
-                    DropdownMenuItem(value: '45 minutes', child: Text('45 minutes')),
-                    DropdownMenuItem(value: '60 minutes', child: Text('60 minutes')),
+                    DropdownMenuItem(
+                      value: '15 minutes',
+                      child: Text('15 minutes'),
+                    ),
+                    DropdownMenuItem(
+                      value: '30 minutes',
+                      child: Text('30 minutes'),
+                    ),
+                    DropdownMenuItem(
+                      value: '45 minutes',
+                      child: Text('45 minutes'),
+                    ),
+                    DropdownMenuItem(
+                      value: '60 minutes',
+                      child: Text('60 minutes'),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -809,12 +819,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       child: Column(
         children: [
           ListTile(
-            title: const Text(
-              'Tournament Preview',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
+            title: Text(
+              lang.tournamentPreview,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             trailing: IconButton(
               icon: Icon(
@@ -849,7 +856,10 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                             color: const Color(0xFF1E40AF),
                             borderRadius: BorderRadius.circular(24),
                           ),
-                          child: const Icon(Icons.emoji_events, color: Colors.white),
+                          child: const Icon(
+                            Icons.emoji_events,
+                            color: Colors.white,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Column(
@@ -881,11 +891,20 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       mainAxisSpacing: 8,
                       childAspectRatio: 2.5,
                       children: [
-                        _buildPreviewInfo('Location', _location),
-                        _buildPreviewInfo('Registration Deadline', 
-                          DateFormat('MMM d, yyyy').format(DateTime.parse(_regDeadlineController.text))),
-                        _buildPreviewInfo('Teams', '${_teamsController.text} teams'),
-                        _buildPreviewInfo('Age Groups', _getSelectedAgeGroups()),
+                        _buildPreviewInfo(
+                          lang.registrationDeadline,
+                          DateFormat(
+                            'MMM d, yyyy',
+                          ).format(DateTime.parse(_regDeadlineController.text)),
+                        ),
+                        _buildPreviewInfo(
+                          lang.teams,
+                          '${_teamsController.text} ${lang.teams}',
+                        ),
+                        _buildPreviewInfo(
+                          lang.ageGroups,
+                          _getSelectedAgeGroups(),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -898,27 +917,28 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Format',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                          Text(
+                            lang.format,
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
                             _format,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(height: 8),
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              _buildPreviewChip('${_halfDurationController.text} min halves'),
-                              _buildPreviewChip('${_winPointsController.text} pts win'),
-                              _buildPreviewChip('${_maxPlayersController.text} players'),
+                              _buildPreviewChip(
+                                lang.minHalves(_halfDurationController.text),
+                              ),
+                              _buildPreviewChip(
+                                lang.ptsWin(_winPointsController.text),
+                              ),
+                              _buildPreviewChip(
+                                lang.players(_maxPlayersController.text),
+                              ),
                             ],
                           ),
                         ],
@@ -934,18 +954,13 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Description',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                          Text(
+                            lang.description,
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
                             _descriptionController.text,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ],
                       ),
@@ -970,19 +985,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -997,10 +1001,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 12,
-          color: Color(0xFF1E40AF),
-        ),
+        style: const TextStyle(fontSize: 12, color: Color(0xFF1E40AF)),
       ),
     );
   }
@@ -1023,7 +1024,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 side: BorderSide(color: Colors.grey[300]!),
               ),
-              child: const Text('Save as Draft'),
+              child: Text(lang.saveAsDraft),
             ),
           ),
           const SizedBox(width: 16),
@@ -1036,7 +1037,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                 backgroundColor: const Color(0xFF1E40AF),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: const Text('Publish Tournament'),
+              child: Text(lang.publishTournament),
             ),
           ),
         ],
@@ -1044,7 +1045,11 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
     );
   }
 
-  Widget _buildCheckboxTile(String title, bool value, Function(bool?) onChanged) {
+  Widget _buildCheckboxTile(
+    String title,
+    bool value,
+    Function(bool?) onChanged,
+  ) {
     return CheckboxListTile(
       title: Text(title),
       value: value,
@@ -1054,9 +1059,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       dense: true,
       activeColor: const Color(0xFF1E40AF),
       tileColor: Colors.grey[100],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
 
@@ -1069,75 +1072,154 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
     return selected.join(', ');
   }
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(
+    BuildContext context,
+    TextEditingController controller,
+  ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.parse(controller.text),
-      firstDate: DateTime.now(),
+      firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
     if (picked != null) {
       setState(() {
-        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+        controller.text = DateFormat('yyyy-MM-dd', "en").format(picked);
       });
     }
   }
 
   void _saveAsDraft() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tournament saved as draft')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(lang.tournamentSaved)));
     }
   }
 
-  void _publishTournament() {
+  Future<void> _publishTournament() async {
+    S lang = S.of(context);
+
     if (_formKey.currentState!.validate()) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD1FAE5),
-                  borderRadius: BorderRadius.circular(32),
+      try {
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder:
+              (context) => const Center(child: CircularProgressIndicator()),
+        );
+
+        // Get current user ID (you'll need to implement your own user management)
+        final userId =
+            MyConstants.centerUser!.id!; // Replace with actual user ID
+
+        // Create Tournament object from form data
+        final tournament = Tournament(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: _nameController.text,
+          description: _descriptionController.text,
+          logoUrl: null, // You'll need to implement image upload
+          startDate: DateTime.parse(_startDateController.text),
+          endDate: DateTime.parse(_endDateController.text),
+          registrationDeadline: DateTime.parse(_regDeadlineController.text),
+          location: MyConstants.centerUser!.youthCenterName,
+          numberOfTeams: int.parse(_teamsController.text),
+          format: _format,
+          minutesPerHalf: int.parse(_halfDurationController.text),
+          halftimeMinutes: int.parse(_halftimeController.text),
+          winPoints: int.parse(_winPointsController.text),
+          drawPoints: int.parse(_drawPointsController.text),
+          lossPoints: int.parse(_lossPointsController.text),
+          minPlayers: int.parse(_minPlayersController.text),
+          maxPlayers: int.parse(_maxPlayersController.text),
+          substitutionRules: _substitutionRules,
+          offsideRule: _offsideRule,
+          cardSystem: _cardSystem,
+          extraTime: _extraTime,
+          penaltyShootout: _penaltyShootout,
+          customRules: _customRulesController.text,
+          scheduling: _scheduling,
+
+          breakBetweenMatches: _breakBetweenMatches,
+          createdAt: DateTime.now(),
+          createdBy: userId,
+          isPublished: true,
+        );
+
+        // Save to database (implement your own repository)
+        await createTournament(tournament);
+
+        // Close loading dialog
+        Navigator.pop(context);
+
+        // Show success dialog
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD1FAE5),
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Color(0xFF10B981),
+                        size: 32,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      lang.tournamentCreated,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      lang.tournamentCreatedMsg,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context); // Go back to previous screen
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E40AF),
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                      child: Text(lang.goToTournaments),
+                    ),
+                  ],
                 ),
-                child: const Icon(Icons.check, color: Color(0xFF10B981), size: 32),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Tournament Created!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Your tournament has been successfully created and published.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // Navigate to tournaments screen
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1E40AF),
-                  minimumSize: const Size(double.infinity, 48),
-                ),
-                child: const Text('Go to Tournaments'),
-              ),
-            ],
+        );
+      } catch (e) {
+        // Close loading dialog
+        Navigator.pop(context);
+
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error publishing tournament: ${e.toString()}'),
+            backgroundColor: Colors.red,
           ),
-        ),
-      );
+        );
+      }
     }
+  }
+
+  createTournament(Tournament tournament) async {
+    await ref.watch(cupsControllerProvider).createCup(tournament);
   }
 }

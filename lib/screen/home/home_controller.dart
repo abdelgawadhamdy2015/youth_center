@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/models/booking_model.dart';
-import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
+import 'package:youth_center/models/tournament.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
@@ -48,7 +48,7 @@ final youthCenterNamesProvider = FutureProvider<List<String>>((ref) async {
 });
 
 final selectedCenterNameProvider = StateProvider<String?>((ref) {
-  return  MyConstants.centerUser?.youthCenterName;
+  return MyConstants.centerUser?.youthCenterName;
 });
 
 final selectedDayProvider = StateProvider<String>((ref) {
@@ -60,7 +60,8 @@ final bookingsProvider = FutureProvider<List<BookingModel>>((ref) async {
 
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
-  final user = MyConstants.centerUser ?? ref.watch(centerUserProvider).asData?.value;
+  final user =
+      MyConstants.centerUser ?? ref.watch(centerUserProvider).asData?.value;
 
   if (isAdmin) {
     return bookingService.getBookingsByCenter(user?.youthCenterName ?? '');
@@ -94,29 +95,32 @@ final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
   );
 });
 
-final activeCupsProvider = FutureProvider<List<CupModel>>((ref) async {
-  final bookingService = DataBaseService();
-  final isAdmin = ref.watch(isAdminProvider);
-  final selectedCenter =  ref.watch(selectedCenterNameProvider);
-
-  if (isAdmin) {
-    final user =  ref.watch(centerUserProvider).asData?.value;
-    return await bookingService.getCups(user?.youthCenterName ?? '', finished: false);
-  } else if (selectedCenter != null) {
-    return await bookingService.getCups(selectedCenter, finished: false);
-  } else {
-    return [];
-  }
-
-});
-
-final cupsProvider = FutureProvider<List<CupModel>>((ref) async {
+final activeCupsProvider = FutureProvider<List<Tournament>>((ref) async {
   final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
   if (isAdmin) {
     final user = ref.watch(centerUserProvider).asData?.value;
+    return await bookingService.getCups(
+      user?.youthCenterName ?? '',
+      finished: false,
+    );
+  } else if (selectedCenter != null) {
+    return await bookingService.getCups(selectedCenter, finished: false);
+  } else {
+    return [];
+  }
+});
+
+final cupsProvider = FutureProvider<List<Tournament>>((ref) async {
+  final bookingService = DataBaseService();
+  final isAdmin = ref.watch(isAdminProvider);
+  final selectedCenter = ref.watch(selectedCenterNameProvider);
+
+  if (isAdmin) {
+    final user = ref.watch(centerUserProvider).asData?.value;
+    log("${user?.youthCenterName}");
     return await bookingService.getCups(user?.youthCenterName ?? '');
   }
 
@@ -127,13 +131,13 @@ final cupsProvider = FutureProvider<List<CupModel>>((ref) async {
   return [];
 });
 
-final filteredCupsProvider = FutureProvider<List<CupModel>>((ref) async {
+final filteredCupsProvider = FutureProvider<List<Tournament>>((ref) async {
   final cupProvider = ref.watch(activeCupsProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
   return cupProvider.when(
     data: (cups) {
-      return cups.where((cup) => cup.youthCenterId == selectedCenter).toList();
+      return cups.where((cup) => cup.location == selectedCenter).toList();
     },
     loading: () => [],
     error: (_, __) => [],
@@ -142,18 +146,23 @@ final filteredCupsProvider = FutureProvider<List<CupModel>>((ref) async {
 
 final matchesProvider = FutureProvider<List<MatchModel>>((ref) async {
   final isAdmin = ref.watch(isAdminProvider);
-  final filteredCupsAsync = !isAdmin ? ref.watch(filteredCupsProvider) : ref.watch(activeCupsProvider);
+  final filteredCupsAsync =
+      !isAdmin
+          ? ref.watch(filteredCupsProvider)
+          : ref.watch(activeCupsProvider);
 
   return filteredCupsAsync.when(
     data: (cups) {
-      log( "Fetching matches for ${cups.length} cups");
+      log("Fetching matches for ${cups.length} cups");
       List<MatchModel> matches = [];
       for (final cup in cups) {
-        for (final match in cup.matches) {
-          matches.add(MatchModel.fromMap(match));
+        if (cup.matches != null) {
+          for (final match in cup.matches!) {
+            matches.add(MatchModel.fromMap(match));
+          }
         }
       }
-      log( "Total matches found: ${matches.length}");
+      log("Total matches found: ${matches.length}");
       return matches;
     },
     loading: () => [],

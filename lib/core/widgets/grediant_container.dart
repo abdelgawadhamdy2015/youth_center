@@ -6,6 +6,8 @@ class GradientContainer extends StatelessWidget {
   final Widget child;
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
+  final double? height;
+  final double? width;
 
   const GradientContainer({
     super.key,
@@ -13,18 +15,17 @@ class GradientContainer extends StatelessWidget {
     required this.child,
     this.floatingActionButton,
     this.bottomNavigationBar,
+    this.height,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient:ColorManger.mainGradient,
-      ),
+      height: height ?? double.infinity,
+      width: width ?? double.infinity,
+      decoration: BoxDecoration(gradient: ColorManger.mainGradient),
       child: child,
-      
     );
   }
 }

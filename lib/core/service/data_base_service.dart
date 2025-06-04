@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/cup_model.dart';
+import 'package:youth_center/models/tournament.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
 
@@ -16,15 +16,14 @@ class DataBaseService {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return null;
 
-    final snapshot = await _db
-        .collection(MyConstants.userCollection)
-        .doc(user.uid)
-        .get();
+    final snapshot =
+        await _db.collection(MyConstants.userCollection).doc(user.uid).get();
 
     if (!snapshot.exists) return null;
 
     return CenterUser.fromSnapshot(snapshot);
   }
+
   Future<List<BookingModel>> getAllBookings() async {
     final snapshot = await _db.collection(MyConstants.bookingCollection).get();
     return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
@@ -45,7 +44,7 @@ class DataBaseService {
     return snapshot.docs.map((e) => YouthCenterModel.fromSnapshot(e)).toList();
   }
 
-  Future<List<CupModel>> getCups(String centerName, {bool? finished}) async {
+  Future<List<Tournament>> getCups(String centerName, {bool? finished}) async {
     var query = _db
         .collection(MyConstants.cupCollection)
         .where(MyConstants.youthCenterIdCollection, isEqualTo: centerName);
@@ -55,12 +54,12 @@ class DataBaseService {
     }
 
     final snapshot = await query.get();
-   
-    return snapshot.docs.map((e) => CupModel.fromSnapshot(e)).toList();
+
+    return snapshot.docs.map((e) => Tournament.fromSnapshot(e)).toList();
   }
 
-  Future<void> createCup(CupModel cup) async {
-    await _db.collection(MyConstants.cupCollection).add(cup.toJson());
+  Future<void> createCup(Tournament cup) async {
+    await _db.collection(MyConstants.cupCollection).add(cup.toMap());
   }
 
   Future<void> deleteCup(String cupId) async {
@@ -102,16 +101,18 @@ class DataBaseService {
 
   Future<List<BookingModel>> getRequests(String centerId) async {
     log('Fetching requests for center: $centerId');
-    final snapshot = await _db
-        .collection(MyConstants.requestCollection)
-        .where(MyConstants.youthCenterIdCollection, isEqualTo: centerId)
-        .get();
+    final snapshot =
+        await _db
+            .collection(MyConstants.requestCollection)
+            .where(MyConstants.youthCenterIdCollection, isEqualTo: centerId)
+            .get();
     return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
   }
 
   Future<void> deleteRequest(String requestId) async {
     await _db.collection(MyConstants.requestCollection).doc(requestId).delete();
   }
+
   Future<void> updateRequest(BookingModel booking) async {
     await _db
         .collection(MyConstants.requestCollection)
