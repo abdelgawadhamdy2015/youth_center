@@ -1343,6 +1343,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Matches`
+  String get matches {
+    return Intl.message('Matches', name: 'matches', desc: '', args: []);
+  }
+
+  /// `More`
+  String get more {
+    return Intl.message('More', name: 'more', desc: '', args: []);
+  }
+
+  /// `click back again to exit`
+  String get clickAgainToExit {
+    return Intl.message(
+      'click back again to exit',
+      name: 'clickAgainToExit',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

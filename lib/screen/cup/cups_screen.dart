@@ -10,9 +10,8 @@ import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
-import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/cup/cup_card.dart';
+import 'package:youth_center/screen/cup/tournament_card.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 
 class CupScreen extends ConsumerStatefulWidget {
@@ -53,8 +52,6 @@ class Cup extends ConsumerState<CupScreen> {
     );
   }
 
-  
-
   String getElement(List anyList, int index) {
     if (anyList.isNotEmpty) {
       return anyList.elementAt(index);
@@ -67,8 +64,6 @@ class Cup extends ConsumerState<CupScreen> {
     return 10;
   }
 
-  
-
   @override
   void dispose() {
     super.dispose();
@@ -77,22 +72,22 @@ class Cup extends ConsumerState<CupScreen> {
     mobileController.dispose();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     final adminValue = ref.watch(isAdminProvider);
-    return Scaffold(
-      body: SwipeDetector(
-        onSwipeDown: (offset) => setState(() {}),
-        child: GradientContainer(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Header(title: S.of(context).tournaments),
-                _buildBody(adminValue),
-              ],
-            ),
+    return SwipeDetector(
+      onSwipeDown: (offset) => setState(() {}),
+      child: GradientContainer(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HelperMethods.buildHeader(
+                context,
+                S.of(context).tournaments,
+                adminValue,
+              ),
+              _buildBody(adminValue),
+            ],
           ),
         ),
       ),
@@ -101,7 +96,7 @@ class Cup extends ConsumerState<CupScreen> {
 
   _buildBody(bool adminValue) {
     final youthcenterNames = ref.watch(youthCenterNamesProvider);
-    final selectedDay = ref.watch(selectedDayProvider);
+    final selectedCenter = ref.watch(selectedCenterNameProvider);
     final cupsProviderAsync = ref.watch(cupsProvider);
     return BodyContainer(
       height: SizeConfig.screenHeight! * .85,
@@ -113,11 +108,12 @@ class Cup extends ConsumerState<CupScreen> {
                 visible: !adminValue,
                 child: youthcenterNames.when(
                   data:
-                      (days) => DayDropdown(
-                        days: days,
-                        selectedDay: selectedDay,
+                      (centerNames) => DayDropdown(
+                        days: centerNames,
+                        selectedDay: selectedCenter,
                         onChanged: (days) {
-                          ref.read(selectedDayProvider.notifier).state = days!;
+                          ref.read(selectedCenterNameProvider.notifier).state =
+                              days!;
                         },
                       ),
                   loading:
@@ -135,7 +131,7 @@ class Cup extends ConsumerState<CupScreen> {
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
-                            TournamentCard(cupModel: cups[index]),
+                            TournamentCard(tournament: cups[index]),
                             HelperMethods.verticalSpace(.02),
                           ],
                         );
@@ -160,7 +156,6 @@ class Cup extends ConsumerState<CupScreen> {
   //     return dropdownValue;
   //   }
   // }
-
 }
 
 /*

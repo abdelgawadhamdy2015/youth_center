@@ -29,9 +29,7 @@ final isAdminProvider = Provider<bool>((ref) {
 final youthCentersProvider = FutureProvider<List<YouthCenterModel>>((
   ref,
 ) async {
-  final service = DataBaseService();
-
-  final centers = await service.getAllCenters();
+  final centers = await DataBaseService().getAllCenters();
   return centers;
 });
 
@@ -58,20 +56,21 @@ final selectedDayProvider = StateProvider<String>((ref) {
 final bookingsProvider = FutureProvider<List<BookingModel>>((ref) async {
   final bookingService = DataBaseService();
 
-  final isAdmin = ref.watch(isAdminProvider);
-  final selectedCenter = ref.watch(selectedCenterNameProvider);
-  final user =
-      MyConstants.centerUser ?? ref.watch(centerUserProvider).asData?.value;
+  // final isAdmin = ref.watch(isAdminProvider);
+  // final selectedCenter = ref.watch(selectedCenterNameProvider);
+  // final user =
+  //     MyConstants.centerUser ?? ref.watch(centerUserProvider).asData?.value;
 
-  if (isAdmin) {
-    return bookingService.getBookingsByCenter(user?.youthCenterName ?? '');
-  }
+  // if (user?.admin ?? false) {
+  //   log("booking as admin and center is ${user?.youthCenterName}");
+  //   return bookingService.getBookingsByCenter(user?.youthCenterName ?? '');
+  // }
 
-  if (selectedCenter != null && selectedCenter.isNotEmpty) {
-    return bookingService.getBookingsByCenter(selectedCenter);
-  }
+  // if (selectedCenter != null && selectedCenter.isNotEmpty) {
+  //   return bookingService.getBookingsByCenter(selectedCenter);
+  // }
 
-  return [];
+  return bookingService.getAllBookings();
 });
 final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
   ref,
@@ -79,7 +78,7 @@ final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
   final bookingsAsync = ref.watch(bookingsProvider);
   final selectedDay = ref.watch(selectedDayProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
-
+  log("filter bookings : center is $selectedCenter , day is $selectedDay");
   return bookingsAsync.when(
     data: (bookings) {
       return bookings

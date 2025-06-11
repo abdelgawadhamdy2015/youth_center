@@ -1,18 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/cup/create_tournement.dart';
+import 'package:youth_center/screen/auth/update_profile.dart';
+import 'package:youth_center/screen/booking/add_booking.dart';
+import 'package:youth_center/screen/booking/requests_booking.dart';
+import 'package:youth_center/screen/cup/create.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/home_body.dart';
 
-class HomeScreen extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:youth_center/screen/home/home_controller.dart';
+
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
@@ -23,11 +30,38 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    _screens = [HomeScreenBody(tabController: _tabController), CupScreen()];
+    _screens = [
+      HomeScreenBody(tabController: _tabController),
+      CupScreen(),
+      UpdateProfile(),
+      BookingRequestsScreen(),
+    ];
+  }
+
+  _showMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: [
+            ListTile(
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacementNamed('/');
+              },
+              titleAlignment: ListTileTitleAlignment.center,
+              trailing: Icon(Icons.logout),
+              title: Text(S.of(context).logOut),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin = ref.watch(isAdminProvider);
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (canPop) {
@@ -35,9 +69,12 @@ class _HomeScreenState extends State<HomeScreen>
           SystemNavigator.pop();
         } else {
           canPop = true;
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('click back again to exit')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(S.of(context).clickAgainToExit)),
+          );
+          Future.delayed(Duration(seconds: 2), () {
+            canPop = false;
+          });
         }
       },
       canPop: canPop,
@@ -47,6 +84,10 @@ class _HomeScreenState extends State<HomeScreen>
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
+            if (index == 4) {
+              _showMenu();
+              return;
+            }
             setState(() {
               _currentIndex = index;
             });
@@ -60,21 +101,44 @@ class _HomeScreenState extends State<HomeScreen>
               icon: Icon(Icons.emoji_events_outlined),
               label: S.of(context).tournaments,
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: S.of(context).myAccount,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.request_page),
+              label: S.of(context).requests,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              label: S.of(context).more,
+            ),
           ],
           selectedItemColor: const Color(0xFF1E40AF),
           unselectedItemColor: Colors.grey,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => CreateTournamentScreen(),
-            );
-          },
-          backgroundColor: const Color(0xFF1E40AF),
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
+        floatingActionButton:
+            _currentIndex == 0 || (_currentIndex == 1 && isAdmin)
+                ? FloatingActionButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        if (_currentIndex == 0) {
+                          return CreateBooking();
+                        } else if (_currentIndex == 1 && isAdmin) {
+                          return CreateTournamentScreen();
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    );
+                  },
+                  backgroundColor: const Color(0xFF1E40AF),
+                  child: const Icon(Icons.add, color: Colors.white),
+                )
+                : SizedBox.shrink(),
       ),
     );
   }

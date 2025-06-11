@@ -13,7 +13,6 @@ import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
-import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
@@ -121,12 +120,11 @@ class Update extends ConsumerState<UpdateProfile> {
   @override
   Widget build(BuildContext context) {
     adminValue=ref.watch(isAdminProvider);
-    return Scaffold(
-      body: GradientContainer(
+    return  GradientContainer(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: S.of(context).myAccount),
+HelperMethods.buildHeader(context,S.of(context).myAccount,adminValue),
               BodyContainer(
                 padding: SizeConfig().getScreenPadding(
                   vertical: .1,
@@ -201,7 +199,7 @@ class Update extends ConsumerState<UpdateProfile> {
             ],
           ),
         ),
-      ),
+   
     );
   }
 

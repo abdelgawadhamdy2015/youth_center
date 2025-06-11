@@ -16,17 +16,17 @@ import 'package:youth_center/screen/booking/booking_controller.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/home_screen.dart';
 
-class AddBooking extends ConsumerStatefulWidget {
-  const AddBooking({super.key});
+class CreateBooking extends ConsumerStatefulWidget {
+  const CreateBooking({super.key});
 
   @override
   @override
-  ConsumerState<AddBooking> createState() {
-    return Add();
+  ConsumerState<CreateBooking> createState() {
+    return CreateBookingState();
   }
 }
 
-class Add extends ConsumerState<AddBooking> {
+class CreateBookingState extends ConsumerState<CreateBooking> {
   late BookingModel booking;
   TextEditingController nameController = TextEditingController();
 

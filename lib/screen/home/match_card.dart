@@ -3,13 +3,13 @@ import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InteractiveMatchCard extends StatefulWidget {
   const InteractiveMatchCard({
     super.key,
     required this.match,
-    required this.isAdmin, required this.canUpdate,
+    required this.isAdmin,
+    required this.canUpdate,
   });
 
   final MatchModel match;
@@ -21,12 +21,12 @@ class InteractiveMatchCard extends StatefulWidget {
 
 class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
   late DateTime iniDate;
-  late Timestamp dateTime;
+  late DateTime dateTime;
   final fetchData = FetchData();
   @override
   void initState() {
     super.initState();
-    iniDate = widget.match.cupStartDate.toDate();
+    iniDate = widget.match.cupStartDate;
     dateTime = widget.match.cupStartDate;
   }
 
@@ -54,7 +54,7 @@ class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
     );
 
     setState(() {
-      dateTime = Timestamp.fromDate(iniDate);
+      dateTime = iniDate;
       widget.match.setTime(dateTime);
     });
   }
@@ -62,14 +62,11 @@ class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
   @override
   Widget build(BuildContext context) {
     final match = widget.match;
-final bool canUpdate  = (widget.isAdmin && widget.canUpdate);
+    final bool canUpdate = (widget.isAdmin && widget.canUpdate);
     return SwipeDetector(
-      onSwipeRight: canUpdate
-          ? (_) => setState(() => match.teem2Score--)
-          : null,
-      onSwipeLeft: canUpdate
-          ? (_) => setState(() => match.teem1Score--)
-          : null,
+      onSwipeRight:
+          canUpdate ? (_) => setState(() => match.teem2Score--) : null,
+      onSwipeLeft: canUpdate ? (_) => setState(() => match.teem1Score--) : null,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 4,
@@ -85,9 +82,10 @@ final bool canUpdate  = (widget.isAdmin && widget.canUpdate);
             children: [
               Expanded(
                 child: GestureDetector(
-                  onLongPress: canUpdate
-                      ? () => setState(() => match.teem1Score++)
-                      : null,
+                  onLongPress:
+                      canUpdate
+                          ? () => setState(() => match.teem1Score++)
+                          : null,
                   child: Text(match.team1, textAlign: TextAlign.center),
                 ),
               ),
@@ -97,17 +95,16 @@ final bool canUpdate  = (widget.isAdmin && widget.canUpdate);
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
-                    onTap:canUpdate ? _pickDateTime : null,
+                    onTap: canUpdate ? _pickDateTime : null,
                     child: FittedBox(
                       child: Text(
-                        fetchData.getDateTime(match.cupStartDate.toDate(),
-                        ),
+                        fetchData.getDateTime(match.cupStartDate),
                         textAlign: TextAlign.center,
-                       // style: const TextStyle(),
+                        // style: const TextStyle(),
                       ),
                     ),
                   ),
-                                                   HelperMethods.verticalSpace(.02),
+                  HelperMethods.verticalSpace(.02),
 
                   Text("${match.teem1Score} : ${match.teem2Score}"),
                 ],
@@ -115,9 +112,10 @@ final bool canUpdate  = (widget.isAdmin && widget.canUpdate);
               const Icon(Icons.sports_soccer),
               Expanded(
                 child: GestureDetector(
-                  onLongPress: canUpdate
-                      ? () => setState(() => match.teem2Score++)
-                      : null,
+                  onLongPress:
+                      canUpdate
+                          ? () => setState(() => match.teem2Score++)
+                          : null,
                   child: Text(match.team2, textAlign: TextAlign.center),
                 ),
               ),

@@ -50,10 +50,7 @@ class FetchData {
         if (admin) {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder:
-                  (context) => AddBooking(),
-            ),
+            MaterialPageRoute(builder: (context) => CreateBooking()),
           );
         }
         break;
@@ -61,9 +58,7 @@ class FetchData {
         if (admin) {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => CupScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => CupScreen()),
           );
         }
         break;
@@ -75,13 +70,13 @@ class FetchData {
 
   String getScore(MatchModel matchModel, int i) {
     if (i == 1) {
-      if (matchModel.cupStartDate.toDate().isAfter(DateTime.now())) {
+      if (matchModel.cupStartDate.isAfter(DateTime.now())) {
         return "-";
       } else {
         return matchModel.teem1Score.toString();
       }
     } else {
-      if (matchModel.cupStartDate.toDate().isAfter(DateTime.now())) {
+      if (matchModel.cupStartDate.isAfter(DateTime.now())) {
         return "-";
       } else {
         return matchModel.teem2Score.toString();
@@ -111,8 +106,7 @@ class FetchData {
             "/ ${dateTime.month} "
             "/ ${dateTime.year}"
             "\n ${dateTime.minute}"
-            ": ${dateTime.hour
-            }");
+            ": ${dateTime.hour}");
     return dateTimeStr;
   }
 }

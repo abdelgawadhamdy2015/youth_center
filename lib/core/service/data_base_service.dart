@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/models/booking_model.dart';
-import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/tournament.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
@@ -45,32 +44,41 @@ class DataBaseService {
   }
 
   Future<List<Tournament>> getCups(String centerName, {bool? finished}) async {
-    var query = _db
-        .collection(MyConstants.cupCollection)
-        .where(MyConstants.youthCenterIdCollection, isEqualTo: centerName);
+    try {
+      var query = _db
+          .collection(MyConstants.cupCollection)
+          .where(MyConstants.youthCenterIdCollection, isEqualTo: centerName);
 
-    if (finished != null) {
-      query = query.where(MyConstants.finished, isEqualTo: finished);
+      if (finished != null && finished) {
+        query = query.where(
+          MyConstants.cupEndDate,
+          isGreaterThanOrEqualTo: DateTime.now(),
+        );
+      }
+
+      final snapshot = await query.get();
+
+      return snapshot.docs.map((e) => Tournament.fromSnapshot(e)).toList();
+    } catch (error) {
+      log(error.toString());
     }
-
-    final snapshot = await query.get();
-
-    return snapshot.docs.map((e) => Tournament.fromSnapshot(e)).toList();
+    return [];
   }
 
-  Future<void> createCup(Tournament cup) async {
-    await _db.collection(MyConstants.cupCollection).add(cup.toMap());
+  Future<void> createCup(Tournament tournament) async {
+    await _db.collection(MyConstants.cupCollection).add(tournament.toJson());
   }
 
   Future<void> deleteCup(String cupId) async {
     await _db.collection(MyConstants.cupCollection).doc(cupId).delete();
   }
 
-  Future<void> updateCup(CupModel cup) async {
+  Future<void> updateCup(Tournament tournament) async {
+    log(tournament.id!);
     await _db
         .collection(MyConstants.cupCollection)
-        .doc(cup.id)
-        .update(cup.toJson());
+        .doc(tournament.id)
+        .update(tournament.toJson());
   }
 
   Future<void> addBooking(BookingModel booking) async {

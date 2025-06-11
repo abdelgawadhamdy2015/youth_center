@@ -1,39 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Tournament {
-  final String? id;
-  final String? name;
-  final String? description;
-  final String? logoUrl;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final DateTime? registrationDeadline;
-  final String? location;
-  final int? numberOfTeams;
-  final List<String>? ageGroups;
-  final String? format;
-  final int? minutesPerHalf;
-  final int? halftimeMinutes;
-  final int? winPoints;
-  final int? drawPoints;
-  final int? lossPoints;
-  final int? minPlayers;
-  final int? maxPlayers;
-  final String? substitutionRules;
-  final bool? offsideRule;
-  final bool? cardSystem;
-  final bool? extraTime;
-  final bool? penaltyShootout;
-  final String? customRules;
-  final String? scheduling;
-  final List<String>? timeSlots;
-  final List<String>? venues;
-  final String? breakBetweenMatches;
-  final DateTime? createdAt;
-  final String? createdBy;
-  final bool? isPublished;
-  final List? teems;
-  final List<dynamic>? matches;
+    String? id;
+    String? name;
+    String? description;
+    String? logoUrl;
+    DateTime? startDate;
+    DateTime? endDate;
+    DateTime? registrationDeadline;
+    String? location;
+    int? numberOfTeams;
+    List<String>? ageGroups;
+    String? format;
+    int? minutesPerHalf;
+    int? halftimeMinutes;
+    int? winPoints;
+    int? drawPoints;
+    int? lossPoints;
+    int? minPlayers;
+    int? maxPlayers;
+    String? substitutionRules;
+    bool? offsideRule;
+    bool? cardSystem;
+    bool? extraTime;
+    bool? penaltyShootout;
+    String? customRules;
+    String? scheduling;
+    List<String>? timeSlots;
+    List<String>? venues;
+    String? breakBetweenMatches;
+    DateTime? createdAt;
+    String? createdBy;
+    bool? isPublished;
+    List? teams;
+    List<dynamic>? matches;
+ 
 
   Tournament({
     this.id,
@@ -67,24 +68,33 @@ class Tournament {
     this.createdAt,
     this.createdBy,
     this.isPublished,
-    this.teems,
+    this.teams,
     this.matches,
   });
 
-  // add from snapshot factory 
-  factory Tournament.fromSnapshot( DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  // add from snapshot factory
+  factory Tournament.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
     final data = snapshot.data() as Map<String, dynamic>;
     return Tournament(
       id: snapshot.id,
       name: data['name'],
       description: data['description'],
       logoUrl: data['logoUrl'],
-      startDate: data['startDate'] != null ? DateTime.parse(data['startDate']) : null,
+      startDate:
+          data['startDate'] != null ? DateTime.parse(data['startDate']) : null,
       endDate: data['endDate'] != null ? DateTime.parse(data['endDate']) : null,
-      registrationDeadline: data['registrationDeadline'] != null ? DateTime.parse(data['registrationDeadline']) : null,
+      registrationDeadline:
+          data['registrationDeadline'] != null
+              ? DateTime.parse(data['registrationDeadline'])
+              : null,
       location: data['location'],
       numberOfTeams: data['numberOfTeams'],
-      ageGroups: data['ageGroups'] != null ? List<String>.from(data['ageGroups']) : null,
+      ageGroups:
+          data['ageGroups'] != null
+              ? List<String>.from(data['ageGroups'])
+              : null,
       format: data['format'],
       minutesPerHalf: data['minutesPerHalf'],
       halftimeMinutes: data['halftimeMinutes'],
@@ -100,14 +110,18 @@ class Tournament {
       penaltyShootout: data['penaltyShootout'],
       customRules: data['customRules'],
       scheduling: data['scheduling'],
-      timeSlots: data['timeSlots'] != null ? List<String>.from(data['timeSlots']) : null,
+      timeSlots:
+          data['timeSlots'] != null
+              ? List<String>.from(data['timeSlots'])
+              : null,
       venues: data['venues'] != null ? List<String>.from(data['venues']) : null,
       breakBetweenMatches: data['breakBetweenMatches'],
-      createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : null,
+      createdAt:
+          data['createdAt'] != null ? DateTime.parse(data['createdAt']) : null,
       createdBy: data['createdBy'],
       isPublished: data['isPublished'],
       matches: data['matches'],
-      teems: data['teems'],
+      teams: data['teams'],
     );
   }
   // Convert to Map for Firestore
@@ -145,7 +159,7 @@ class Tournament {
       'createdBy': createdBy,
       'isPublished': isPublished,
       "matches": matches,
-      "teems": teems,
+      "teams": teams,
     };
   }
 
@@ -184,7 +198,45 @@ class Tournament {
       createdBy: map['createdBy'],
       isPublished: map['isPublished'],
       matches: map['matches'],
-      teems: map['teams'],
+      teams: map['teams'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'logoUrl': logoUrl,
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+      'registrationDeadline': registrationDeadline?.toIso8601String(),
+      'location': location,
+      'numberOfTeams': numberOfTeams,
+      'ageGroups': ageGroups,
+      'format': format,
+      'minutesPerHalf': minutesPerHalf,
+      'halftimeMinutes': halftimeMinutes,
+      'winPoints': winPoints,
+      'drawPoints': drawPoints,
+      'lossPoints': lossPoints,
+      'minPlayers': minPlayers,
+      'maxPlayers': maxPlayers,
+      'substitutionRules': substitutionRules,
+      'offsideRule': offsideRule,
+      'cardSystem': cardSystem,
+      'extraTime': extraTime,
+      'penaltyShootout': penaltyShootout,
+      'customRules': customRules,
+      'scheduling': scheduling,
+      'timeSlots': timeSlots,
+      'venues': venues,
+      'breakBetweenMatches': breakBetweenMatches,
+      'createdAt': createdAt?.toIso8601String(),
+      'createdBy': createdBy,
+      'isPublished': isPublished,
+      'matches': matches,
+      'teams': teams,
+    };
   }
 }

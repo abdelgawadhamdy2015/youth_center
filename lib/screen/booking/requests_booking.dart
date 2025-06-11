@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
-import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/screen/booking/booking_controller.dart';
@@ -63,40 +63,38 @@ class _RequestBookingScreenState extends ConsumerState<BookingRequestsScreen> {
     final lang = S.of(context);
     final bookingRequestsAsync = ref.watch(bookingRequestsProvider);
 
-    return Scaffold(
-      body: GradientContainer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Header(title: lang.requests),
-              BodyContainer(
-                height: SizeConfig.screenHeight! * 0.8,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: bookingRequestsAsync.when(
-                          data: (requests) {
-                            if (requests.isEmpty) {
-                              return Text(
-                                lang.noData,
-                                style: TextStyles.blackBoldStyle(
-                                  SizeConfig.fontSize3!,
-                                ),
-                              );
-                            }
-                            return _buildRequestList(requests);
-                          },
-                          loading: () => const CircularProgressIndicator(),
-                          error: (error, stackTrace) => Text(error.toString()),
-                        ),
+    return GradientContainer(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            HelperMethods.buildHeader(context, lang.requests, true),
+            BodyContainer(
+              height: SizeConfig.screenHeight! * 0.8,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: bookingRequestsAsync.when(
+                        data: (requests) {
+                          if (requests.isEmpty) {
+                            return Text(
+                              lang.noData,
+                              style: TextStyles.blackBoldStyle(
+                                SizeConfig.fontSize3!,
+                              ),
+                            );
+                          }
+                          return _buildRequestList(requests);
+                        },
+                        loading: () => const CircularProgressIndicator(),
+                        error: (error, stackTrace) => Text(error.toString()),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:svg_flutter/svg.dart';
@@ -24,7 +25,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _Login extends ConsumerState<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  bool canPop = false;
   @override
   void initState() {
     super.initState();
@@ -66,76 +67,100 @@ class _Login extends ConsumerState<LoginScreen> {
       );
     });
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: GradientContainer(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: SizeConfig().getScreenPadding(horizintal: .05),
-            child: Column(
-              children: [
-                SvgPicture.asset(MyConstants.logoSvg, width: 100, height: 100),
-                HelperMethods.verticalSpace(.02),
-                Text(
-                  "YOUTH CENTER",
-                  style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize5!),
-                ),
-                HelperMethods.verticalSpace(.02),
-
-                HelperMethods.buildTextField(
-                  inputType: TextInputType.emailAddress,
-                  Icons.person,
-                  lang.username,
-                  usernameController,
-                  validator: (value) {
-                    value?.isEmpty ?? true ? S.of(context).enterUsername : null;
-
-                    if (!MyConstants.emailCharRegExp.hasMatch(value)) {
-                      return lang.enterValidEmail;
-                    }
-                    return null;
-                  },
-                ),
-                HelperMethods.verticalSpace(.02),
-
-                PasswordText(
-                  fillColor: ColorManger.whiteColor,
-                  hint: lang.password,
-                  obsecur: true,
-                  control: passwordController,
-                ),
-                HelperMethods.verticalSpace(.02),
-
-                AppButtonText(
-                  backGroundColor: ColorManger.darkBlue,
-                  borderRadius: SizeConfig.screenWidth! * .05,
-                  textStyle: GoogleFonts.tajawal(
-                    fontSize: 20,
-                    color: Colors.white,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (canPop) {
+          canPop = false;
+          SystemNavigator.pop();
+        } else {
+          canPop = true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(S.of(context).clickAgainToExit)),
+          );
+          Future.delayed(Duration(seconds: 2), () {
+            canPop = false;
+          });
+        }
+      },
+      canPop: canPop,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        body: GradientContainer(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: SizeConfig().getScreenPadding(horizintal: .05),
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    MyConstants.logoSvg,
+                    width: 100,
+                    height: 100,
                   ),
-                  butonText: lang.login,
-                  onPressed: loginState is AsyncLoading ? () {} : _handleLogin,
-                ),
+                  HelperMethods.verticalSpace(.02),
+                  Text(
+                    "YOUTH CENTER",
+                    style: TextStyles.darkBlueBoldStyle(SizeConfig.fontSize5!),
+                  ),
+                  HelperMethods.verticalSpace(.02),
 
-                HelperMethods.verticalSpace(.02),
+                  HelperMethods.buildTextField(
+                    inputType: TextInputType.emailAddress,
+                    Icons.person,
+                    lang.username,
+                    usernameController,
+                    validator: (value) {
+                      value?.isEmpty ?? true
+                          ? S.of(context).enterUsername
+                          : null;
 
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
-                    );
-                  },
-                  child: Text(
-                    lang.DonotHaveAccount,
-                    style: GoogleFonts.tajawal(
-                      fontSize: 16,
+                      if (!MyConstants.emailCharRegExp.hasMatch(value)) {
+                        return lang.enterValidEmail;
+                      }
+                      return null;
+                    },
+                  ),
+                  HelperMethods.verticalSpace(.02),
+
+                  PasswordText(
+                    fillColor: ColorManger.whiteColor,
+                    hint: lang.password,
+                    obsecur: true,
+                    control: passwordController,
+                  ),
+                  HelperMethods.verticalSpace(.02),
+
+                  AppButtonText(
+                    backGroundColor: ColorManger.darkBlue,
+                    borderRadius: SizeConfig.screenWidth! * .05,
+                    textStyle: GoogleFonts.tajawal(
+                      fontSize: 20,
                       color: Colors.white,
-                      decoration: TextDecoration.underline,
+                    ),
+                    butonText: lang.login,
+                    onPressed:
+                        loginState is AsyncLoading ? () {} : _handleLogin,
+                  ),
+
+                  HelperMethods.verticalSpace(.02),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      );
+                    },
+                    child: Text(
+                      lang.DonotHaveAccount,
+                      style: GoogleFonts.tajawal(
+                        fontSize: 16,
+                        color: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

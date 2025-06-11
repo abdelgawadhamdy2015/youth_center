@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
 import 'package:youth_center/models/tournament.dart';
 
@@ -12,10 +11,10 @@ class CupsController extends StateNotifier<AsyncValue<void>> {
 
   CupsController(this.ref) : super(AsyncValue.data(null));
 
-  Future<void> createCup(Tournament cup) async {
+  Future<void> createCup(Tournament tournament) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().createCup(cup);
+      await DataBaseService().createCup(tournament);
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e.toString(), StackTrace.current);
@@ -32,10 +31,10 @@ class CupsController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<void> updateCup(CupModel cup) async {
+  Future<void> updateCup(Tournament tournament) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().updateCup(cup);
+      await DataBaseService().updateCup(tournament);
       state = const AsyncData(null);
     } catch (e) {
       state = AsyncError(e.toString(), StackTrace.current);

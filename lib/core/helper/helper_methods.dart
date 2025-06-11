@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
+import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/booking/booking_controller.dart';
@@ -15,7 +18,7 @@ class HelperMethods {
     IconData icon,
     String hint,
     TextEditingController controller, {
-     TextInputType? inputType,
+    TextInputType? inputType,
     var validator,
     VoidCallback? onTab,
     bool obsecur = false,
@@ -119,5 +122,42 @@ class HelperMethods {
     if (hour == null || minute == null) return null;
 
     return DateTime(0, 0, 0, hour, minute);
+  }
+
+  static buildHeader(BuildContext context,String title, bool isAdmin) {
+    return SafeArea(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SvgPicture.asset(
+                MyConstants.logoSvg,
+                height: SizeConfig.screenHeight! * .05,
+              ),
+              HelperMethods.horizintalSpace(.02),
+
+              Text(
+                S.of(context).appName,
+                style: GoogleFonts.tajawal(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+
+          // TabBar
+          Padding(
+            padding: SizeConfig().getScreenPadding(),
+            child: Text(
+             title,
+              style: TextStyles.whiteBoldStyle(SizeConfig.fontSize4!),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

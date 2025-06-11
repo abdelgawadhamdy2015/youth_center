@@ -44,7 +44,9 @@ class MyConstants {
   static const String team2 = 'team2';
   static const String team1Score = 'team1Score';
   static const String team2Score = 'team2Score';
-  static const String cupStartDate = 'cupStartDate';
+  static const String cupStartDate = 'startDate';
+    static const String cupEndDate = 'endDate';
+
   static const String id = "id";
   static const String cupGroup = 'group';
 

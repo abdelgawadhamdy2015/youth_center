@@ -167,5 +167,8 @@
   "under14": "Under 14",
   "under16": "Under 16",
   "under18": "Under 18",
-  "tournamentSaved": "Tournament saved as draft"
+  "tournamentSaved": "Tournament saved as draft",
+  "matches": "Matches",
+  "more": "More",
+  "clickAgainToExit": "click back again to exit"
 }

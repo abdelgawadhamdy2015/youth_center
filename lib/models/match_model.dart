@@ -5,7 +5,7 @@ class MatchModel {
   final String? id;
   final String team1;
   final String team2;
-  Timestamp cupStartDate;
+  DateTime cupStartDate;
   int teem1Score;
   int teem2Score;
   String cupName;
@@ -14,7 +14,7 @@ class MatchModel {
     return cupStartDate;
   }
 
-  setTime(Timestamp dateTime) {
+  setTime(DateTime dateTime) {
     cupStartDate = dateTime;
   }
 

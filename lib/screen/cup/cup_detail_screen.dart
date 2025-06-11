@@ -14,15 +14,15 @@ import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/models/cup_model.dart';
 import 'package:youth_center/models/match_model.dart';
+import 'package:youth_center/models/tournament.dart';
 import 'package:youth_center/screen/cup/cups_controller.dart';
 import 'package:youth_center/screen/cup/cups_screen.dart';
 import 'package:youth_center/screen/home/home_controller.dart';
 import 'package:youth_center/screen/home/match_card.dart';
 
 class CupDetailScreen extends ConsumerStatefulWidget {
-  final CupModel cupModel;
+  final Tournament cupModel;
 
   const CupDetailScreen({super.key, required this.cupModel});
 
@@ -35,7 +35,7 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
   final FetchData fetchData = FetchData();
   final TextEditingController nameController = TextEditingController();
 
-  late CupModel cupModel;
+  late Tournament cupModel;
   late Timestamp dateTime;
   late DateTime iniDate;
 
@@ -47,15 +47,15 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
   void initState() {
     super.initState();
     cupModel = widget.cupModel;
-    nameController.text = cupModel.name;
+    nameController.text = cupModel.name ?? '';
     iniDate = DateTime.now();
 
     _splitTeams();
-    matchesModels = _parseMatches(cupModel.matches);
+    matchesModels = _parseMatches(cupModel.matches ?? []);
   }
 
   void _splitTeams() {
-    List teams = cupModel.teems;
+    List teams = cupModel.teams ?? [];
     for (int i = 0; i < teams.length && i < 32; i++) {
       groupedTeams[i ~/ 4].add(teams[i]);
     }
@@ -82,41 +82,41 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
       _jsonMatches.add(match.toJson());
     }
 
-    CupModel updatedCup = CupModel(
-      id: cupModel.id,
-      name: nameController.text,
-      teems: cupModel.teems,
-      timeStart: cupModel.timeStart,
-      youthCenterId: cupModel.youthCenterId,
-      matches: _jsonMatches,
-      status: cupModel.status,
-    );
+    // CupModel updatedCup = CupModel(
+    //   id: cupModel.id,
+    //   name: nameController.text,
+    //   teems: cupModel.teems,
+    //   timeStart: cupModel.timeStart,
+    //   youthCenterId: cupModel.youthCenterId,
+    //   matches: _jsonMatches,
+    //   status: cupModel.status,
+    // );
 
-    ref
-        .read(cupsControllerProvider)
-        .updateCup(updatedCup)
-        .then((_) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(lang.successSave)));
-          ref.invalidate(cupsProvider);
+    // ref
+    //     .read(cupsControllerProvider)
+    //     .updateCup(updatedCup)
+    //     .then((_) {
+    //       ScaffoldMessenger.of(
+    //         context,
+    //       ).showSnackBar(SnackBar(content: Text(lang.successSave)));
+    //       ref.invalidate(cupsProvider);
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => CupScreen()),
-          );
-        })
-        .catchError((error) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(error.toString())));
-        });
+    //       Navigator.pushReplacement(
+    //         context,
+    //         MaterialPageRoute(builder: (context) => CupScreen()),
+    //       );
+    //     })
+    //     .catchError((error) {
+    //       ScaffoldMessenger.of(
+    //         context,
+    //       ).showSnackBar(SnackBar(content: Text(error.toString())));
+    //     });
   }
 
   Future<void> _deleteCup(S lang) async {
     ref
         .read(cupsControllerProvider)
-        .deleteCup(cupModel.id)
+        .deleteCup(cupModel.id ?? '')
         .then((_) {
           ScaffoldMessenger.of(
             context,
@@ -192,8 +192,6 @@ class _CupDetailScreenState extends ConsumerState<CupDetailScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-           
-
             HelperMethods.verticalSpace(.02),
 
             TextField(
