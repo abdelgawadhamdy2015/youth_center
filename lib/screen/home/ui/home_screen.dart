@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
-import 'package:youth_center/screen/booking/add_booking.dart';
-import 'package:youth_center/screen/booking/requests_booking.dart';
-import 'package:youth_center/screen/cup/create.dart';
-import 'package:youth_center/screen/cup/cups_screen.dart';
-import 'package:youth_center/screen/home/home_body.dart';
+import 'package:youth_center/screen/booking/ui/add_booking.dart';
+import 'package:youth_center/screen/booking/ui/widgets/requests_booking.dart';
+import 'package:youth_center/screen/cup/ui/widgets/create.dart';
+import 'package:youth_center/screen/cup/ui/cups_screen.dart';
+import 'package:youth_center/screen/home/ui/widgets/home_body.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

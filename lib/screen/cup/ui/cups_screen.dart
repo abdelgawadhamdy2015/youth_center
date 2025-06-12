@@ -11,8 +11,8 @@ import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/cup/tournament_card.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
+import 'package:youth_center/screen/cup/ui/widgets/tournament_card.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
 
 class CupScreen extends ConsumerStatefulWidget {
   const CupScreen({super.key});

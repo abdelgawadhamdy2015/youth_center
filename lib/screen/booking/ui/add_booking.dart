@@ -12,9 +12,9 @@ import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
-import 'package:youth_center/screen/booking/booking_controller.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
-import 'package:youth_center/screen/home/home_screen.dart';
+import 'package:youth_center/screen/booking/logic/booking_controller.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/home/ui/home_screen.dart';
 
 class CreateBooking extends ConsumerStatefulWidget {
   const CreateBooking({super.key});

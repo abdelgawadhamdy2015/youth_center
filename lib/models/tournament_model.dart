@@ -1,42 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Tournament {
-    String? id;
-    String? name;
-    String? description;
-    String? logoUrl;
-    DateTime? startDate;
-    DateTime? endDate;
-    DateTime? registrationDeadline;
-    String? location;
-    int? numberOfTeams;
-    List<String>? ageGroups;
-    String? format;
-    int? minutesPerHalf;
-    int? halftimeMinutes;
-    int? winPoints;
-    int? drawPoints;
-    int? lossPoints;
-    int? minPlayers;
-    int? maxPlayers;
-    String? substitutionRules;
-    bool? offsideRule;
-    bool? cardSystem;
-    bool? extraTime;
-    bool? penaltyShootout;
-    String? customRules;
-    String? scheduling;
-    List<String>? timeSlots;
-    List<String>? venues;
-    String? breakBetweenMatches;
-    DateTime? createdAt;
-    String? createdBy;
-    bool? isPublished;
-    List? teams;
-    List<dynamic>? matches;
- 
+class TournamentModel {
+  String? id;
+  String? name;
+  String? description;
+  String? logoUrl;
+  DateTime? startDate;
+  DateTime? endDate;
+  DateTime? registrationDeadline;
+  String? location;
+  int? numberOfTeams;
+  List<String>? ageGroups;
+  String? format;
+  int? minutesPerHalf;
+  int? halftimeMinutes;
+  int? winPoints;
+  int? drawPoints;
+  int? lossPoints;
+  int? minPlayers;
+  int? maxPlayers;
+  String? substitutionRules;
+  bool? offsideRule;
+  bool? cardSystem;
+  bool? extraTime;
+  bool? penaltyShootout;
+  String? customRules;
+  String? scheduling;
+  List<String>? timeSlots;
+  List<String>? venues;
+  String? breakBetweenMatches;
+  DateTime? createdAt;
+  String? createdBy;
+  bool? isPublished;
+  List? teams;
+  List<dynamic>? matches;
 
-  Tournament({
+  TournamentModel({
     this.id,
     this.name,
     this.description,
@@ -73,11 +72,11 @@ class Tournament {
   });
 
   // add from snapshot factory
-  factory Tournament.fromSnapshot(
+  factory TournamentModel.fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
   ) {
     final data = snapshot.data() as Map<String, dynamic>;
-    return Tournament(
+    return TournamentModel(
       id: snapshot.id,
       name: data['name'],
       description: data['description'],
@@ -164,8 +163,8 @@ class Tournament {
   }
 
   // Create from Firestore document
-  factory Tournament.fromMap(Map<String, dynamic> map) {
-    return Tournament(
+  factory TournamentModel.fromMap(Map<String, dynamic> map) {
+    return TournamentModel(
       id: map['id'],
       name: map['name'],
       description: map['description'],

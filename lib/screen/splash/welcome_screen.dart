@@ -6,16 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/screen/auth/login_screen.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
-import 'package:youth_center/screen/home/home_screen.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/home/ui/home_screen.dart';
 
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
@@ -29,7 +28,6 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 class Welcome extends ConsumerState<WelcomeScreen> with SingleTickerProviderStateMixin {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  FetchData fetchDate = FetchData();
 
   List<String> youthCentersNames = [];
   late CenterUser centerUser;

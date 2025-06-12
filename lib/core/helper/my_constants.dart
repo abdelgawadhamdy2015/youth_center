@@ -21,7 +21,7 @@ class MyConstants {
 
   static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
   static final DateFormat dateFormat = DateFormat(
-    'yyyy-MM-dd',
+    'dds-MM-yyyy',
     MyConstants.english,
   );
   static CenterUser? centerUser;
@@ -45,7 +45,8 @@ class MyConstants {
   static const String team1Score = 'team1Score';
   static const String team2Score = 'team2Score';
   static const String cupStartDate = 'startDate';
-    static const String cupEndDate = 'endDate';
+  static const String cupEndDate = 'endDate';
+  static const String matchTime = "matchTime";
 
   static const String id = "id";
   static const String cupGroup = 'group';

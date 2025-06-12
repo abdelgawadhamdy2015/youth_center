@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:youth_center/screen/booking/update_booking.dart';
+import 'package:youth_center/screen/booking/ui/widgets/update_booking.dart';
 
 class BookingCard extends StatelessWidget {
   final BookingModel booking;

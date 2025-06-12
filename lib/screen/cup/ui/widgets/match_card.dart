@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
-import 'package:youth_center/FetchData.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/match_model.dart';
 
@@ -22,12 +21,11 @@ class InteractiveMatchCard extends StatefulWidget {
 class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
   late DateTime iniDate;
   late DateTime dateTime;
-  final fetchData = FetchData();
   @override
   void initState() {
     super.initState();
-    iniDate = widget.match.cupStartDate;
-    dateTime = widget.match.cupStartDate;
+    iniDate = widget.match.matchTime;
+    dateTime = widget.match.matchTime;
   }
 
   Future<void> _pickDateTime() async {
@@ -55,7 +53,7 @@ class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
 
     setState(() {
       dateTime = iniDate;
-      widget.match.setTime(dateTime);
+      widget.match.matchTime = dateTime;
     });
   }
 
@@ -98,7 +96,7 @@ class _InteractiveMatchCardState extends State<InteractiveMatchCard> {
                     onTap: canUpdate ? _pickDateTime : null,
                     child: FittedBox(
                       child: Text(
-                        fetchData.getDateTime(match.cupStartDate),
+                        HelperMethods.getDateTime(match.matchTime),
                         textAlign: TextAlign.center,
                         // style: const TextStyle(),
                       ),

@@ -14,17 +14,16 @@ import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/header.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/models/tournament.dart';
-import 'package:youth_center/screen/cup/cups_controller.dart';
-import 'package:youth_center/screen/cup/cups_screen.dart';
-import 'package:youth_center/screen/cup/group_card.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
-import 'package:youth_center/screen/home/home_screen.dart';
-import 'package:youth_center/screen/home/match_card.dart';
+import 'package:youth_center/models/tournament_model.dart';
+import 'package:youth_center/screen/cup/logic/cups_controller.dart';
+import 'package:youth_center/screen/cup/ui/widgets/group_card.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/home/ui/home_screen.dart';
+import 'package:youth_center/screen/cup/ui/widgets/match_card.dart';
 
 class CreateTournamentScreen extends ConsumerStatefulWidget {
   const CreateTournamentScreen({super.key, this.tournament});
-  final Tournament? tournament;
+  final TournamentModel? tournament;
 
   @override
   ConsumerState<CreateTournamentScreen> createState() =>
@@ -101,7 +100,7 @@ class _CreateTournamentScreenState
     }
   }
 
-  initData(Tournament tournament) {
+  initData(TournamentModel tournament) {
     _nameController.text = tournament.name!;
     _descriptionController.text = tournament.description ?? "";
     _startDateController.text = MyConstants.dateFormat.format(
@@ -155,7 +154,8 @@ class _CreateTournamentScreenState
       if (_teams.isNotEmpty) {
         _collectTeams();
         if (tournament.matches != null && tournament.matches!.isNotEmpty) {
-          _generateMatches();
+          _matches.clear();
+          _matches.addAll(HelperMethods.parseMatches(tournament.matches ?? []));
           _showMatches = true;
         }
       }
@@ -265,9 +265,7 @@ class _CreateTournamentScreenState
           final match = MatchModel(
             team1: group[i],
             team2: group[j],
-            cupStartDate: 
-              DateTime.parse(_startDateController.text),
-            
+            matchTime: DateTime.parse(_startDateController.text),
             teem1Score: 0,
             teem2Score: 0,
             cupName: _nameController.text,
@@ -282,25 +280,31 @@ class _CreateTournamentScreenState
   }
 
   void _resetForm() {
-    setState(() {
-      if (_showMatches) {
-        _matches.clear();
-        _jsonMatches.clear();
-        _showMatches = false;
-      } else if (_showGroups) {
-        _groups.clear();
-        _showGroups = false;
-      } else {
-        _teams.clear();
-        _teamsController.text = '8';
-        _initializeTeamControllers();
-        _nameController.clear();
-        _descriptionController.clear();
-        _startDateController.clear();
-        _endDateController.clear();
-        _regDeadlineController.clear();
-      }
-    });
+    if (widget.tournament != null) {
+      setState(() {
+        initData(widget.tournament!);
+      });
+    } else {
+      setState(() {
+        if (_showMatches) {
+          _matches.clear();
+          _jsonMatches.clear();
+          _showMatches = false;
+        } else if (_showGroups) {
+          _groups.clear();
+          _showGroups = false;
+        } else {
+          _teams.clear();
+          _teamsController.text = '8';
+          _initializeTeamControllers();
+          _nameController.clear();
+          _descriptionController.clear();
+          _startDateController.clear();
+          _endDateController.clear();
+          _regDeadlineController.clear();
+        }
+      });
+    }
   }
 
   Future<void> _publishTournament() async {
@@ -312,117 +316,17 @@ class _CreateTournamentScreenState
     } else if (!_showMatches) {
       _generateMatches();
       return;
-    }
-
-    try {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
-
-      final userId = MyConstants.centerUser!.id!;
-      final tournament = Tournament(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: _nameController.text,
-        description: _descriptionController.text,
-        logoUrl: null,
-        startDate: DateTime.parse(_startDateController.text),
-        endDate: DateTime.parse(_endDateController.text),
-        registrationDeadline: DateTime.parse(_regDeadlineController.text),
-        location: MyConstants.centerUser!.youthCenterName,
-        numberOfTeams: int.parse(_teamsController.text),
-        format: _format,
-        minutesPerHalf: int.parse(_halfDurationController.text),
-        halftimeMinutes: int.parse(_halftimeController.text),
-        winPoints: int.parse(_winPointsController.text),
-        drawPoints: int.parse(_drawPointsController.text),
-        lossPoints: int.parse(_lossPointsController.text),
-        minPlayers: int.parse(_minPlayersController.text),
-        maxPlayers: int.parse(_maxPlayersController.text),
-        substitutionRules: _substitutionRules,
-        offsideRule: _offsideRule,
-        cardSystem: _cardSystem,
-        extraTime: _extraTime,
-        penaltyShootout: _penaltyShootout,
-        customRules: _customRulesController.text,
-        scheduling: _scheduling,
-        breakBetweenMatches: _breakBetweenMatches,
-        createdAt: DateTime.now(),
-        createdBy: userId,
-        isPublished: true,
-        teams: _teams, // Added from AddCupScreen
-        matches: _jsonMatches, // Added from AddCupScreen
-      );
-
-      await ref.read(cupsControllerProvider).createCup(tournament);
-
-      Navigator.pop(context);
-
-      showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1FAE5),
-                      borderRadius: BorderRadius.circular(32),
-                    ),
-                    child: const Icon(
-                      Icons.check,
-                      color: Color(0xFF10B981),
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    lang.tournamentCreated,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    lang.tournamentCreatedMsg,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E40AF),
-                      minimumSize: const Size(double.infinity, 48),
-                    ),
-                    child: Text(lang.goToTournaments),
-                  ),
-                ],
-              ),
-            ),
-      );
-    } catch (e) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error publishing tournament: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } else {
+      _resetForm();
     }
   }
 
   void _saveAsIncommingTournament() {
-    log(widget.tournament!.id!);
-    final tournament = Tournament(
+    if (_matches.isNotEmpty && _jsonMatches.isEmpty) {
+      log("json matches is empty");
+      _jsonMatches.addAll(_matches.map((m) => m.toJson()).toList());
+    }
+    final tournament = TournamentModel(
       id:
           widget.tournament?.id ??
           DateTime.now().millisecondsSinceEpoch.toString(),
@@ -468,13 +372,65 @@ class _CreateTournamentScreenState
               ref.invalidate(cupsControllerProvider);
               ref.invalidate(activeCupsProvider);
               ref.invalidate(cupsProvider);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return HomeScreen();
-                  },
-                ),
+              ref.invalidate(matchesProvider);
+
+              Navigator.pop(context);
+
+              showDialog(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD1FAE5),
+                              borderRadius: BorderRadius.circular(32),
+                            ),
+                            child: const Icon(
+                              Icons.check,
+                              color: Color(0xFF10B981),
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            lang.tournamentCreated,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            lang.tournamentCreatedMsg,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return HomeScreen();
+                                  },
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1E40AF),
+                              minimumSize: const Size(double.infinity, 48),
+                            ),
+                            child: Text(lang.goToTournaments),
+                          ),
+                        ],
+                      ),
+                    ),
               );
             })
             .catchError((error) {
@@ -489,6 +445,18 @@ class _CreateTournamentScreenState
             .then((tournament) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(lang.tournamentCreatedMsg)),
+              );
+              ref.invalidate(cupsControllerProvider);
+              ref.invalidate(activeCupsProvider);
+              ref.invalidate(cupsProvider);
+              ref.invalidate(matchesProvider);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return HomeScreen();
+                  },
+                ),
               );
             })
             .catchError((error) {

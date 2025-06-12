@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
 
 final addBookingProvider =
     StateNotifierProvider<BookingController, AsyncValue<void>>((ref) {

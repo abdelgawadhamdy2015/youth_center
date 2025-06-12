@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
-import 'package:youth_center/models/tournament.dart';
-import 'package:youth_center/screen/cup/create.dart';
+import 'package:youth_center/models/tournament_model.dart';
+import 'package:youth_center/screen/cup/ui/widgets/create.dart';
 
 class TournamentCard extends StatelessWidget {
-  final Tournament tournament;
+  final TournamentModel tournament;
   const TournamentCard({super.key, required this.tournament});
 
   @override

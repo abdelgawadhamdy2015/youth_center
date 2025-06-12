@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
@@ -10,8 +9,9 @@ import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/booking/booking_controller.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
+import 'package:youth_center/models/match_model.dart';
+import 'package:youth_center/screen/booking/logic/booking_controller.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
 
 class HelperMethods {
   static Widget buildTextField(
@@ -124,7 +124,7 @@ class HelperMethods {
     return DateTime(0, 0, 0, hour, minute);
   }
 
-  static buildHeader(BuildContext context,String title, bool isAdmin) {
+  static buildHeader(BuildContext context, String title, bool isAdmin) {
     return SafeArea(
       child: Column(
         children: [
@@ -152,12 +152,39 @@ class HelperMethods {
           Padding(
             padding: SizeConfig().getScreenPadding(),
             child: Text(
-             title,
+              title,
               style: TextStyles.whiteBoldStyle(SizeConfig.fontSize4!),
             ),
           ),
         ],
       ),
     );
+  }
+
+  static List<MatchModel> parseMatches(List<dynamic> rawMatches) {
+    return rawMatches.map((match) => MatchModel.fromMap(match)).toList();
+  }
+
+  static String getDateTime(DateTime dateTime) {
+    String dateTimeStr =
+        ("${MyConstants.dateFormat.format(dateTime)}\n"
+            "${MyConstants.hourFormat.format(dateTime)}");
+    return dateTimeStr;
+  }
+
+  static String getScore(MatchModel matchModel, int i) {
+    if (i == 1) {
+      if (matchModel.matchTime.isAfter(DateTime.now())) {
+        return "-";
+      } else {
+        return matchModel.teem1Score.toString();
+      }
+    } else {
+      if (matchModel.matchTime.isAfter(DateTime.now())) {
+        return "-";
+      } else {
+        return matchModel.teem2Score.toString();
+      }
+    }
   }
 }

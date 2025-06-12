@@ -9,9 +9,9 @@ import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
-import 'package:youth_center/screen/home/matches_of_ctive_cups.dart';
-import 'package:youth_center/screen/home/time_slot_card.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/home/ui/widgets/matches_of_ctive_cups.dart';
+import 'package:youth_center/screen/home/ui/widgets/time_slot_card.dart';
 
 class HomeScreenBody extends ConsumerStatefulWidget {
   final TabController tabController;

@@ -5,8 +5,8 @@ import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
-import 'package:youth_center/screen/home/match_card.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/cup/ui/widgets/match_card.dart';
 
 class MatchesOfActiveCups extends ConsumerStatefulWidget {
   const MatchesOfActiveCups({super.key});

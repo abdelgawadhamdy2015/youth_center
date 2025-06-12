@@ -11,7 +11,7 @@ import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/screen/auth/auth.dart';
 import 'package:youth_center/screen/auth/signub_controller.dart';
-import 'package:youth_center/screen/home/home_controller.dart';
+import 'package:youth_center/screen/home/logic/home_controller.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
-import 'package:youth_center/models/tournament.dart';
+import 'package:youth_center/models/tournament_model.dart';
 
 final cupsControllerProvider = Provider<CupsController>(
   (ref) => CupsController(ref),
@@ -11,7 +11,7 @@ class CupsController extends StateNotifier<AsyncValue<void>> {
 
   CupsController(this.ref) : super(AsyncValue.data(null));
 
-  Future<void> createCup(Tournament tournament) async {
+  Future<void> createCup(TournamentModel tournament) async {
     state = const AsyncLoading();
     try {
       await DataBaseService().createCup(tournament);
@@ -31,7 +31,7 @@ class CupsController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  Future<void> updateCup(Tournament tournament) async {
+  Future<void> updateCup(TournamentModel tournament) async {
     state = const AsyncLoading();
     try {
       await DataBaseService().updateCup(tournament);

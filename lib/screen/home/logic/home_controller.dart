@@ -6,7 +6,7 @@ import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/shared_pref_helper.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/models/match_model.dart';
-import 'package:youth_center/models/tournament.dart';
+import 'package:youth_center/models/tournament_model.dart';
 import 'package:youth_center/models/user_model.dart';
 import 'package:youth_center/models/youth_center_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
@@ -94,7 +94,7 @@ final filteredBookingsProvider = FutureProvider<List<BookingModel>>((
   );
 });
 
-final activeCupsProvider = FutureProvider<List<Tournament>>((ref) async {
+final activeCupsProvider = FutureProvider<List<TournamentModel>>((ref) async {
   final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
@@ -112,7 +112,7 @@ final activeCupsProvider = FutureProvider<List<Tournament>>((ref) async {
   }
 });
 
-final cupsProvider = FutureProvider<List<Tournament>>((ref) async {
+final cupsProvider = FutureProvider<List<TournamentModel>>((ref) async {
   final bookingService = DataBaseService();
   final isAdmin = ref.watch(isAdminProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
@@ -130,7 +130,7 @@ final cupsProvider = FutureProvider<List<Tournament>>((ref) async {
   return [];
 });
 
-final filteredCupsProvider = FutureProvider<List<Tournament>>((ref) async {
+final filteredCupsProvider = FutureProvider<List<TournamentModel>>((ref) async {
   final cupProvider = ref.watch(activeCupsProvider);
   final selectedCenter = ref.watch(selectedCenterNameProvider);
 
