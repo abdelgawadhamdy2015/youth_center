@@ -68,9 +68,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "clickAgainToExit": MessageLookupByLibrary.simpleMessage(
       "click back again to exit",
     ),
+    "completed": MessageLookupByLibrary.simpleMessage("Completed"),
     "createCup": MessageLookupByLibrary.simpleMessage("Create Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
     "customRules": MessageLookupByLibrary.simpleMessage("Custom Rules"),
+    "defaultDescription": MessageLookupByLibrary.simpleMessage(
+      "The Summer Youth Cup is an annual tournament designed to bring together young athletes...",
+    ),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteRequest": MessageLookupByLibrary.simpleMessage("Delete Request"),
     "description": MessageLookupByLibrary.simpleMessage("Description"),
@@ -174,6 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
     "numberOfTeams": MessageLookupByLibrary.simpleMessage("Number of Teams"),
     "offsideRule": MessageLookupByLibrary.simpleMessage("Offside rule applies"),
+    "onGoing": MessageLookupByLibrary.simpleMessage("OnGoing"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "penaltyShootout": MessageLookupByLibrary.simpleMessage(
       "Penalty shootout if tied after extra time",
@@ -196,6 +201,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "random": MessageLookupByLibrary.simpleMessage("Random"),
     "recommendedSize": MessageLookupByLibrary.simpleMessage(
       "Recommended size: 200x200px, Max: 2MB",
+    ),
+    "registeredClosed": MessageLookupByLibrary.simpleMessage(
+      "Registration is closed",
     ),
     "registrationDeadline": MessageLookupByLibrary.simpleMessage(
       "Registration Deadline",
@@ -299,6 +307,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unlimitedSubstitutions": MessageLookupByLibrary.simpleMessage(
       "Unlimited Substitutions",
     ),
+    "upComming": MessageLookupByLibrary.simpleMessage("UpComming"),
     "update": MessageLookupByLibrary.simpleMessage("Update"),
     "uploadLogo": MessageLookupByLibrary.simpleMessage("Upload Logo"),
     "userRegistered": MessageLookupByLibrary.simpleMessage(
@@ -306,6 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "username": MessageLookupByLibrary.simpleMessage("User Name"),
     "venueAllocation": MessageLookupByLibrary.simpleMessage("Venue Allocation"),
+    "viewDetails": MessageLookupByLibrary.simpleMessage("View Details"),
     "wednesday": MessageLookupByLibrary.simpleMessage("Wednesday"),
     "weekdayEvenings": MessageLookupByLibrary.simpleMessage(
       "Weekday Evenings (17:00 - 21:00)",

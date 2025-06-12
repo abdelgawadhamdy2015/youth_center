@@ -5,8 +5,8 @@ import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
 import 'package:youth_center/screen/booking/ui/add_booking.dart';
 import 'package:youth_center/screen/booking/ui/widgets/requests_booking.dart';
-import 'package:youth_center/screen/cup/ui/widgets/create.dart';
 import 'package:youth_center/screen/cup/ui/cups_screen.dart';
+import 'package:youth_center/screen/cup/ui/widgets/create_tournament_screen.dart';
 import 'package:youth_center/screen/home/ui/widgets/home_body.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -128,7 +128,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         if (_currentIndex == 0) {
                           return CreateBooking();
                         } else if (_currentIndex == 1 && isAdmin) {
-                          return CreateTournamentScreen();
+                          return NewCreateTournament();
                         } else {
                           return SizedBox.shrink();
                         }

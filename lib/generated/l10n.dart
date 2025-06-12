@@ -1363,6 +1363,51 @@ class S {
       args: [],
     );
   }
+
+  /// `The Summer Youth Cup is an annual tournament designed to bring together young athletes...`
+  String get defaultDescription {
+    return Intl.message(
+      'The Summer Youth Cup is an annual tournament designed to bring together young athletes...',
+      name: 'defaultDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Details`
+  String get viewDetails {
+    return Intl.message(
+      'View Details',
+      name: 'viewDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UpComming`
+  String get upComming {
+    return Intl.message('UpComming', name: 'upComming', desc: '', args: []);
+  }
+
+  /// `OnGoing`
+  String get onGoing {
+    return Intl.message('OnGoing', name: 'onGoing', desc: '', args: []);
+  }
+
+  /// `Completed`
+  String get completed {
+    return Intl.message('Completed', name: 'completed', desc: '', args: []);
+  }
+
+  /// `Registration is closed`
+  String get registeredClosed {
+    return Intl.message(
+      'Registration is closed',
+      name: 'registeredClosed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

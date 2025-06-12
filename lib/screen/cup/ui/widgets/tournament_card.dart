@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/tournament_model.dart';
-import 'package:youth_center/screen/cup/ui/widgets/create.dart';
+import 'package:youth_center/screen/cup/ui/widgets/create_tournament_screen.dart';
 
 class TournamentCard extends StatelessWidget {
   final TournamentModel tournament;
@@ -9,7 +10,7 @@ class TournamentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusData = _getStatus();
+    final statusData = _getStatus(context);
     final Color statusColor = statusData['color'] as Color;
     final String status = statusData['status'] as String;
 
@@ -82,7 +83,7 @@ class TournamentCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '${tournament.teams} teams',
+                    getDeadLineMessage(context),
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
@@ -94,7 +95,7 @@ class TournamentCard extends StatelessWidget {
                     MaterialPageRoute(
                       builder:
                           (context) =>
-                              CreateTournamentScreen(tournament: tournament),
+                              NewCreateTournament(tournament: tournament),
                     ),
                   );
                 },
@@ -108,8 +109,8 @@ class TournamentCard extends StatelessWidget {
                     vertical: 6,
                   ),
                 ),
-                child: const Text(
-                  'View Details',
+                child: Text(
+                  S.of(context).viewDetails,
                   style: TextStyle(fontSize: 12, color: Color(0xFF1E40AF)),
                 ),
               ),
@@ -120,25 +121,35 @@ class TournamentCard extends StatelessWidget {
     );
   }
 
-  Map<String, Object> _getStatus() {
+  Map<String, Object> _getStatus(BuildContext context) {
     if (tournament.startDate != null &&
         DateTime.now().isBefore(tournament.startDate!)) {
       return {
         'color': const Color(0xFF1E40AF),
-        'status': MyConstants.upComming,
+        'status': S.of(context).upComming,
       };
     } else if (tournament.startDate != null &&
         DateTime.now().isAfter(tournament.startDate!) &&
         DateTime.now().isBefore(tournament.endDate!)) {
-      return {'color': const Color(0xFF10B981), 'status': MyConstants.ongoing};
+      return {
+        'color': const Color(0xFF10B981),
+        'status': S.of(context).onGoing,
+      };
     } else if (tournament.endDate != null &&
         DateTime.now().isAfter(tournament.endDate!)) {
       return {
         'color': const Color(0xFF6B7280),
-        'status': MyConstants.completed,
+        'status': S.of(context).completed,
       };
     } else {
       return {'color': const Color(0xFF1E40AF), 'status': MyConstants.ongoing};
     }
+  }
+
+  getDeadLineMessage(BuildContext context) {
+    if (tournament.registrationDeadline!.isAfter(DateTime.now())) {
+      return '${S.of(context).registrationDeadline} : ${MyConstants.dateFormat.format(tournament.registrationDeadline ?? DateTime.now())}';
+    }
+    return S.of(context).registeredClosed;
   }
 }

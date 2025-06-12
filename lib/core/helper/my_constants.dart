@@ -21,7 +21,7 @@ class MyConstants {
 
   static final DateFormat hourFormat = DateFormat('HH:mm', MyConstants.english);
   static final DateFormat dateFormat = DateFormat(
-    'dds-MM-yyyy',
+    'dd/MM/yyyy',
     MyConstants.english,
   );
   static CenterUser? centerUser;
