@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
+import 'package:youth_center/core/service/local_notification_service.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
 import 'package:youth_center/core/widgets/app_text_button.dart';
@@ -14,6 +16,7 @@ import 'package:youth_center/core/widgets/day_drop_down.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/screen/auth/login_controller.dart';
 import 'package:youth_center/screen/home/logic/home_controller.dart';
 import 'package:youth_center/screen/home/ui/home_screen.dart';
 
@@ -71,12 +74,22 @@ class Update extends ConsumerState<UpdateProfile> {
     setData();
   }
 
-  Future updateMyProfile(CenterUser centerUser) async {
-    await db
-        .collection(MyConstants.userCollection)
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set(centerUser.toJson())
+  updateMyProfile(CenterUser centerUser) {
+    final loginController = ref.read(loginControllerProvider.notifier);
+    loginController
+        .updateProfile(centerUser)
         .whenComplete(() {
+          LocalNotificationService localNotificationService =
+              LocalNotificationService();
+          localNotificationService.initNotification();
+          localNotificationService.showNotification(
+            RemoteMessage(
+              notification: RemoteNotification(
+                body: "this is test",
+                title: "me",
+              ),
+            ),
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(S.of(context).profileUpdated),
@@ -92,43 +105,31 @@ class Update extends ConsumerState<UpdateProfile> {
               },
             ),
           );
+        })
+        .catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error),
+              backgroundColor: ColorManger.redButtonColor,
+              elevation: 10,
+            ),
+          );
         });
   }
-
-  // getUser() async {
-  //   await FirebaseFirestore.instance
-  //       .collection(MyConstants.userCollection)
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get()
-  //       .then((DocumentSnapshot documentSnapshot) {
-  //         if (documentSnapshot.exists) {
-  //           String json = jsonEncode(documentSnapshot.data());
-  //           Map<String, dynamic>? c = jsonDecode(json);
-  //           centerUser = CenterUser.fromJson(c!);
-  //           setState(() {
-  //             usernameController.text = centerUser.email.toString().trim();
-  //             nameController.text = centerUser.name.toString().trim();
-  //             mobileController.text = centerUser.mobile.toString().trim();
-  //             dropdownValue = centerUser.youthCenterName.toString().trim();
-  //             adminValue = centerUser.admin;
-  //           });
-  //         } else {
-  //           print(S.of(context).wrong);
-  //         }
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {
     adminValue = ref.watch(isAdminProvider);
+    final youthCenterNames = ref.watch(youthCenterNamesProvider);
+    final selectedYouthCenter = ref.watch(selectedCenterNameProvider);
     return GradientContainer(
       child: SingleChildScrollView(
         child: Column(
           children: [
             HelperMethods.buildHeader(
-              context,
-              S.of(context).myAccount,
-              adminValue,
+              context: context,
+              title: S.of(context).myAccount,
+              isAdmin: adminValue,
             ),
             BodyContainer(
               padding: SizeConfig().getScreenPadding(
@@ -160,20 +161,27 @@ class Update extends ConsumerState<UpdateProfile> {
                       mobileController,
                     ),
                     HelperMethods.verticalSpace(.02),
-
-                    DayDropdown(
-                      days: MyConstants.centerNames,
-                      selectedDay: dropdownValue,
-                      onChanged:
-                          MyConstants.centerUser?.admin ?? false
-                              ? null
-                              : (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    dropdownValue = value;
-                                  });
-                                }
-                              },
+                    youthCenterNames.when(
+                      data: (names) {
+                        return DayDropdown(
+                          days: names,
+                          selectedDay: selectedYouthCenter,
+                          onChanged:
+                              MyConstants.centerUser?.admin ?? false
+                                  ? null
+                                  : (value) {
+                                    if (value != null) {
+                                      ref
+                                          .read(
+                                            selectedCenterNameProvider.notifier,
+                                          )
+                                          .state = value;
+                                    }
+                                  },
+                        );
+                      },
+                      loading: () => const CircularProgressIndicator(),
+                      error: (error, stack) => Text('Error: $error'),
                     ),
                     HelperMethods.verticalSpace(.04),
 
@@ -191,7 +199,9 @@ class Update extends ConsumerState<UpdateProfile> {
                             name: nameController.text,
                             mobile: mobileController.text,
                             email: usernameController.text,
-                            youthCenterName: dropdownValue,
+                            youthCenterName:
+                                selectedYouthCenter ??
+                                MyConstants.centerUser!.youthCenterName,
                             admin: MyConstants.centerUser?.admin ?? false,
                           ),
                         );
@@ -218,30 +228,5 @@ class Update extends ConsumerState<UpdateProfile> {
       hint: hintText,
       controller: controller,
     );
-
-    // return Container(
-    //   padding: EdgeInsets.symmetric(horizontal: 16),
-    //   decoration: BoxDecoration(
-    //     color: Colors.white,
-    //     borderRadius: BorderRadius.circular(30),
-    //     border: Border.all(color: Colors.blueGrey),
-    //   ),
-    //   child: Row(
-    //     children: [
-    //       Icon(icon, color: Colors.blueGrey),
-    //       SizedBox(width: 10),
-    //       Expanded(
-    //         child: TextField(
-    //           controller: controller,
-    //           style: GoogleFonts.tajawal(),
-    //           decoration: InputDecoration(
-    //             hintText: hintText,
-    //             border: InputBorder.none,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

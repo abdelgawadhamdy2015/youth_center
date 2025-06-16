@@ -13,9 +13,11 @@ import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/cup/ui/widgets/tournament_card.dart';
 import 'package:youth_center/screen/home/logic/home_controller.dart';
+import 'package:youth_center/screen/home/ui/widgets/matches_of_ctive_cups.dart';
 
 class CupScreen extends ConsumerStatefulWidget {
-  const CupScreen({super.key});
+  const CupScreen({super.key, required this.tabController});
+  final TabController tabController;
 
   @override
   ConsumerState<CupScreen> createState() {
@@ -75,19 +77,25 @@ class Cup extends ConsumerState<CupScreen> {
   @override
   Widget build(BuildContext context) {
     final adminValue = ref.watch(isAdminProvider);
-    return SwipeDetector(
-      onSwipeDown: (offset) => setState(() {}),
-      child: GradientContainer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              HelperMethods.buildHeader(
-                context,
-                S.of(context).tournaments,
-                adminValue,
-              ),
-              _buildBody(adminValue),
-            ],
+    return DefaultTabController(
+      length: 2,
+      child: SwipeDetector(
+        onSwipeDown: (offset) => setState(() {}),
+        child: GradientContainer(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                HelperMethods.buildHeader(
+                  context: context,
+                  title: S.of(context).tournaments,
+                  isAdmin: adminValue,
+                  tabController: widget.tabController,
+                  tabs: [S.of(context).tournaments, S.of(context).matches],
+                ),
+
+                _buildBody(adminValue),
+              ],
+            ),
           ),
         ),
       ),
@@ -95,57 +103,65 @@ class Cup extends ConsumerState<CupScreen> {
   }
 
   _buildBody(bool adminValue) {
+    return BodyContainer(
+      padding: EdgeInsets.only(bottom: SizeConfig.screenHeight! * .13),
+
+      height: SizeConfig.screenHeight! * .85,
+      child: TabBarView(
+        controller: widget.tabController,
+        children: [_buildListOfCups(adminValue), MatchesOfActiveCups()],
+      ),
+    );
+  }
+
+  _buildListOfCups(bool adminValue) {
     final youthcenterNames = ref.watch(youthCenterNamesProvider);
     final selectedCenter = ref.watch(selectedCenterNameProvider);
     final cupsProviderAsync = ref.watch(cupsProvider);
-    return BodyContainer(
-      height: SizeConfig.screenHeight! * .85,
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Visibility(
-                visible: !adminValue,
-                child: youthcenterNames.when(
-                  data:
-                      (centerNames) => DayDropdown(
-                        days: centerNames,
-                        selectedDay: selectedCenter,
-                        onChanged: (days) {
-                          ref.read(selectedCenterNameProvider.notifier).state =
-                              days!;
-                        },
-                      ),
-                  loading:
-                      () => const Center(child: CircularProgressIndicator()),
-                  error: (error, stack) => Center(child: Text('Error: $error')),
-                ),
-              ),
-              HelperMethods.verticalSpace(.02),
-              cupsProviderAsync.when(
-                data: (cups) {
-                  log(cups.length.toString());
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: cups.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            TournamentCard(tournament: cups[index]),
-                            HelperMethods.verticalSpace(.02),
-                          ],
-                        );
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Visibility(
+              visible: !adminValue,
+              child: youthcenterNames.when(
+                data:
+                    (centerNames) => DayDropdown(
+                      days: centerNames,
+                      selectedDay: selectedCenter,
+                      onChanged: (days) {
+                        ref.read(selectedCenterNameProvider.notifier).state =
+                            days!;
                       },
                     ),
-                  );
-                },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) => Center(child: Text('Error: $error')),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            HelperMethods.verticalSpace(.02),
+            cupsProviderAsync.when(
+              data: (cups) {
+                log(cups.length.toString());
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: cups.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          TournamentCard(tournament: cups[index]),
+                          HelperMethods.verticalSpace(.02),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('Error: $error')),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

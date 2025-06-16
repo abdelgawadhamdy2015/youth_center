@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,7 +111,6 @@ class HelperMethods {
 
   static DateTime? parseTime(String? timeString) {
     if (timeString == null) return null;
-    log('timeString: $timeString');
     final parts = timeString.split(':');
     if (parts.length != 2) return null;
 
@@ -124,7 +122,13 @@ class HelperMethods {
     return DateTime(0, 0, 0, hour, minute);
   }
 
-  static buildHeader(BuildContext context, String title, bool isAdmin) {
+  static buildHeader({
+    required BuildContext context,
+    String? title,
+    required bool isAdmin,
+    List<String>? tabs,
+    TabController? tabController,
+  }) {
     return SafeArea(
       child: Column(
         children: [
@@ -147,15 +151,28 @@ class HelperMethods {
               ),
             ],
           ),
-
-          // TabBar
-          Padding(
-            padding: SizeConfig().getScreenPadding(),
-            child: Text(
-              title,
-              style: TextStyles.whiteBoldStyle(SizeConfig.fontSize4!),
-            ),
-          ),
+          (tabController != null && tabs != null)
+              ? Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.screenWidth! * .2,
+                  ),
+                ),
+                child: TabBar(
+                  controller: tabController,
+                  unselectedLabelColor: Colors.white60,
+                  labelColor: Colors.white,
+                  tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+                ),
+              )
+              : Padding(
+                padding: SizeConfig().getScreenPadding(),
+                child: Text(
+                  title ?? "",
+                  style: TextStyles.whiteBoldStyle(SizeConfig.fontSize4!),
+                ),
+              ),
         ],
       ),
     );

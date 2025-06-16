@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/widgets/body_container.dart';
 import 'package:youth_center/core/widgets/grediant_container.dart';
 import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/screen/booking/ui/widgets/requests_booking.dart';
 import 'package:youth_center/screen/home/logic/home_controller.dart';
-import 'package:youth_center/screen/home/ui/widgets/matches_of_ctive_cups.dart';
 import 'package:youth_center/screen/home/ui/widgets/time_slot_card.dart';
 
 class HomeScreenBody extends ConsumerStatefulWidget {
@@ -46,7 +44,15 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
       child: GradientContainer(
         child: SingleChildScrollView(
           child: Column(
-            children: [_buildHeader(lang, isAdmin), _buildBody(isAdmin)],
+            children: [
+              HelperMethods.buildHeader(
+                context: context,
+                isAdmin: isAdmin,
+                tabController: widget.tabController,
+                tabs: [lang.bookings, lang.requests],
+              ),
+              _buildBody(isAdmin),
+            ],
           ),
         ),
       ),
@@ -60,7 +66,7 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
       child: SwipeDetector(
         child: TabBarView(
           controller: widget.tabController,
-          children: [_buildBookingsTab(isAdmin), MatchesOfActiveCups()],
+          children: [_buildBookingsTab(isAdmin), BookingRequestsScreen()],
         ),
       ),
     );
@@ -206,52 +212,6 @@ class _HomeScreenBodyState extends ConsumerState<HomeScreenBody> {
           error: (e, _) => Center(child: Text("حدث خطأ: $e")),
         ),
       ],
-    );
-  }
-
-  _buildHeader(var lang, bool isAdmin) {
-    return SafeArea(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SvgPicture.asset(
-                MyConstants.logoSvg,
-                height: SizeConfig.screenHeight! * .05,
-              ),
-              HelperMethods.horizintalSpace(.02),
-
-              Text(
-                lang.appName,
-                style: GoogleFonts.tajawal(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
-
-          // TabBar
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(SizeConfig.screenWidth! * .2),
-            ),
-            child: TabBar(
-              controller: widget.tabController,
-
-              unselectedLabelColor: Colors.white60,
-              labelColor: Colors.white,
-              tabs: [
-                Tab(child: Text(lang.bookings)),
-                Tab(child: Text(lang.matches)),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -32,7 +32,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     _screens = [
       HomeScreenBody(tabController: _tabController),
-      CupScreen(),
+      CupScreen(tabController: _tabController),
       UpdateProfile(),
       BookingRequestsScreen(),
     ];
@@ -84,7 +84,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
-            if (index == 4) {
+            if (index == 3) {
               _showMenu();
               return;
             }
@@ -105,10 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               icon: Icon(Icons.person),
               label: S.of(context).myAccount,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.request_page),
-              label: S.of(context).requests,
-            ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz),
               label: S.of(context).more,
