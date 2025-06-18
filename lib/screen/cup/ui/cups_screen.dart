@@ -118,50 +118,54 @@ class Cup extends ConsumerState<CupScreen> {
     final youthcenterNames = ref.watch(youthCenterNamesProvider);
     final selectedCenter = ref.watch(selectedCenterNameProvider);
     final cupsProviderAsync = ref.watch(cupsProvider);
-    return Stack(
-      children: [
-        Column(
-          children: [
-            Visibility(
-              visible: !adminValue,
-              child: youthcenterNames.when(
-                data:
-                    (centerNames) => DayDropdown(
-                      days: centerNames,
-                      selectedDay: selectedCenter,
-                      onChanged: (days) {
-                        ref.read(selectedCenterNameProvider.notifier).state =
-                            days!;
+    return Padding(
+      padding: SizeConfig().getScreenPadding(),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Visibility(
+                visible: !adminValue,
+                child: youthcenterNames.when(
+                  data:
+                      (centerNames) => DayDropdown(
+                        days: centerNames,
+                        selectedDay: selectedCenter,
+                        onChanged: (days) {
+                          ref.read(selectedCenterNameProvider.notifier).state =
+                              days!;
+                        },
+                      ),
+                  loading:
+                      () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(child: Text('Error: $error')),
+                ),
+              ),
+              HelperMethods.verticalSpace(.02),
+              cupsProviderAsync.when(
+                data: (cups) {
+                  log(cups.length.toString());
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: cups.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            TournamentCard(tournament: cups[index]),
+                            HelperMethods.verticalSpace(.02),
+                          ],
+                        );
                       },
                     ),
+                  );
+                },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) => Center(child: Text('Error: $error')),
               ),
-            ),
-            HelperMethods.verticalSpace(.02),
-            cupsProviderAsync.when(
-              data: (cups) {
-                log(cups.length.toString());
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: cups.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          TournamentCard(tournament: cups[index]),
-                          HelperMethods.verticalSpace(.02),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Error: $error')),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

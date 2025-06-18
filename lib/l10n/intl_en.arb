@@ -176,6 +176,15 @@
   "upComming": "UpComming",
   "onGoing": "OnGoing",
   "completed": "Completed",
-  "registeredClosed": "Registration is closed"
-
+  "registeredClosed": "Registration is closed",
+  "bookedBy": "Booked by:",
+  "booked": "Booked",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "needLogOut": "Are you sure need logOut?",
+  "pinding": "Pending",
+  "accepted": "Accepted",
+  "rejected": "Rejected",
+  "day": "Day",
+  "yothCenter": "Youth Center"
 }

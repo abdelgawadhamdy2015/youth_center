@@ -35,10 +35,10 @@ class MyConstants {
   static const String cupCollection = 'Cups';
   static const String bookingCollection = 'Bookings';
   static const String requestCollection = 'BookingRequests';
-
-  static const String youthCenterIdCollection = 'location';
+  static const String status = 'status';
+  static const String location = 'location';
   static const String youthCentersCollection = 'youthCenters';
-
+  static const String youthCenterId = "youthCenterId";
   static const String cupName = 'cupName';
   static const String team1 = 'team1';
   static const String team2 = 'team2';
@@ -50,7 +50,7 @@ class MyConstants {
 
   static const String id = "id";
   static const String cupGroup = 'group';
-
+  static const String userId = "userId";
   //images
   static const String logoPath = 'images/logo.png';
   static const String logoSvg = 'images/logo.svg';

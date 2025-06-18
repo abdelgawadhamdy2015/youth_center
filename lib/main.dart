@@ -34,28 +34,25 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primaryColor: const Color(0xFF1E40AF),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: const Color(0xFF10B981),
-        ),
-        fontFamily: 'Inter',
-      ),
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-      home: const Auth(),
-    ) ;
+          title: "Youth Center",
+          theme: ThemeData(
+            primaryColor: const Color(0xFF1E40AF),
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              secondary: const Color(0xFF10B981),
+            ),
+            fontFamily: 'Inter',
+          ),
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          home: const Auth(),
+        );
       },
     );
-    
-    
-   
   }
 }

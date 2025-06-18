@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:svg_flutter/svg.dart';
@@ -6,6 +5,7 @@ import 'package:youth_center/core/helper/my_constants.dart';
 import 'package:youth_center/core/helper/size_config.dart';
 import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/core/themes/text_styles.dart';
+import 'package:youth_center/core/widgets/app_text_button.dart';
 import 'package:youth_center/core/widgets/mytextfile.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/match_model.dart';
@@ -203,5 +203,56 @@ class HelperMethods {
         return matchModel.teem2Score.toString();
       }
     }
+  }
+
+  static buildAlertDialog({
+    required BuildContext context,
+    required String message,
+    required List<String> actions,
+    Function? onTap,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: Icon(Icons.logout_outlined, color: ColorManger.delayRedColor),
+          content: Text(
+            textAlign: TextAlign.center,
+            message,
+            style: TextStyles.blackBoldStyle(SizeConfig.fontSize3!),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children:
+                  actions
+                      .map(
+                        (action) => AppButtonText(
+                          backGroundColor:
+                              actions.indexOf(action) > 0
+                                  ? ColorManger.darkBlack
+                                  : ColorManger.darkRed,
+                          buttonWidth: SizeConfig.screenWidth! * .3,
+                          textStyle: TextStyles.whiteBoldStyle(
+                            SizeConfig.fontSize3!,
+                          ),
+                          onPressed: () {
+                            if (actions.length > 1 &&
+                                actions.indexOf(action) > 0 &&
+                                onTap != null) {
+                              onTap();
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          butonText: action,
+                        ),
+                      )
+                      .toList(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

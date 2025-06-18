@@ -10,6 +10,7 @@ class BookingModel {
   final String youthCenterId;
   final String day;
   final String date;
+  final int? status;
 
   const BookingModel({
     this.id,
@@ -21,8 +22,33 @@ class BookingModel {
     required this.youthCenterId,
     required this.day,
     required this.date,
+    this.status,
   });
-
+  BookingModel copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? mobile,
+    String? timeEnd,
+    String? timeStart,
+    String? youthCenterId,
+    String? day,
+    String? date,
+    int? status,
+  }) {
+    return BookingModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      mobile: mobile ?? this.mobile,
+      timeEnd: timeEnd ?? this.timeEnd,
+      timeStart: timeStart ?? this.timeStart,
+      youthCenterId: youthCenterId ?? this.youthCenterId,
+      day: day ?? this.day,
+      date: date ?? this.date,
+      status: status ?? this.status,
+    );
+  }
   toJson() {
     return {
       "date": date,
@@ -33,6 +59,7 @@ class BookingModel {
       "timeEnd": timeEnd,
       "youthCenterId": youthCenterId,
       "userId": userId,
+      "status": status,
     };
   }
 
@@ -50,6 +77,7 @@ class BookingModel {
       timeStart: data["timeStart"],
       timeEnd: data["timeEnd"],
       youthCenterId: data["youthCenterId"],
+      status: data["status"],
     );
   }
 
@@ -63,6 +91,7 @@ class BookingModel {
       "timeStart": timeStart,
       "youthCenterId": youthCenterId,
       "userId": userId,
+      "status": status,
     };
   }
 }

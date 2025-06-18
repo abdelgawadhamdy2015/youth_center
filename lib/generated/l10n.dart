@@ -1408,6 +1408,61 @@ class S {
       args: [],
     );
   }
+
+  /// `Booked by:`
+  String get bookedBy {
+    return Intl.message('Booked by:', name: 'bookedBy', desc: '', args: []);
+  }
+
+  /// `Booked`
+  String get booked {
+    return Intl.message('Booked', name: 'booked', desc: '', args: []);
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message('OK', name: 'ok', desc: '', args: []);
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Are you sure need logOut?`
+  String get needLogOut {
+    return Intl.message(
+      'Are you sure need logOut?',
+      name: 'needLogOut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending`
+  String get pinding {
+    return Intl.message('Pending', name: 'pinding', desc: '', args: []);
+  }
+
+  /// `Accepted`
+  String get accepted {
+    return Intl.message('Accepted', name: 'accepted', desc: '', args: []);
+  }
+
+  /// `Rejected`
+  String get rejected {
+    return Intl.message('Rejected', name: 'rejected', desc: '', args: []);
+  }
+
+  /// `Day`
+  String get day {
+    return Intl.message('Day', name: 'day', desc: '', args: []);
+  }
+
+  /// `Youth Center`
+  String get yothCenter {
+    return Intl.message('Youth Center', name: 'yothCenter', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

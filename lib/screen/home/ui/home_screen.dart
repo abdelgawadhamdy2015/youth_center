@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:youth_center/core/helper/helper_methods.dart';
+import 'package:youth_center/core/themes/colors.dart';
 import 'package:youth_center/generated/l10n.dart';
+import 'package:youth_center/screen/auth/login_screen.dart';
 import 'package:youth_center/screen/auth/update_profile.dart';
 import 'package:youth_center/screen/booking/ui/add_booking.dart';
 import 'package:youth_center/screen/booking/ui/widgets/requests_booking.dart';
@@ -38,6 +41,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     ];
   }
 
+  _signOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
   _showMenu() {
     showModalBottomSheet(
       context: context,
@@ -46,8 +56,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           children: [
             ListTile(
               onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushReplacementNamed('/');
+                HelperMethods.buildAlertDialog(
+                  context: context,
+                  message: S.of(context).needLogOut,
+                  actions: [S.of(context).cancel, S.of(context).ok],
+                  onTap: _signOut,
+                );
               },
               titleAlignment: ListTileTitleAlignment.center,
               trailing: Icon(Icons.logout),
@@ -132,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       },
                     );
                   },
-                  backgroundColor: const Color(0xFF1E40AF),
+                  backgroundColor: ColorManger.darkBlack,
                   child: const Icon(Icons.add, color: Colors.white),
                 )
                 : SizedBox.shrink(),

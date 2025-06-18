@@ -32,7 +32,7 @@ class DataBaseService {
     final snapshot =
         await _db
             .collection(MyConstants.bookingCollection)
-            .where(MyConstants.youthCenterIdCollection, isEqualTo: centerName)
+            .where(MyConstants.location, isEqualTo: centerName)
             .get();
     return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
   }
@@ -50,7 +50,7 @@ class DataBaseService {
     try {
       var query = _db
           .collection(MyConstants.cupCollection)
-          .where(MyConstants.youthCenterIdCollection, isEqualTo: centerName);
+          .where(MyConstants.location, isEqualTo: centerName);
 
       if (finished != null && finished) {
         query = query.where(
@@ -110,12 +110,25 @@ class DataBaseService {
     await _db.collection(MyConstants.requestCollection).add(booking.toJson());
   }
 
-  Future<List<BookingModel>> getRequests(String centerId) async {
-    log('Fetching requests for center: $centerId');
+  Future<List<BookingModel>> getRequestsByCenter() async {
+    log("center is ${MyConstants.centerUser?.youthCenterName}");
     final snapshot =
         await _db
             .collection(MyConstants.requestCollection)
-            .where(MyConstants.youthCenterIdCollection, isEqualTo: centerId)
+            .where(
+              MyConstants.youthCenterId,
+              isEqualTo: MyConstants.centerUser?.youthCenterName,
+            )
+            .where(MyConstants.status, isEqualTo: 0)
+            .get();
+    return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
+  }
+
+  Future<List<BookingModel>> getRequestsByUser(String userId) async {
+    final snapshot =
+        await _db
+            .collection(MyConstants.requestCollection)
+            .where(MyConstants.userId, isEqualTo: userId)
             .get();
     return snapshot.docs.map((e) => BookingModel.fromSnapshot(e)).toList();
   }

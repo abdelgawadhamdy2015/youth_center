@@ -174,5 +174,15 @@
   "upComming": "قادمة",
   "onGoing": "جارية",
   "completed": "مكتملة",
-  "registeredClosed": "انتهى التسجيل"
+  "registeredClosed": "انتهى التسجيل",
+  "bookedBy": "محجوز بواسطة:",
+  "booked": "محجوز",
+  "ok": "موافق",
+  "cancel": "إلغاء",
+  "needLogOut": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "pinding": "قيد الانتظار",
+  "accepted": "مقبول",
+  "rejected": "مرفوض",
+  "day": "يوم",
+  "yothCenter": "مركز شباب"
 }

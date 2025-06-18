@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/models/booking_model.dart';
 
 class TimeSlotCard extends StatelessWidget {
   final BookingModel bookingModel;
   final bool? isAvailable;
-  const TimeSlotCard({
-    super.key, required this.bookingModel,
-    this.isAvailable
-  });
+  const TimeSlotCard({super.key, required this.bookingModel, this.isAvailable});
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +14,12 @@ class TimeSlotCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: (isAvailable ?? false) ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+          color:
+              (isAvailable ?? false)
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFFEF4444),
         ),
-        color: Colors.white
-        // (isAvailable ?? false) 
-        //     ? const Color(0xFF10B981).withOpacity(0.1)
-        //     : const Color(0xFFEF4444).withOpacity(0.1),
+        color: Colors.white,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,18 +37,20 @@ class TimeSlotCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: (isAvailable ?? false) 
-                      ? const Color(0xFFD1FAE5)
-                      : const Color(0xFFFEE2E2),
+                  color:
+                      (isAvailable ?? false)
+                          ? const Color(0xFFD1FAE5)
+                          : const Color(0xFFFEE2E2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "Booked",
+                  S.of(context).booked,
                   style: TextStyle(
                     fontSize: 12,
-                    color: (isAvailable ?? false) 
-                        ? const Color(0xFF065F46)
-                        : const Color(0xFFB91C1C),
+                    color:
+                        (isAvailable ?? false)
+                            ? const Color(0xFF065F46)
+                            : const Color(0xFFB91C1C),
                   ),
                 ),
               ),
@@ -59,20 +59,13 @@ class TimeSlotCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             bookingModel.youthCenterId,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
-        
-            Text(
-              'Booked by: ${bookingModel.name}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-        
+
+          Text(
+            '${S.of(context).bookedBy} ${bookingModel.name}',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
         ],
       ),
     );

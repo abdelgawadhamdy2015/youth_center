@@ -1,10 +1,10 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:youth_center/core/helper/helper_methods.dart';
 import 'package:youth_center/models/booking_model.dart';
 import 'package:youth_center/core/service/data_base_service.dart';
 import 'package:youth_center/screen/home/logic/home_controller.dart';
 
+final dataBaseService = DataBaseService();
 final addBookingProvider =
     StateNotifierProvider<BookingController, AsyncValue<void>>((ref) {
       return BookingController(ref);
@@ -18,7 +18,7 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   Future<void> addBooking(BookingModel booking) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().addBooking(booking);
+      await dataBaseService.addBooking(booking);
       _ref.invalidate(bookingsProvider);
 
       state = const AsyncData(null);
@@ -30,7 +30,7 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   Future<void> deleteBooking(String bookingId) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().deleteBooking(bookingId);
+      await dataBaseService.deleteBooking(bookingId);
       _ref.invalidate(bookingsProvider);
 
       state = const AsyncData(null);
@@ -42,7 +42,7 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   Future<void> updateBooking(BookingModel booking) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().updateBooking(booking);
+      await dataBaseService.updateBooking(booking);
       _ref.invalidate(bookingsProvider);
 
       state = const AsyncData(null);
@@ -54,8 +54,9 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   Future<void> requestBooking(BookingModel booking) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().requestBooking(booking);
-      _ref.invalidate(bookingsProvider);
+      final updateBooking = booking.copyWith(status: 0);
+      await dataBaseService.requestBooking(updateBooking);
+      _ref.invalidate(bookingRequestsProvider);
 
       state = const AsyncData(null);
     } catch (e) {
@@ -66,7 +67,11 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   Future<void> acceptRequestBooking(BookingModel booking) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().addBooking(booking);
+      final updatedBooking = booking.copyWith(status: 1);
+      await dataBaseService.addBooking(updatedBooking);
+
+      await dataBaseService.updateRequest(updatedBooking);
+      _ref.invalidate(bookingsProvider);
       _ref.invalidate(bookingRequestsProvider);
 
       state = const AsyncData(null);
@@ -74,10 +79,13 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
       state = AsyncError(e.toString(), StackTrace.current);
     }
   }
+
   Future<void> rejectRequestBooking(BookingModel booking) async {
     state = const AsyncLoading();
     try {
-      await DataBaseService().deleteBooking(booking.id!);
+      final updatedBooking = booking.copyWith(status: 2);
+      await dataBaseService.updateRequest(updatedBooking);
+      _ref.invalidate(bookingsProvider);
       _ref.invalidate(bookingRequestsProvider);
 
       state = const AsyncData(null);
@@ -87,17 +95,19 @@ class BookingController extends StateNotifier<AsyncValue<void>> {
   }
 
   Future<void> deleteRequestBooking(BookingModel booking) async {
-  await DataBaseService().deleteRequest(booking.id!);
+    await dataBaseService.deleteRequest(booking.id!);
+  }
 }
 
-}
-
-final availableTimesProvider = FutureProvider.family<List<String>, (String centerName, String day)>((ref, args) async {
+final availableTimesProvider = FutureProvider.family<
+  List<String>,
+  (String centerName, String day)
+>((ref, args) async {
   final (centerName, day) = args;
 
-  final bookings = await DataBaseService().getBookingsByCenter(centerName);
+  final bookings = await dataBaseService.getBookingsByCenter(centerName);
   final bookedTimes = bookings.where((booking) => booking.day == day).toList();
-  
+
   if (bookedTimes.isEmpty) {
     return HelperMethods.generateTimes();
   }
@@ -110,22 +120,24 @@ bool isTimeBooked(String time, List<BookingModel> bookings) {
   for (final booking in bookings) {
     final bookingStart = HelperMethods.parseTime(booking.timeStart);
     final bookingEnd = HelperMethods.parseTime(booking.timeEnd);
-    if (bookingStart != null && bookingEnd != null && timeDate != null && timeDate.isAfter(bookingStart) && timeDate.isBefore(bookingEnd)) {
+    if (bookingStart != null &&
+        bookingEnd != null &&
+        timeDate != null &&
+        timeDate.isAfter(bookingStart) &&
+        timeDate.isBefore(bookingEnd)) {
       return true;
     }
   }
   return false;
 }
 
-
-
 final bookingRequestsProvider = FutureProvider<List<BookingModel>>((ref) async {
-  final centerName = ref.watch(selectedCenterNameProvider) ?? "";
-  final bookings = await DataBaseService().getRequests(centerName);
-  return bookings;
+  final isAdmin = ref.watch(isAdminProvider);
+  if (isAdmin) {
+    return await dataBaseService.getRequestsByCenter();
+  } else {
+    return await dataBaseService.getRequestsByUser(
+      ref.watch(centerUserProvider).asData?.value?.id ?? "",
+    );
+  }
 });
-
-
-
-  
-

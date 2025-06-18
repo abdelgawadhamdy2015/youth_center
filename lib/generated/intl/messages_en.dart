@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No matches generated yet",
     ),
     "accept": MessageLookupByLibrary.simpleMessage("Accept"),
+    "accepted": MessageLookupByLibrary.simpleMessage("Accepted"),
     "active": MessageLookupByLibrary.simpleMessage("active"),
     "activeCupMatches": MessageLookupByLibrary.simpleMessage(
       "Active Cup Matches",
@@ -55,12 +56,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "basicInformation": MessageLookupByLibrary.simpleMessage(
       "Basic Information",
     ),
+    "booked": MessageLookupByLibrary.simpleMessage("Booked"),
+    "bookedBy": MessageLookupByLibrary.simpleMessage("Booked by:"),
     "bookingDay": MessageLookupByLibrary.simpleMessage("Booking Day"),
     "bookingTime": MessageLookupByLibrary.simpleMessage("Booking Time"),
     "bookings": MessageLookupByLibrary.simpleMessage("Bookings"),
     "breakBetweenMatches": MessageLookupByLibrary.simpleMessage(
       "Break Between Matches",
     ),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cardSystem": MessageLookupByLibrary.simpleMessage(
       "Yellow/red card system",
     ),
@@ -72,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCup": MessageLookupByLibrary.simpleMessage("Create Tournament"),
     "cupName": MessageLookupByLibrary.simpleMessage("Tournament Name"),
     "customRules": MessageLookupByLibrary.simpleMessage("Custom Rules"),
+    "day": MessageLookupByLibrary.simpleMessage("Day"),
     "defaultDescription": MessageLookupByLibrary.simpleMessage(
       "The Summer Youth Cup is an annual tournament designed to bring together young athletes...",
     ),
@@ -174,15 +179,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "myAccount": MessageLookupByLibrary.simpleMessage("My Account"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "needLogOut": MessageLookupByLibrary.simpleMessage(
+      "Are you sure need logOut?",
+    ),
     "noData": MessageLookupByLibrary.simpleMessage("No data"),
     "noElemnts": MessageLookupByLibrary.simpleMessage("no elements"),
     "numberOfTeams": MessageLookupByLibrary.simpleMessage("Number of Teams"),
     "offsideRule": MessageLookupByLibrary.simpleMessage("Offside rule applies"),
+    "ok": MessageLookupByLibrary.simpleMessage("OK"),
     "onGoing": MessageLookupByLibrary.simpleMessage("OnGoing"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "penaltyShootout": MessageLookupByLibrary.simpleMessage(
       "Penalty shootout if tied after extra time",
     ),
+    "pinding": MessageLookupByLibrary.simpleMessage("Pending"),
     "players": m1,
     "pleaseFill": MessageLookupByLibrary.simpleMessage(
       "Please Fill all fields",
@@ -209,6 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Registration Deadline",
     ),
     "reject": MessageLookupByLibrary.simpleMessage("Reject"),
+    "rejected": MessageLookupByLibrary.simpleMessage("Rejected"),
     "requestAccepted": MessageLookupByLibrary.simpleMessage(
       "Request accepted successfully",
     ),
@@ -322,5 +333,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "win": MessageLookupByLibrary.simpleMessage("Win"),
     "wrong": MessageLookupByLibrary.simpleMessage("Some thing went wrong"),
+    "yothCenter": MessageLookupByLibrary.simpleMessage("Youth Center"),
   };
 }

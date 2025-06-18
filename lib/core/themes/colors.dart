@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class ColorManger {
   static LinearGradient bodyGradient = LinearGradient(
-    colors: [Color(0xFF56ccf2), Color(0xFF2f80ed)],
+    colors: [borderGrayColor, darkListColor],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   static LinearGradient mainGradient = LinearGradient(
-    colors: [Color(0xFF11998e), Color(0xFF38ef7d)],
+    colors: [darkBlack, ligthBlack],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -62,6 +62,6 @@ class ColorManger {
   static const Color delayRedColor = Color(0xFFA80000);
 
   // amper
-  static const Color whiteAmper = Color(0xFFFCF4E4);
-  static const Color amper = Color(0xFFF9A825);
+  static const Color whiteAmper = Color.fromARGB(255, 118, 113, 103);
+  static const Color amper = Color.fromARGB(255, 245, 182, 82);
 }

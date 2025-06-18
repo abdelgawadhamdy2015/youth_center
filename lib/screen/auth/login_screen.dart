@@ -14,6 +14,7 @@ import 'package:youth_center/core/widgets/passwordtext.dart';
 import 'package:youth_center/generated/l10n.dart';
 import 'package:youth_center/screen/auth/login_controller.dart';
 import 'package:youth_center/screen/auth/sign_up_screen.dart';
+import 'package:youth_center/screen/home/ui/home_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -56,6 +57,10 @@ class _Login extends ConsumerState<LoginScreen> {
 
     ref.listen<AsyncValue<void>>(loginControllerProvider, (previous, next) {
       next.whenOrNull(
+        data:
+            (data) => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            ),
         error: (error, _) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -129,17 +134,19 @@ class _Login extends ConsumerState<LoginScreen> {
                   ),
                   HelperMethods.verticalSpace(.02),
 
-                  AppButtonText(
-                    backGroundColor: ColorManger.darkBlue,
-                    borderRadius: SizeConfig.screenWidth! * .05,
-                    textStyle: GoogleFonts.tajawal(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                    butonText: lang.login,
-                    onPressed:
-                        loginState is AsyncLoading ? () {} : _handleLogin,
-                  ),
+                  loginState is AsyncLoading
+                      ? CircularProgressIndicator()
+                      : AppButtonText(
+                        backGroundColor: ColorManger.darkBlue,
+                        borderRadius: SizeConfig.screenWidth! * .05,
+                        textStyle: GoogleFonts.tajawal(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                        butonText: lang.login,
+                        onPressed:
+                            loginState is AsyncLoading ? () {} : _handleLogin,
+                      ),
 
                   HelperMethods.verticalSpace(.02),
 

@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "NoMatches": MessageLookupByLibrary.simpleMessage(" لا توجد مباريات نشطة"),
     "accept": MessageLookupByLibrary.simpleMessage("قبول"),
+    "accepted": MessageLookupByLibrary.simpleMessage("مقبول"),
     "active": MessageLookupByLibrary.simpleMessage("نشطة"),
     "activeCupMatches": MessageLookupByLibrary.simpleMessage(
       "مباريات البطولة النشطة",
@@ -53,12 +54,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "basicInformation": MessageLookupByLibrary.simpleMessage(
       "المعلومات الأساسية",
     ),
+    "booked": MessageLookupByLibrary.simpleMessage("محجوز"),
+    "bookedBy": MessageLookupByLibrary.simpleMessage("محجوز بواسطة:"),
     "bookingDay": MessageLookupByLibrary.simpleMessage("يوم الحجز"),
     "bookingTime": MessageLookupByLibrary.simpleMessage("وقت الحجز"),
     "bookings": MessageLookupByLibrary.simpleMessage("الحجوزات"),
     "breakBetweenMatches": MessageLookupByLibrary.simpleMessage(
       "استراحة بين المباريات",
     ),
+    "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "cardSystem": MessageLookupByLibrary.simpleMessage(
       "نظام البطاقات الصفراء/الحمراء",
     ),
@@ -70,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "createCup": MessageLookupByLibrary.simpleMessage("إنشاء بطولة"),
     "cupName": MessageLookupByLibrary.simpleMessage("اسم البطولة"),
     "customRules": MessageLookupByLibrary.simpleMessage("قوانين مخصصة"),
+    "day": MessageLookupByLibrary.simpleMessage("يوم"),
     "defaultDescription": MessageLookupByLibrary.simpleMessage(
       "كأس الشباب الصيفي هو بطولة سنوية تهدف إلى جمع الرياضيين الشباب...",
     ),
@@ -165,15 +170,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "more": MessageLookupByLibrary.simpleMessage("المزيد"),
     "myAccount": MessageLookupByLibrary.simpleMessage("حسابي"),
     "name": MessageLookupByLibrary.simpleMessage("الاسم"),
+    "needLogOut": MessageLookupByLibrary.simpleMessage(
+      "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    ),
     "noData": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
     "noElemnts": MessageLookupByLibrary.simpleMessage("لا توجد عناصر"),
     "numberOfTeams": MessageLookupByLibrary.simpleMessage("عدد الفرق"),
     "offsideRule": MessageLookupByLibrary.simpleMessage("تطبق قاعدة التسلل"),
+    "ok": MessageLookupByLibrary.simpleMessage("موافق"),
     "onGoing": MessageLookupByLibrary.simpleMessage("جارية"),
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "penaltyShootout": MessageLookupByLibrary.simpleMessage(
       "ركلات ترجيح إذا استمر التعادل بعد الوقت الإضافي",
     ),
+    "pinding": MessageLookupByLibrary.simpleMessage("قيد الانتظار"),
     "players": m1,
     "pleaseFill": MessageLookupByLibrary.simpleMessage(
       "يرجى تعبئة جميع الحقول",
@@ -196,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "آخر موعد للتسجيل",
     ),
     "reject": MessageLookupByLibrary.simpleMessage("رفض"),
+    "rejected": MessageLookupByLibrary.simpleMessage("مرفوض"),
     "requestAccepted": MessageLookupByLibrary.simpleMessage(
       "تم قبول الطلب بنجاح",
     ),
@@ -292,5 +303,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "win": MessageLookupByLibrary.simpleMessage("فوز"),
     "wrong": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
+    "yothCenter": MessageLookupByLibrary.simpleMessage("مركز شباب"),
   };
 }
