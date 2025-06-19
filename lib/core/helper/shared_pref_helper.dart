@@ -4,26 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefHelper {
+  static SharedPreferences? _prefs;
   // private constructor as I don't want to allow creating an instance of this class itself.
   SharedPrefHelper._();
+
+  /// public getter to get the singleton instance
+  static Future<SharedPreferences> getInstance() async {
+    _prefs ??= await SharedPreferences.getInstance();
+    return _prefs!;
+  }
 
   /// Removes a value from SharedPreferences with given [key].
   static removeData(String key) async {
     debugPrint('SharedPrefHelper : data with key : $key has been removed');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     await sharedPreferences.remove(key);
   }
 
   /// Removes all keys and values in the SharedPreferences
   static clearAllData() async {
     debugPrint('SharedPrefHelper : all data has been cleared');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     await sharedPreferences.clear();
   }
 
   /// Saves a [value] with a [key] in the SharedPreferences.
   static setData(String key, value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     log("SharedPrefHelper : setData with key : $key and value : $value");
     switch (value.runtimeType) {
       case const (String):
@@ -49,28 +56,28 @@ class SharedPrefHelper {
   /// Gets a bool value from SharedPreferences with given [key].
   static getBool(String key) async {
     debugPrint('SharedPrefHelper : getBool with key : $key');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     return sharedPreferences.getBool(key) ?? false;
   }
 
   /// Gets a double value from SharedPreferences with given [key].
   static getDouble(String key) async {
     debugPrint('SharedPrefHelper : getDouble with key : $key');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     return sharedPreferences.getDouble(key) ?? 0.0;
   }
 
   /// Gets an int value from SharedPreferences with given [key].
   static getInt(String key) async {
     debugPrint('SharedPrefHelper : getInt with key : $key');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     return sharedPreferences.getInt(key) ?? 0;
   }
 
   /// Gets an String value from SharedPreferences with given [key].
-  static  getString(String key) async {
+  static getString(String key) async {
     debugPrint('SharedPrefHelper : getString with key : $key');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await getInstance();
     return sharedPreferences.getString(key) ?? '';
   }
 
@@ -78,8 +85,8 @@ class SharedPrefHelper {
   static Future<List<String>> getListString(String key) async {
     List<String> list;
     debugPrint('SharedPrefHelper : getString with key : $key');
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    list= sharedPreferences.getStringList(key) ?? [];
+    SharedPreferences sharedPreferences = await getInstance();
+    list = sharedPreferences.getStringList(key) ?? [];
     log(list.toString());
     return list;
   }
